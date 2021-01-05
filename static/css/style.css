@@ -1,0 +1,19 @@
+/* div[id^="new_prop"]{
+  border:1px solid #4582e6;
+}
+div[id^="new_obj"]{
+  border:1px solid #a4f5c3;
+} */
+
+#object{
+  border:2.5px solid #a4f5c3;
+}
+#property{
+  border:2.5px solid #4582e6;
+}
+#keyword{
+  border:2.5px solid #fcba03;
+}
+#latent{
+  border:2.5px solid #f56042;
+}
