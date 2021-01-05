@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 from causal_graph import process_causal
+from flask_socketio import SocketIO
+
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 @app.route("/")
 def home():
@@ -14,8 +17,10 @@ def receive_data():
 def receive_causal_data():
     content = request.get_json()
     print(content)
-    process_causal(content)
+    file_name = process_causal(content)
+    socketio.emit("causal graph", file_name);
     return "OK"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    socketio.run(app, debug=True)

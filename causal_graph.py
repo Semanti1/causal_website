@@ -1,11 +1,15 @@
 from graphviz import Digraph
-
+import os
 all_sentences = [
 ['property:production', 'keyword:AND', 'property:connection to power source', 'keyword:is/are neccesary for', 'latent:Light'],
 ['property:stability', 'keyword:AND', 'property:extension', 'keyword:is/are neccesary for', 'latent:Lamp structure']
 ]
+x = 0
 def process_causal(all_sentences):
-    dot = Digraph()
+    #static i = 0;
+    dot = Digraph(format="png")
+    global x;
+    image_file = "static/images/output" + str(x) + ".gv"
     for sentence in all_sentences:
         property_list = []
         for field in sentence:
@@ -17,8 +21,9 @@ def process_causal(all_sentences):
                 dot.node(value, value);
                 for property in property_list:
                     dot.edge(property, value);
-    print(dot.source)
-    #dot.render("output.gv", view=True)
-    dot.save("output.gv")
-
+    #print(dot.source)
+    dot.render(image_file, view=False)
+    x = x+1;
+    #dot.save(image_file)
+    return image_file
 #process_causal(all_sentences);

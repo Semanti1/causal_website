@@ -11,6 +11,7 @@
     $('#remove_latent').on('click', remove_latent);
     $('#add_causal').on('click', add_causal);
     $('#submit_causal').on('click', submit_causal);
+    var socket = io.connect('http://127.0.0.1:5000');
 
 
 function add_object(){
@@ -170,8 +171,20 @@ function submit_causal(){
    contentType:"application/json; charset=utf-8",
  });
 
+
  console.log(all_sentences)
 }
+
+socket.on("causal graph", function(msg){
+    // $("#image_causal").append("<p>" + msg+ "</p>");
+    $("#image_causal").text("");
+    var content = "<img src='/" + msg + ".png' class='img-fluid' alt='Responsive Image'>"
+    $("#image_causal").append(content);
+    // $("#image_causal").attr("src", "/"+msg+".png");
+  });
+
+
+
 function remove_property() {
   var last_prop_no = $('#total_prop').val();
 

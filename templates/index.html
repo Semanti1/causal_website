@@ -9,9 +9,12 @@
 
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<!-- <script src="/socket.io/socket.io.js"></script> -->
 <script type=text/javascript src="{{url_for('static', filename='js/button.js')}}"></script>
 
 </head>
+
 <h2> Step1: Enter object's properties </h2>
 <div class="col-sm-12">
 <button id="add_object_properties"> Add object's property</button>
@@ -54,6 +57,11 @@
 <div class="col-sm-12" id="text_causal">
 </div>
 
+
+<div class="col-sm-12" id="image_causal">
+<!-- <img src="/static/images/output2.gv.png" class='img-fluid' alt='Responsive Image'> -->
+
+</div>
 <input type="hidden" value="1" id="total_prop">
 <input type="hidden" value="1" id="total_obj">
 <input type="hidden" value="1" id="total_pair">
