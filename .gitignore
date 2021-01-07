@@ -3,3 +3,4 @@ static/images/*
 static/js/buttonv2.js
 templates/labelerv2.html
 .DS_Store
+!static/images/light.png
