@@ -14,11 +14,37 @@
 <script type=text/javascript src="{{url_for('static', filename='js/button.js')}}"></script>
 
 </head>
+<div class="container">
+  <div class="jumbotron">
+    <h1>Object Causal Model Labeler</h1>
+    <p>Human-interface for creating various object's causal model</p>
+  </div>
+</div>
 
-<h2> Step1: Enter object's properties </h2>
+<div class="container">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">Tutorial</a></li>
+    </ul>
+  </div>
+</nav>
+</div>
+
+<div class="container">
+  <img class="img-responsive" src="/static/images/light.png" style="width:25%">
+</div>
+
+<div class=container>
+<h2> Step1: Associate object with its properties </h2>
+<div class ="row" id="object_words">
+</div>
+<div class = "row" id="property_words">
+</div>
 <div class="col-sm-12">
-<button id="add_object_properties"> Add object's property</button>
-<button id="submit"> Submit </button>
+<button class="btn btn-success" id="add_object_properties"> Add object's property</button>
+<button class="btn btn-success" id="submit"> Submit </button>
 </div>
 
 
@@ -26,31 +52,34 @@
 </div>
 <div class="col-sm-12" id="text_obj">
 </div>
+</div>
+
+<div class=container>
 
 <h2> Step2: Enter the object causal model for the object </h2>
+<div class="col-sm-12" id="property_words2">
+<button class="btn btn-success" id="add_property">Add_Property</button>
+<button class= "btn btn-info" id="remove_property">remove_property</button>
+</div>
+
+
+<div class="col-sm-12" id="key_words">
+<button class="btn btn-success" id="add_keywords">Add_Keywords</button>
+<button class="btn btn-info" id="remove_keywords">remove_keywords</button>
+</div>
+
+<div class="col-sm-12" id="lat_words">
+<button class="btn btn-success" id="add_latent">Add_Latent</button>
+<button class="btn btn-info" id="remove_latent">remove_latent</button>
+</div>
+
+
 <div class="col-sm-12">
   <button class="btn btn-success" id="add_causal"> Add_Causal_Rule</button>
   <button class="btn btn-success" id="submit_causal"> Submit_Causal_Rule</button>
 </div>
 
-
-<div class="col-sm-12">
-<button class="btn btn-primary" id="add_property">Add_Property</button>
-<button class= "btn btn-warning" id="remove_property">remove_property</button>
-</div>
-
-
-<div class="col-sm-12">
-<button class="btn btn-primary" id="add_keywords">Add_Keywords</button>
-<button class="btn btn-warning" id="remove_keywords">remove_keywords</button>
-</div>
-
-<div class="col-sm-12">
-<button class="btn btn-primary" id="add_latent">Add_Latent</button>
-<button class="btn btn-warning" id="remove_latent">remoe_latent</button>
-</div>
-
-
+<div class=container>
 <div class="col-sm-12" id="object_causal">
 </div>
 
@@ -62,12 +91,13 @@
 <!-- <img src="/static/images/output2.gv.png" class='img-fluid' alt='Responsive Image'> -->
 
 </div>
+</div>
 <input type="hidden" value="1" id="total_prop">
 <input type="hidden" value="1" id="total_obj">
 <input type="hidden" value="1" id="total_pair">
 <input type="hidden" value="1" id="total_kw">
 <input type="hidden" value="1" id="total_latent">
-<input type="hidden" value="1" id="total_object_causal">
+<input type="hidden" value="0" id="total_object_causal">
 <script type=text/javascript src="{{url_for('static', filename='js/button.js')}}"></script>
 
 </html>

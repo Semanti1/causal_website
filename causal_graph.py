@@ -23,6 +23,10 @@ def process_causal(all_sentences):
                     dot.edge(property, value);
     #print(dot.source)
     dot.render(image_file, view=False)
+    if x >=1:
+        old_image_file = "./static/images/output" + str(x-1) + ".gv"
+        os.remove(old_image_file)
+        os.remove(old_image_file+".png")
     x = x+1;
     #dot.save(image_file)
     return image_file

@@ -1,21 +1,44 @@
 
-  	$('#add_property').on('click', add_property);
+  	$('#add_property').on('click', add_property_handler);
     $('#remove_property').on('click', remove_property);
-		$('#add_object').on('click', add_object);
+		$('#add_object').on('click', add_object_handler);
     $('#remove_object').on('click', remove_object);
-    $('#add_object_properties').on('click', add_object_properties);
+    $('#add_object_properties').on('click', add_object_properties_handler);
     $('#submit').on('click', serialize);
-    $('#add_keywords').on('click', add_keywords);
+    $('#add_keywords').on('click', add_keywords_handler);
     $('#remove_keywords').on('click', remove_keywords);
-    $('#add_latent').on('click', add_latent);
+    $('#add_latent').on('click', add_latent_handler);
     $('#remove_latent').on('click', remove_latent);
     $('#add_causal').on('click', add_causal);
     $('#submit_causal').on('click', submit_causal);
     var socket = io.connect('http://127.0.0.1:5000');
 
+    var object_list = ["base", "cord", "light bulb", "head"];
+    var property_list = ["connection to power source", "production", "stability", "extension", "protection"];
+    var keyword_list = ["AND", "OR", "is/are neccesary for", "is/are perferrable for"];
+    var latent_list = ["Light", "Lamp structure", "Lamp"];
 
-function add_object(){
-var object_list = ["base", "cord", "light bulb", "head"];
+    $('#object_words').append("<div class='col-xs-2 text-center' > <p> Object List: </p> </div>");
+    $('#object_words').append(load_list(object_list, "obj"));
+    $('#property_words').append("<div class='col-xs-2 text-center'> <p> Property List: </p> </div>");
+    $('#property_words').append(load_list(property_list, "prop"));
+    $('#property_words2').prepend(load_list(property_list, "prop"));
+    $('#key_words').prepend(load_list(keyword_list, "key"));
+    $('#lat_words').prepend(load_list(latent_list, "lat"));
+
+function load_list(list, id){
+	var i = 0;
+  var new_input ="";
+for(; i < list.length; i++){
+   new_input += " <div class='col-xs-1 text-center' id='" +id +"'> <p>" + list[i] + "</p></div>";
+ }
+ return new_input;
+}
+function add_object_handler(){
+  add_object(object_list);
+}
+
+function add_object(object_list){
 	var i = 0;
   var new_obj_no = parseInt($('#total_obj').val()) + 1;
   var new_causal_no = parseInt($('#total_object_causal').val());
@@ -30,9 +53,11 @@ for(; i < object_list.length; i++){
   $('#total_obj').val(new_obj_no);
 }
 
+function add_property_handler(){
+  add_property(property_list);
+}
 
-function add_property() {
-var property_list = ["connection to power source", "production", "stability", "extension", "protection"];
+function add_property(property_list) {
 	var i = 0;
   var new_prop_no = parseInt($('#total_prop').val()) + 1;
   var new_causal_no = parseInt($('#total_object_causal').val());
@@ -49,8 +74,10 @@ for(; i < property_list.length; i++){
   $('#total_prop').val(new_prop_no);
 }
 
-function add_keywords() {
-  var keyword_list = ["AND", "OR", "is/are neccesary for", "is/are perferrable for"];
+function add_keywords_handler(){
+  add_keywords(keyword_list);
+}
+function add_keywords(keyword_list) {
   	var i = 0;
     var new_kw_no = parseInt($('#total_kw').val()) + 1;
     var new_causal_no = parseInt($('#total_object_causal').val());
@@ -67,8 +94,11 @@ function add_keywords() {
     $('#total_kw').val(new_kw_no);
 }
 
-function add_latent() {
-  var latent_list = ["Light", "Lamp structure", "Lamp"];
+function add_latent_handler(){
+  add_latent(latent_list);
+}
+
+function add_latent(latent_list) {
   var i = 0;
   var new_lat_no = parseInt($('#total_latent').val()) + 1;
   var new_causal_no = parseInt($('#total_object_causal').val());
@@ -85,10 +115,11 @@ for(; i < latent_list.length; i++){
   $('#total_latent').val(new_lat_no);
 }
 
+function add_object_properties_handler(){
+  add_object_properties(object_list, property_list);
+}
 
-function add_object_properties() {
-  var object_list = ["base", "cord", "light bulb", "head"];
-  var property_list = ["connection to power source", "production", "stability", "extension", "protection"];
+function add_object_properties(object_list, property_list) {
   	var i = 0;
     var new_pair_no = parseInt($('#total_pair').val()) + 1;
     var new_input = "<form> <div class='form-group' id='new_pair_" + new_pair_no+"'>";
@@ -110,6 +141,7 @@ function add_object_properties() {
    $('#total_pair').val(new_pair_no)
 
 }
+
 function getFormData($form){
   var unindexed_array = $form.serializeArray();
   var indexed_array = {};
@@ -145,15 +177,16 @@ function add_causal(){
     var new_input = "</div> </form> <form><div class='form-group row' id='new_form" + new_causal_no +  "'>";
 
   }
-    $("#object_causal").append(new_input);
-  add_property();
+  new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
+  $("#object_causal").append(new_input);
+
 }
 
 function submit_causal(){
  console.log($("#object_causal")[0])
  var object = $("#object_causal").find("form");
  var all_sentences = []
- $("#text_causal").text("");
+ $("#text_causal").empty();
  $.each(object, function(){
    var x = $(this).serializeArray();
    var sentence = []
@@ -177,7 +210,7 @@ function submit_causal(){
 
 socket.on("causal graph", function(msg){
     // $("#image_causal").append("<p>" + msg+ "</p>");
-    $("#image_causal").text("");
+    $("#image_causal").empty();
     var content = "<img src='/" + msg + ".png' class='img-fluid' alt='Responsive Image'>"
     $("#image_causal").append(content);
     // $("#image_causal").attr("src", "/"+msg+".png");
