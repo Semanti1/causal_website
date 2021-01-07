@@ -13,10 +13,10 @@
     $('#submit_causal').on('click', submit_causal);
     var socket = io.connect('http://127.0.0.1:5000');
 
-    var object_list = ["base", "cord", "light bulb", "head"];
-    var property_list = ["connection to power source", "production", "stability", "extension", "protection"];
-    var keyword_list = ["AND", "OR", "is/are neccesary for", "is/are perferrable for"];
-    var latent_list = ["Light", "Lamp structure", "Lamp"];
+    var object_list = content["object_list"];
+    var property_list = content["property_list"];
+    var keyword_list = content["keyword_list"];
+    var latent_list = content["latent_list"];
 
     $('#object_words').append("<div class='col-xs-2 text-center' > <p> Object List: </p> </div>");
     $('#object_words').append(load_list(object_list, "obj"));

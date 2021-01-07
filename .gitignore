@@ -1,6 +1,7 @@
 venv/*
 static/images/*
 static/js/buttonv2.js
+static/furnitures/*
 templates/labelerv2.html
 .DS_Store
 !static/images/light.png

@@ -1,13 +1,17 @@
 from flask import Flask, render_template, request, jsonify
-from causal_graph import process_causal
+from script.causal_graph import CausalGraph
+from script.load_furniture import FurnitureLoader
 from flask_socketio import SocketIO
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+furnitureloader = FurnitureLoader()
+causalgraph = CausalGraph()
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    image_path, img_json = furnitureloader.load()
+    return render_template("index.html", furniture_image=image_path, description=img_json);
 
 @app.route("/recieve_property", methods = ["POST"])
 def receive_data():
@@ -17,7 +21,7 @@ def receive_data():
 def receive_causal_data():
     content = request.get_json()
     print(content)
-    file_name = process_causal(content)
+    file_name = causalgraph.process_causal(content)
     socketio.emit("causal graph", file_name);
     return "OK"
 
