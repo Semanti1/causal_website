@@ -31,7 +31,9 @@ body {
 .row{
   margin-bottom:10px;
 }
-
+.btn{
+  margin-left: 5px;
+}
 
 #object{
   border:2.5px solid #a4f5c3;

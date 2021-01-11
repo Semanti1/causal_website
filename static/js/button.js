@@ -10,6 +10,7 @@
     $('#add_latent').on('click', add_latent_handler);
     $('#remove_latent').on('click', remove_latent);
     $('#add_causal').on('click', add_causal);
+    $('#generate_causal').on('click', generate_causal);
     $('#submit_causal').on('click', submit_causal);
     var socket = io.connect('http://127.0.0.1:5000');
 
@@ -30,7 +31,7 @@ function load_list(list, id){
 	var i = 0;
   var new_input ="";
 for(; i < list.length; i++){
-   new_input += " <div class='col-xs-1 text-center' id='" +id +"'> <p>" + list[i] + "</p></div>";
+   new_input += " <div class='col-auto align-middle' id='" +id +"'> <p>" + list[i] + "</p></div>";
  }
  return new_input;
 }
@@ -61,7 +62,7 @@ function add_property(property_list) {
 	var i = 0;
   var new_prop_no = parseInt($('#total_prop').val()) + 1;
   var new_causal_no = parseInt($('#total_object_causal').val());
-  var new_input = "<div class ='col-xs-2' id='new_prop" + new_prop_no+"'>" + "<input class='form-control' name=property id=property list='property_list' >"+ " <datalist id='property_list'>";
+  var new_input = "<div class ='col-auto' id='new_prop" + new_prop_no+"'>" + "<input class='form-control' name=property id=property list='property_list' >"+ " <datalist id='property_list'>";
 /*   + "<option value = 'connection to power source'>"+
   "<option value = 'production' >" + "</datalist>" */;
 for(; i < property_list.length; i++){
@@ -74,6 +75,8 @@ for(; i < property_list.length; i++){
   $('#total_prop').val(new_prop_no);
 }
 
+
+
 function add_keywords_handler(){
   add_keywords(keyword_list);
 }
@@ -81,7 +84,9 @@ function add_keywords(keyword_list) {
   	var i = 0;
     var new_kw_no = parseInt($('#total_kw').val()) + 1;
     var new_causal_no = parseInt($('#total_object_causal').val());
-    var new_input = "<div class ='col-xs-1' id='new_key" + new_kw_no+"'>" + "<input class='form-control' name=keyword id=keyword list='keyword_list' >"+ " <datalist id='keyword_list'>";
+    var new_input = "<div class ='col-auto' id='new_key" + new_kw_no+"'>" +
+    "<input class='form-control' name=keyword id=keyword list='keyword_list'  >"+
+     " <datalist id='keyword_list'>";
   /*   + "<option value = 'connection to power source'>"+
     "<option value = 'production' >" + "</datalist>" */;
   for(; i < keyword_list.length; i++){
@@ -102,7 +107,7 @@ function add_latent(latent_list) {
   var i = 0;
   var new_lat_no = parseInt($('#total_latent').val()) + 1;
   var new_causal_no = parseInt($('#total_object_causal').val());
-  var new_input = "<div class ='col-xs-2' id='new_latent" + new_lat_no+"'>" + "<input class='form-control' name=latent id=latent list='latent_list' >"+ " <datalist id='latent_list'>";
+  var new_input = "<div class ='col-auto' id='new_latent" + new_lat_no+"'>" + "<input class='form-control' name=latent id=latent list='latent_list' >"+ " <datalist id='latent_list'>";
 /*   + "<option value = 'connection to power source'>"+
   "<option value = 'production' >" + "</datalist>" */;
 for(; i < latent_list.length; i++){
@@ -122,21 +127,21 @@ function add_object_properties_handler(){
 function add_object_properties(object_list, property_list) {
   	var i = 0;
     var new_pair_no = parseInt($('#total_pair').val()) + 1;
-    var new_input = "<form> <div class='form-group' id='new_pair_" + new_pair_no+"'>";
-    new_input += "<div class ='col-sm-2'> <input id='object' name='object' class='form-control' list='object_list'>"+ " <datalist id='object_list'>";
+    var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
+    new_input += "<div class ='col-auto'> <input id='object' name='object' class='form-control' list='object_list'>"+ " <datalist id='object_list'>";
   for(; i < object_list.length; i++){
      new_input += " <option value='" + object_list[i] + "'>"
    }
    new_input += "</datalist> </div>"
-   new_input += "<div class = 'col-sm-1'> <p class='text-center'>has</p> </div>"
+   new_input += "<div class = 'col-auto'> <p class='text-center'>has</p> </div>"
 
   	i = 0;
-    new_input += "<div class ='col-sm-2'> <input id='property' name='property' class='form-control' list='property_list'>"+ " <datalist id='property_list'>";
+    new_input += "<div class ='col-auto'> <input id='property' name='property' class='form-control' list='property_list'>"+ " <datalist id='property_list'>";
   for(; i < property_list.length; i++){
      new_input += " <option value='" + property_list[i] + "'>"
    }
-   new_input += "</datalist> </div></div></form><br/><br/>"
-   $('#obj_property').append(new_input);
+   new_input += "</datalist> </div></div>"
+   $('#obj_property_form').append(new_input);
    console.log(new_input);
    $('#total_pair').val(new_pair_no)
 
@@ -153,7 +158,7 @@ function getFormData($form){
 }
 
 function serialize(){
-  var form = $("#obj_property").find("form");
+  var form = $("#obj_property_form");
   //var content = getFormData(form);
   var content = JSON.stringify(form.serializeArray())
   //$.post("/recieve_property", content)
@@ -182,8 +187,8 @@ function add_causal(){
 
 }
 
-function submit_causal(){
- console.log($("#object_causal")[0])
+function generate_causal(){
+ // console.log($("#object_causal")[0])
  var object = $("#object_causal").find("form");
  var all_sentences = []
  $("#text_causal").empty();
@@ -215,6 +220,30 @@ socket.on("causal graph", function(msg){
     $("#image_causal").append(content);
     // $("#image_causal").attr("src", "/"+msg+".png");
   });
+
+
+function submit_causal(){
+   // console.log($("#object_causal")[0])
+   var object = $("#object_causal").find("form");
+   var all_sentences = []
+   $.each(object, function(){
+     var x = $(this).serializeArray();
+     var sentence = []
+     $.each(x, function(i, field){
+       sentence.push(field.name + ":" + field.value);
+     })
+     all_sentences.push(sentence);
+   })
+   $.ajax({
+     type:"POST",
+     url: "/submit_causal",
+     data: JSON.stringify(all_sentences),
+     contentType:"application/json; charset=utf-8",
+   });
+
+
+   console.log(all_sentences)
+  }
 
 
 
