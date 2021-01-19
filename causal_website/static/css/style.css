@@ -4,6 +4,22 @@
 div[id^="new_obj"]{
   border:1px solid #a4f5c3;
 } */
+
+#prop_btn{
+  background-color: #4582e6;
+  margin-left :5px;
+}
+
+#key_btn{
+  background-color: #fcba03;
+  margin-left :5px;
+}
+
+#lat_btn{
+  background-color: #f56042;
+  margin-left :5px;
+}
+
 body {
     padding-bottom: 50px;
 }
@@ -11,22 +27,26 @@ body {
   margin-bottom:10px;
 }
 #obj{
-  margin-right:5px;
+  margin-left:5px;
   background-color: #a4f5c3;
-
+  display:inline-block;
 }
+
 #prop{
-  margin-right:5px;
+  margin-left:5px;
   background-color: #4582e6;
+  display:inline-block;
 }
 #key{
-  margin-right:5px;
+  margin-left:5px;
   background-color: #fcba03;
+  display:inline-block;
 }
 
 #lat{
-  margin-right:5px;
+  margin-left:5px;
   background-color: #f56042;
+  display:inline-block;
 }
 .row{
   margin-bottom:10px;

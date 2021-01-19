@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -36,19 +36,24 @@
 <p> Welcome to Object causal model labeler. The labeler will help you create a causal model for a furniture piece that can help the robot better understand how to assemble them.
   We will explain the interface and show you examples of correct causal model </p>
   <h2> What is Object Causal Model?</h2>
+  <p>Object causal models are models of how the parts of a target system have properties that relate to one another to produce a working system.
+    These models are intended to capture the causal mechanisms underlying classes of objects, such as how lamps work, at the level of properties of object parts
+     rather than the specific parts themselves. The variables in the object causal models will be either observed or latent.
+     Observed variables represent the properties of a specific object part. The latent variables represent distinct mechanisms, whose probability distributions are functions of their causes
+      (which can be observed or latent variables themselves).</p>
   <h2> How to use the interface? </h2>
-  <h3> Step1: Associate object part with it's properties.</h3>
+  <h4> Step1: Associate object part with it's properties.</h4>
   <img src="/static/instructions/step1.png" style="height:300px; width:auto">
   <p> We provides you a list of object parts' names and a list of random properties. Click "Add object's properties" and click the dropdown menu to select the object with it's associated properties.
     Some parts can have more than one properties so you can click "Add object properties" multiple times untill you think you've add all the properties. After you're done, click "Submit" to finish.
   </p>
-  <h3> Step2:Add object causal model</h3>
+  <h4> Step2:Add object causal model</h4>
   <img src="/static/instructions/step2.png" style="height:150px; width:auto">
 
-  <p> In this step, you need to complete a sentence using the list of words we provides to construct a causal relationship between object's properties to it's latent variables.
-    We provides a list of property words, key words(logic and extend words) and latent words. Click "Add Causal Rule" to add a new causal rule. Click "Add property", "Add keyword" or "Add latent" to add a field
-      that has a dropdown menu and select the word you want. After you complete your sentence, you can click "Add Causal Rule" again to add a new rule. After you finish adding all the causal rules,
-      click "generate graph" and the website will display you with the causal graph you generated. Click "Submit" if you think the causal information is correct.
+  <p> In this step, you need to complete sentences using the list of words we provide to construct a causal relationship between object's properties and its latent variables.
+    We provide a list of property words, key words(logic and extend words) and latent words. Click "Add Causal Rule" to add a new causal rule. Click at the words to add to the sentence.
+    After you complete your sentence, you can click "Add Causal Rule" to verify your syntax and if it passes, it adds a new rule. After you finish adding all the causal rules,
+      click "Generate graph" and the website will display you with the causal graph you generated. Click "Submit" if you think the causal information is correct.
   </p>
 
 <h1> Examples </h1>

@@ -19,13 +19,60 @@
     var keyword_list = content["keyword_list"];
     var latent_list = content["latent_list"];
 
-    $('#object_words').append("<div class='col-xs-2 text-center' > <p> Object List: </p> </div>");
+    $('#object_words').append("<div class='col-auto text-center' > <p> Object List: </p> </div>");
     $('#object_words').append(load_list(object_list, "obj"));
-    $('#property_words').append("<div class='col-xs-2 text-center'> <p> Property List: </p> </div>");
+    $('#property_words').append("<div class='col-auto text-center'> <p> Property List: </p> </div>");
     $('#property_words').append(load_list(property_list, "prop"));
-    $('#property_words2').prepend(load_list(property_list, "prop"));
-    $('#key_words').prepend(load_list(keyword_list, "key"));
-    $('#lat_words').prepend(load_list(latent_list, "lat"));
+    // $('#property_words2').prepend(load_list(property_list, "prop"));
+    // $('#key_words').prepend(load_list(keyword_list, "key"));
+    // $('#lat_words').prepend(load_list(latent_list, "lat"));
+
+$(window).on("load", function(){
+//   console.log("hello")
+  var i = 0;
+  $("#property_words2").append("<div class='col-auto text-center'> <p> Property List: </p> </div>");
+  $("#key_words").append("<div class='col-auto text-center'> <p> Keyword List: </p> </div>")
+  $("#lat_words").append("<div class='col-auto text-center'> <p> Latent List: </p> </div>")
+
+  for (; i < property_list.length; i++){
+    $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
+  }
+  for (i = 0; i < keyword_list.length; i++){
+    $("#key_words").append("<button id=key_btn>" + keyword_list[i] + "</button>");
+  }
+
+  for (i = 0; i < latent_list.length; i++){
+    $("#lat_words").append("<button  id=lat_btn>" + latent_list[i] + "</button>");
+  }
+
+
+  $("#property_words2 #prop_btn").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=prop>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
+
+  $("#key_words #key_btn").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=key>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
+
+  $("#lat_words #lat_btn").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=lat>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
+
+
+
+
+ });
+
+
 
 function load_list(list, id){
 	var i = 0;
@@ -172,46 +219,129 @@ function serialize(){
   $("#text_obj").text(content);
 }
 
+// function add_causal(){
+//   var new_causal_no = parseInt($('#total_object_causal').val())+1;
+//   $('#total_object_causal').val(new_causal_no)
+//   if (new_causal_no ==2){
+//     var new_input = " <form> <div class='form-group row' id='new_form" + new_causal_no +  "'>";
+//
+//   }else{
+//     var new_input = "</div> </form> <form><div class='form-group row' id='new_form" + new_causal_no +  "'>";
+//
+//   }
+//   new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
+//   $("#object_causal").append(new_input);
+//
+// }
+
 function add_causal(){
-  var new_causal_no = parseInt($('#total_object_causal').val())+1;
-  $('#total_object_causal').val(new_causal_no)
-  if (new_causal_no ==2){
-    var new_input = " <form> <div class='form-group row' id='new_form" + new_causal_no +  "'>";
+  var new_causal_no = parseInt($('#total_object_causal').val())
+  if (new_causal_no ==0){
+    new_causal_no =+1;
+    $('#total_object_causal').val(new_causal_no)
+    var new_input = " <div class='row' id='new_form" + new_causal_no +  "'>";
+    new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
+    $("#object_causal").append(new_input);
 
   }else{
-    var new_input = "</div> </form> <form><div class='form-group row' id='new_form" + new_causal_no +  "'>";
+    var prev_causal = $("#new_form" + (new_causal_no))
+    var prev_causal_obj = prev_causal.find(".col-auto");
+    sentence = []
+    $.each(prev_causal_obj, function(){
+      var obj_name = $(this).text();
+      var obj_type = $(this).attr("id");
+      sentence.push(obj_type + ":" + obj_name);
+    })
+    console.log(sentence)
+    $.ajax({
+      type:"POST",
+      url:"/check_correct",
+      data: JSON.stringify(sentence),
+      contentType:"application/json; charset=utf-8",
+      success: function(data){
+        console.log(data)
+        if (data){
+              $("#text_causal").empty()
+              new_causal_no +=1;
+              $('#total_object_causal').val(new_causal_no);
+              var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
+              new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
+              $("#object_causal").append(new_input);
+        }
+        else{
+          $("#text_causal").text("syntax error");
+        }
+      }
+    });
+
+    // socket.on("check", function(msg){
+    //   console.log(msg)
+    //   if(msg == "incorrect"){
+    //     $("#text_causal").text("synthax error");
+    //   }
+    //   else{
+    //     $("#text_causal").empty()
+    //     new_causal_no +=1;
+    //     $('#total_object_causal').val(new_causal_no);
+    //     var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
+    //     new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
+    //     $("#object_causal").append(new_input);
+    //
+    //   }
+    // })
+
 
   }
-  new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
-  $("#object_causal").append(new_input);
 
 }
+
+
+// function generate_causal(){
+//  // console.log($("#object_causal")[0])
+//  var object = $("#object_causal").find("form");
+//  var all_sentences = []
+//  $("#text_causal").empty();
+//  $.each(object, function(){
+//    var x = $(this).serializeArray();
+//    var sentence = []
+//    $.each(x, function(i, field){
+//      $("#text_causal").append(field.name + ": " + field.value + " ");
+//      sentence.push(field.name + ":" + field.value);
+//    })
+//    all_sentences.push(sentence);
+//    $("#text_causal").append("</p>");
+//  })
+//  $.ajax({
+//    type:"POST",
+//    url: "/recieve_causal",
+//    data: JSON.stringify(all_sentences),
+//    contentType:"application/json; charset=utf-8",
+//  });
 
 function generate_causal(){
- // console.log($("#object_causal")[0])
- var object = $("#object_causal").find("form");
- var all_sentences = []
- $("#text_causal").empty();
- $.each(object, function(){
-   var x = $(this).serializeArray();
-   var sentence = []
-   $.each(x, function(i, field){
-     $("#text_causal").append(field.name + ": " + field.value + " ");
-     sentence.push(field.name + ":" + field.value);
-   })
-   all_sentences.push(sentence);
-   $("#text_causal").append("</p>");
- })
- $.ajax({
-   type:"POST",
-   url: "/recieve_causal",
-   data: JSON.stringify(all_sentences),
-   contentType:"application/json; charset=utf-8",
- });
-
-
- console.log(all_sentences)
+  var row = $("#object_causal").find(".row");
+  all_sentences = []
+  $.each(row, function(){
+    sentence = []
+    var object = $(this).find('.col-auto');
+      $.each(object, function(){
+      var obj_name = $(this).text();
+      var obj_type = $(this).attr("id");
+      sentence.push(obj_type + ":" + obj_name);
+    })
+    all_sentences.push(sentence);
+  });
+  console.log(all_sentences);
+   $.ajax({
+     type:"POST",
+     url: "/recieve_causal",
+     data: JSON.stringify(all_sentences),
+     contentType:"application/json; charset=utf-8",
+   });
 }
+//
+//  console.log(all_sentences)
+// }
 
 socket.on("causal graph", function(msg){
     // $("#image_causal").append("<p>" + msg+ "</p>");
@@ -221,19 +351,36 @@ socket.on("causal graph", function(msg){
     // $("#image_causal").attr("src", "/"+msg+".png");
   });
 
+socket.on("save success", function(msg){
+    // $("#image_causal").append("<p>" + msg+ "</p>");
+    $("#text_causal").empty();
+    $("#image_causal").append("<p style='color:blue;' >" + msg + "</p>");
+    // $("#image_causal").attr("src", "/"+msg+".png");
+  });
+
+socket.on("save failure", function(msg){
+    // $("#image_causal").append("<p>" + msg+ "</p>");
+    $("#text_causal").empty();
+    $("#image_causal").append("<p style='color:red;'>" + msg + "</p>");
+    // $("#image_causal").attr("src", "/"+msg+".png");
+  });
+
+
 
 function submit_causal(){
    // console.log($("#object_causal")[0])
-   var object = $("#object_causal").find("form");
-   var all_sentences = []
-   $.each(object, function(){
-     var x = $(this).serializeArray();
-     var sentence = []
-     $.each(x, function(i, field){
-       sentence.push(field.name + ":" + field.value);
+   var row = $("#object_causal").find(".row");
+   all_sentences = []
+   $.each(row, function(){
+     sentence = []
+     var object = $(this).find('.col-auto');
+       $.each(object, function(){
+       var obj_name = $(this).text();
+       var obj_type = $(this).attr("id");
+       sentence.push(obj_type + ":" + obj_name);
      })
      all_sentences.push(sentence);
-   })
+   });
    $.ajax({
      type:"POST",
      url: "/submit_causal",

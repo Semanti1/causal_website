@@ -2,10 +2,9 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
 <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 <!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <!-- Latest compiled JavaScript -->
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
@@ -25,8 +24,13 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="{{url_for('home')}}">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link dropdown-toggle" href="{{url_for('home')}}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home <span class="sr-only">(current)</span></a>
+
         <a class="nav-item nav-link" href="{{url_for('tutorial')}}">Tutorial</a>
+       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+         <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
+         <a class="dropdown-item" href="{{url_for('chair')}}">Chair</a>
+       </div>
       </div>
     </div>
   </nav>
@@ -65,19 +69,19 @@ console.log(content);
 
 <h2> Step2: Enter the object causal model for the object </h2>
 <div class="row" id="property_words2">
-<button class="btn btn-success" id="add_property">Add_Property</button>
-<button class= "btn btn-info" id="remove_property">remove_property</button>
+<!-- <button class="btn btn-success" id="add_property">Add_Property</button>
+<button class= "btn btn-info" id="remove_property">remove_property</button> -->
 </div>
 
 
 <div class="row" id="key_words">
-<button class="btn btn-success" id="add_keywords">Add_Keywords</button>
-<button class="btn btn-info" id="remove_keywords">remove_keywords</button>
+<!-- <button class="btn btn-success" id="add_keywords">Add_Keywords</button>
+<button class="btn btn-info" id="remove_keywords">remove_keywords</button> -->
 </div>
 
 <div class="row" id="lat_words">
-<button class="btn btn-success" id="add_latent">Add_Latent</button>
-<button class="btn btn-info" id="remove_latent">remove_latent</button>
+<!-- <button class="btn btn-success" id="add_latent">Add_Latent</button>
+<button class="btn btn-info" id="remove_latent">remove_latent</button> -->
 </div>
 
 
@@ -89,8 +93,9 @@ console.log(content);
 
 <div class=container>
 <div id="object_causal">
-
 </div>
+</div>
+
 
 <div class="col-sm-12" id="text_causal">
 </div>
@@ -107,6 +112,10 @@ console.log(content);
 <input type="hidden" value="1" id="total_kw">
 <input type="hidden" value="1" id="total_latent">
 <input type="hidden" value="0" id="total_object_causal">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type=text/javascript src="{{url_for('static', filename='js/button.js')}}"></script>
 
 </html>
