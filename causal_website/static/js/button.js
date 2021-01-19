@@ -12,7 +12,7 @@
     $('#add_causal').on('click', add_causal);
     $('#generate_causal').on('click', generate_causal);
     $('#submit_causal').on('click', submit_causal);
-    var socket = io.connect('http://127.0.0.1:5000');
+    // var socket = io.connect('http://127.0.0.1:5000');
 
     var object_list = content["object_list"];
     var property_list = content["property_list"];
@@ -274,49 +274,11 @@ function add_causal(){
       }
     });
 
-    // socket.on("check", function(msg){
-    //   console.log(msg)
-    //   if(msg == "incorrect"){
-    //     $("#text_causal").text("synthax error");
-    //   }
-    //   else{
-    //     $("#text_causal").empty()
-    //     new_causal_no +=1;
-    //     $('#total_object_causal').val(new_causal_no);
-    //     var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
-    //     new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
-    //     $("#object_causal").append(new_input);
-    //
-    //   }
-    // })
-
-
   }
 
 }
 
 
-// function generate_causal(){
-//  // console.log($("#object_causal")[0])
-//  var object = $("#object_causal").find("form");
-//  var all_sentences = []
-//  $("#text_causal").empty();
-//  $.each(object, function(){
-//    var x = $(this).serializeArray();
-//    var sentence = []
-//    $.each(x, function(i, field){
-//      $("#text_causal").append(field.name + ": " + field.value + " ");
-//      sentence.push(field.name + ":" + field.value);
-//    })
-//    all_sentences.push(sentence);
-//    $("#text_causal").append("</p>");
-//  })
-//  $.ajax({
-//    type:"POST",
-//    url: "/recieve_causal",
-//    data: JSON.stringify(all_sentences),
-//    contentType:"application/json; charset=utf-8",
-//  });
 
 function generate_causal(){
   var row = $("#object_causal").find(".row");
@@ -337,33 +299,32 @@ function generate_causal(){
      url: "/recieve_causal",
      data: JSON.stringify(all_sentences),
      contentType:"application/json; charset=utf-8",
+     success:function(msg){
+       $("#image_causal").empty();
+       console.log(msg)
+       var content = "<img src='/" + msg + ".png' class='img-fluid' alt='Responsive Image'>"
+       $("#image_causal").append(content);
+     }
    });
 }
 //
 //  console.log(all_sentences)
 // }
 
-socket.on("causal graph", function(msg){
-    // $("#image_causal").append("<p>" + msg+ "</p>");
-    $("#image_causal").empty();
-    var content = "<img src='/" + msg + ".png' class='img-fluid' alt='Responsive Image'>"
-    $("#image_causal").append(content);
-    // $("#image_causal").attr("src", "/"+msg+".png");
-  });
-
-socket.on("save success", function(msg){
-    // $("#image_causal").append("<p>" + msg+ "</p>");
-    $("#text_causal").empty();
-    $("#image_causal").append("<p style='color:blue;' >" + msg + "</p>");
-    // $("#image_causal").attr("src", "/"+msg+".png");
-  });
-
-socket.on("save failure", function(msg){
-    // $("#image_causal").append("<p>" + msg+ "</p>");
-    $("#text_causal").empty();
-    $("#image_causal").append("<p style='color:red;'>" + msg + "</p>");
-    // $("#image_causal").attr("src", "/"+msg+".png");
-  });
+//
+// socket.on("save success", function(msg){
+//     // $("#image_causal").append("<p>" + msg+ "</p>");
+//     $("#text_causal").empty();
+//     $("#image_causal").append("<p style='color:blue;' >" + msg + "</p>");
+//     // $("#image_causal").attr("src", "/"+msg+".png");
+//   });
+//
+// socket.on("save failure", function(msg){
+//     // $("#image_causal").append("<p>" + msg+ "</p>");
+//     $("#text_causal").empty();
+//     $("#image_causal").append("<p style='color:red;'>" + msg + "</p>");
+//     // $("#image_causal").attr("src", "/"+msg+".png");
+//   });
 
 
 
@@ -386,6 +347,10 @@ function submit_causal(){
      url: "/submit_causal",
      data: JSON.stringify(all_sentences),
      contentType:"application/json; charset=utf-8",
+     success: function(msg){
+       $("#text_causal").empty();
+       $("#image_causal").append("<p style='color:blue;' >" + msg + "</p>");
+     }
    });
 
 

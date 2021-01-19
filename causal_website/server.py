@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 from causal_website.causal_graph import CausalGraph, CausalInfo, check_correctness
 from causal_website.load_furniture import FurnitureLoader
-from flask_socketio import SocketIO
 import json
 import os
-from causal_website import app, socketio
+from causal_website import app
 # app = Flask(__name__)
 #
 # socketio = SocketIO(app)
@@ -51,8 +50,7 @@ def receive_causal_data():
     content = request.get_json()
     print(content)
     file_name = causalgraph.process_causal(content)
-    socketio.emit("causal graph", file_name);
-    return "OK"
+    return jsonify(file_name)
 
 @app.route("/submit_causal", methods=["POST"])
 def submit_causal_data():
@@ -60,12 +58,11 @@ def submit_causal_data():
     content = request.get_json()
     success = causalinfo.create_causal_info(content, causal_path);
     if success:
-        socketio.emit("save success", "successfully saved the causal model");
-        return "OK"
+        return jsonify("successfully saved the causal model");
     else:
-        socketio.emit("save failure", "There is an error on the server end to save the causal model. Please report this to the developer.")
+        return jsonify("There is an error on the server end to save the causal model. Please report this to the developer.")
 
 
 if __name__ == '__main__':
-    #app.run(debug=True)
-    socketio.run(app, debug=True, port=8000)
+    app.run(debug=True)
+    # socketio.run(app, debug=True, port=8000)
