@@ -38,14 +38,18 @@
   <h2> What is Object Causal Model?</h2>
   <p>Object causal models are models of how the parts of a target system have properties that relate to one another to produce a working system.
     These models are intended to capture the causal mechanisms underlying classes of objects, such as how lamps work, at the level of properties of object parts
-     rather than the specific parts themselves. The variables in the object causal models will be either observed or latent.
-     Observed variables represent the properties of a specific object part. The latent variables represent distinct mechanisms, whose probability distributions are functions of their causes
-      (which can be observed or latent variables themselves).</p>
+     rather than the specific parts themselves. The causal model is constructed with following variables. <p>
+       <ul>
+         <li> Observed variables:  represent the properties of a specific object part. </li>
+          <li> Latent variables: represent distinct mechanisms, whose probability distributions are functions of their causes
+              (which can be observed or latent variables themselves).</li>
+          <li> keyword variables: combinations of logic words (AND/OR) and extend word (necessary/ preferrable)
+        </ul>
   <h2> How to use the interface? </h2>
   <h4> Step1: Associate object part with it's properties.</h4>
   <img src="/static/instructions/step1.png" style="height:300px; width:auto">
   <p> We provides you a list of object parts' names and a list of random properties. Click "Add object's properties" and click the dropdown menu to select the object with it's associated properties.
-    Some parts can have more than one properties so you can click "Add object properties" multiple times untill you think you've add all the properties. After you're done, click "Submit" to finish.
+    Some parts can have more than one properties so you can click "Add object properties" multiple times untill you think you've added all the properties. After you're done, click "Submit" to finish.
   </p>
   <h4> Step2:Add object causal model</h4>
   <img src="/static/instructions/step2.png" style="height:150px; width:auto">
@@ -58,8 +62,12 @@
 
 <h1> Examples </h1>
 
-
-
-
+<p> Here we provides you with an example of causal model for an "Dining chair" </p>
+<img src="/static/instructions/example.png" style="height:300px; width:auto">
+<p> Given an dining chair as shown in the image, we complete the first step by assining functional properties to each dining chair components given.
+  The image below shows an example of possible assignments</p>
+<img src="/static/instructions/step1_example.png" style="height:300px; width:auto">
+<p> In step2, we can generate the following causal rules and possible causal model like shown in the image below</p>
+<img src="/static/instructions/step2_example.png" style="height:400px; width:auto">
 </div>
 </html>
