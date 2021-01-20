@@ -228,6 +228,10 @@ function getFormData($form){
   return indexed_array;
 }
 
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+
 function serialize(){
   var form = $("#obj_property_form");
   var content = JSON.stringify(form.serializeArray());
@@ -238,18 +242,24 @@ function serialize(){
     data: content,
     contentType:"application/json; charset=utf-8",
   });
-  console.log(content);
 
   var property_list = form.serializeArray().map(function(v){
     if (v.name =="property"){
       return [v.value];
     }
   })
-  var i = 0;
-  for (; i < property_list.length; i++){
-    if (property_list[i] != undefined){
-      $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
+  var set = {};
+  $.each(property_list, function(index, value){
+    if (value != undefined){
+      set[value] = 1;
     }
+  })
+
+  var i = 0;
+  $("#property_words2").empty()
+  $("#property_words2").append("<div class='col-auto text-center'> <p> Property List: </p> </div>");
+  for (var key in set){
+      $("#property_words2").append("<button  id=prop_btn>" + key + "</button>");
   }
   $("#property_words2 #prop_btn").each(function(index){
     $(this).on('click', function(){
