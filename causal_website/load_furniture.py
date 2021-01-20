@@ -3,16 +3,17 @@ import json
 
 class FurnitureLoader():
     def __init__(self, furniture=None):
-        self.index = 2;
+        self.index = 1;
         if furniture is None:
-            self.furniture="chair"
+            self.furniture="table"
         else:
             self.furniture = furniture
         self.APP_ROOT = os.path.dirname(os.path.abspath(__file__))
         self.furniture_path = os.path.join(self.APP_ROOT, "static/furnitures/", self.furniture, '{0:02}'.format(self.index))
         print(self.furniture_path)
-    def set_furniture(self, furniture):
+    def set_furniture(self, furniture, index=1):
         self.furniture = furniture
+        self.index = index;
         self.furniture_path = os.path.join(self.APP_ROOT, "static/furnitures/", self.furniture, '{0:02}'.format(self.index))
 
     def load(self):

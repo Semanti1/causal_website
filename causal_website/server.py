@@ -30,6 +30,12 @@ def chair():
     furnitureloader.set_furniture("chair")
     image_path, img_json = furnitureloader.load()
     return render_template("index.html", furniture_image=image_path, description=img_json);
+@app.route("/chair_exp")
+def chair_exp():
+    furnitureloader.set_furniture("chair", index=3)
+    image_path, img_json = furnitureloader.load()
+    return render_template("index.html", furniture_image=image_path, description=img_json);
+
 
 @app.route("/recieve_property", methods = ["POST"])
 def receive_data():
