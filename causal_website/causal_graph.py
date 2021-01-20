@@ -24,6 +24,16 @@ def check_correctness(sentence):
         return False
     return True
 
+def check_extend(sentence):
+    try:
+        for idx, field in enumerate(sentence):
+            name,value = feild.split(":")
+            if name == "key":
+                if (value.find("preferrable") != -1):
+                    return True
+        return False
+    except:
+        return False
 
 class CausalGraph():
     def __init__(self, furniture):

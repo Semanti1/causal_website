@@ -34,29 +34,53 @@ $(window).on("load", function(){
   $("#key_words").append("<div class='col-auto text-center'> <p> Keyword List: </p> </div>")
   $("#lat_words").append("<div class='col-auto text-center'> <p> Latent List: </p> </div>")
 
-  for (; i < property_list.length; i++){
-    $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
-  }
+  // for (; i < property_list.length; i++){
+  //   $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
+  // }
   for (i = 0; i < keyword_list.length; i++){
-    $("#key_words").append("<button id=key_btn>" + keyword_list[i] + "</button>");
+    if (keyword_list[i].indexOf("preferrable") !=-1){
+      $("#key_words").append("<button id=key_btn_special>" + keyword_list[i] + "</button> ");
+    }else{
+      $("#key_words").append("<button id=key_btn>" + keyword_list[i] + "</button>");
+    }
   }
 
   for (i = 0; i < latent_list.length; i++){
     $("#lat_words").append("<button  id=lat_btn>" + latent_list[i] + "</button>");
   }
-
-
-  $("#property_words2 #prop_btn").each(function(index){
-    $(this).on('click', function(){
+  $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add custom latent' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
+  $("#lat_add").on('click', function(){
+    var text = $("#custom_lat").val();
+    var lat_no = parseInt($("#total_latent").val());
+    $("<button id='lat_add_btn" + lat_no + "'>" + text + "</button>").insertBefore('#custom_lat');
+    $("#lat_add_btn" + lat_no).on('click', function(){
       var causal_no = parseInt($('#total_object_causal').val());
-      $("<div class='col-auto align-middle' id=prop>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
-    });
+      $("<div class='col-auto align-middle' id=lat>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    })
+    $("#total_latent").val(lat_no+1);
+
   })
+
+
 
   $("#key_words #key_btn").each(function(index){
     $(this).on('click', function(){
       var causal_no = parseInt($('#total_object_causal').val());
       $("<div class='col-auto align-middle' id=key>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
+
+  $("#key_words #key_btn_special").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=key>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+      var input = "<select id='score'>";
+      var i =1;
+      for (; i <= 5; i++){
+        input += "<option value='" + i +"'>" + i + "</option>";
+      }
+      input += "</select>";
+      $("#new_form"+ causal_no).append(input)
     });
   })
 
@@ -206,8 +230,7 @@ function getFormData($form){
 
 function serialize(){
   var form = $("#obj_property_form");
-  //var content = getFormData(form);
-  var content = JSON.stringify(form.serializeArray())
+  var content = JSON.stringify(form.serializeArray());
   //$.post("/recieve_property", content)
   $.ajax({
     type:"POST",
@@ -216,7 +239,26 @@ function serialize(){
     contentType:"application/json; charset=utf-8",
   });
   console.log(content);
-  $("#text_obj").text(content);
+
+  var property_list = form.serializeArray().map(function(v){
+    if (v.name =="property"){
+      return [v.value];
+    }
+  })
+  var i = 0;
+  for (; i < property_list.length; i++){
+    if (property_list[i] != undefined){
+      $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
+    }
+  }
+  $("#property_words2 #prop_btn").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=prop>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
+
+  // $("#text_obj").text(content);
 }
 
 // function add_causal(){
@@ -261,7 +303,6 @@ function add_causal(){
       success: function(data){
         console.log(data)
         if (data){
-              $("#text_causal").empty()
               new_causal_no +=1;
               $('#total_object_causal').val(new_causal_no);
               var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
@@ -269,6 +310,7 @@ function add_causal(){
               $("#object_causal").append(new_input);
         }
         else{
+          $("#text_causal").empty()
           $("#text_causal").text("syntax error");
         }
       }
@@ -278,9 +320,7 @@ function add_causal(){
 
 }
 
-
-
-function generate_causal(){
+function extract_causal(){
   var row = $("#object_causal").find(".row");
   all_sentences = []
   $.each(row, function(){
@@ -291,8 +331,18 @@ function generate_causal(){
       var obj_type = $(this).attr("id");
       sentence.push(obj_type + ":" + obj_name);
     })
+    var object = $(this).find("select")
+    if (object.length > 0){
+      var obj_value = object.find(":selected").text();
+      sentence.push("extend:"+obj_value);
+    }
     all_sentences.push(sentence);
   });
+  return all_sentences;
+}
+
+function generate_causal(){
+  var all_sentences = extract_causal();
   console.log(all_sentences);
    $.ajax({
      type:"POST",
@@ -331,17 +381,8 @@ function generate_causal(){
 function submit_causal(){
    // console.log($("#object_causal")[0])
    var row = $("#object_causal").find(".row");
-   all_sentences = []
-   $.each(row, function(){
-     sentence = []
-     var object = $(this).find('.col-auto');
-       $.each(object, function(){
-       var obj_name = $(this).text();
-       var obj_type = $(this).attr("id");
-       sentence.push(obj_type + ":" + obj_name);
-     })
-     all_sentences.push(sentence);
-   });
+   var all_sentences = extract_causal();
+
    $.ajax({
      type:"POST",
      url: "/submit_causal",

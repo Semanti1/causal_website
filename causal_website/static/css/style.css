@@ -10,12 +10,24 @@ div[id^="new_obj"]{
   margin-left :5px;
 }
 
-#key_btn{
+#key_btn, #key_btn_special{
   background-color: #fcba03;
   margin-left :5px;
 }
+select{
+  margin-left :5px;
+}
+#custom_lat{
+  margin-left :5px;
+
+}
 
 #lat_btn{
+  background-color: #f56042;
+  margin-left :5px;
+}
+
+button[id^="lat_add_btn"]{
   background-color: #f56042;
   margin-left :5px;
 }

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from causal_website.causal_graph import CausalGraph, CausalInfo, check_correctness
+from causal_website.causal_graph import CausalGraph, CausalInfo, check_correctness, check_extend
 from causal_website.load_furniture import FurnitureLoader
 import json
 import os

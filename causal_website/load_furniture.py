@@ -3,9 +3,9 @@ import json
 
 class FurnitureLoader():
     def __init__(self, furniture=None):
-        self.index = 1;
+        self.index = 2;
         if furniture is None:
-            self.furniture="table"
+            self.furniture="chair"
         else:
             self.furniture = furniture
         self.APP_ROOT = os.path.dirname(os.path.abspath(__file__))
