@@ -293,6 +293,7 @@ function add_causal(){
     $('#total_object_causal').val(new_causal_no)
     var new_input = " <div class='row' id='new_form" + new_causal_no +  "'>";
     new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
+    new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
     $("#object_causal").append(new_input);
 
   }else{
@@ -317,6 +318,8 @@ function add_causal(){
               $('#total_object_causal').val(new_causal_no);
               var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
               new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
+              // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+              new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
               $("#object_causal").append(new_input);
         }
         else{
@@ -325,10 +328,15 @@ function add_causal(){
         }
       }
     });
-
   }
 
 }
+
+$(document).on('click', "#object_causal .row .close", function(){
+  $(this).parent().remove();
+})
+
+
 
 function extract_causal(){
   var row = $("#object_causal").find(".row");
