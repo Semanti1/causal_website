@@ -204,7 +204,7 @@ function add_object_properties(object_list, property_list) {
      new_input += " <option value='" + object_list[i] + "'>"
    }
    new_input += "</datalist> </div>"
-   new_input += "<div class = 'col-auto'> <p class='text-center'>has</p> </div>"
+   new_input += "<div class = 'col-auto my-auto'>  's function to provide </div>"
 
   	i = 0;
     new_input += "<div class ='col-auto'> <input id='property' name='property' class='form-control' list='property_list'>"+ " <datalist id='property_list'>";
@@ -292,8 +292,8 @@ function add_causal(){
     new_causal_no =+1;
     $('#total_object_causal').val(new_causal_no)
     var new_input = " <div class='row' id='new_form" + new_causal_no +  "'>";
-    new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
     new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+    new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
     $("#object_causal").append(new_input);
 
   }else{
@@ -317,9 +317,9 @@ function add_causal(){
               new_causal_no +=1;
               $('#total_object_causal').val(new_causal_no);
               var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
-              new_input += "<p> Causal rule #" + new_causal_no + ": </p>"
-              // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
               new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+              new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+              // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
               $("#object_causal").append(new_input);
         }
         else{
