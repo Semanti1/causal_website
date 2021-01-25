@@ -204,7 +204,7 @@ function add_object_properties(object_list, property_list) {
      new_input += " <option value='" + object_list[i] + "'>"
    }
    new_input += "</datalist> </div>"
-   new_input += "<div class = ' my-auto'>  's function is to provide </div>"
+   new_input += "<div class = ' my-auto'>  's function is to </div>"
 
   	i = 0;
     new_input += "<div class ='col-auto'> <input id='property' name='property' class='form-control' list='property_list'>"+ " <datalist id='property_list'>";

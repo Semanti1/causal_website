@@ -22,7 +22,7 @@ def tutorial():
     return render_template("tutorial.html")
 @app.route("/lamp")
 def lamp():
-    furnitureloader.set_furniture("lamp")
+    furnitureloader.set_furniture("lamp", index=2)
     image_path, img_json = furnitureloader.load()
     return render_template("index.html", furniture_image=image_path, description=img_json);
 @app.route("/chair")
