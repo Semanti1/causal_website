@@ -21,7 +21,7 @@
 
     $('#object_words').append("<div class='col-auto text-center' > <p> Object List: </p> </div>");
     $('#object_words').append(load_list(object_list, "obj"));
-    $('#property_words').append("<div class='col-auto text-center'> <p> Property List: </p> </div>");
+    $('#property_words').append("<div class='col-auto text-center'> <p> Function List: </p> </div>");
     $('#property_words').append(load_list(property_list, "prop"));
     // $('#property_words2').prepend(load_list(property_list, "prop"));
     // $('#key_words').prepend(load_list(keyword_list, "key"));
@@ -30,7 +30,7 @@
 $(window).on("load", function(){
 //   console.log("hello")
   var i = 0;
-  $("#property_words2").append("<div class='col-auto text-center'> <p> Property List: </p> </div>");
+  $("#property_words2").append("<div class='col-auto text-center'> <p> Function List: </p> </div>");
   $("#key_words").append("<div class='col-auto text-center'> <p> Keyword List: </p> </div>")
   $("#lat_words").append("<div class='col-auto text-center'> <p> Latent List: </p> </div>")
 
@@ -257,7 +257,7 @@ function serialize(){
 
   var i = 0;
   $("#property_words2").empty()
-  $("#property_words2").append("<div class='col-auto text-center'> <p> Property List: </p> </div>");
+  $("#property_words2").append("<div class='col-auto text-center'> <p> Function List: </p> </div>");
   for (var key in set){
       $("#property_words2").append("<button  id=prop_btn>" + key + "</button>");
   }
