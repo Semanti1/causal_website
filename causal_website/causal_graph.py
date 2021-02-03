@@ -14,9 +14,9 @@ def check_correctness(sentence):
     try:
         for idx, field in enumerate(sentence[:-1]):
             name,value = field.split(":")
-            print(value)
+            # print(value)
             if name == "prop" or name =="lat":
-                print(sentence[idx+1], sentence[idx+1].find("key"))
+                # print(sentence[idx+1], sentence[idx+1].find("key"))
                 if (sentence[idx+1].find("key") == -1):
                     print("error")
                     raise Exception("key word missing")
@@ -42,23 +42,33 @@ class CausalGraph():
         self.APP_ROOT = os.path.dirname(os.path.abspath(__file__))
     def process_causal(self, all_sentences):
         #static i = 0;
+        print("CALLED")
         dot = Digraph(format="png")
         image_filename = "static/images/output_" + self.furniture + str(self.x) + ".gv";
         image_file = os.path.join(self.APP_ROOT, image_filename)
         for sentence in all_sentences:
             children_list = []
             before_key = True
+            optional = False;
             for idx, field in enumerate(sentence):
                 name, value = field.split(':')
-                if before_key and (name == "prop" or name== "lat"):
+                if before_key and (name == "prop" or name== "lat" or name =="goal"):
                     children_list.append(value);
                 else:
-                    if name == "lat":
-                        dot.node(value, value);
-                        for child in children_list:
-                            dot.edge(child, value);
+                    if name == "lat" or name =="goal":
+                        dot.node(value, label=value, color='red');
+                        if optional:
+                            for child in children_list:
+                                dot.edge(child, value, style="dashed");
+                        else:
+                            for child in children_list:
+                                dot.edge(child, value);
                 if name == "key" and value.find("is/are")!=-1:
                     before_key = False;
+                if name == "key" and value.find("neccesary")!=-1:
+                    optional = False;
+                if name == "key" and value.find("preferrable")!=-1:
+                    optional = True;
 
 
         #print(dot.source)

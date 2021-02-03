@@ -18,6 +18,7 @@
     var property_list = content["property_list"];
     var keyword_list = content["keyword_list"];
     var latent_list = content["latent_list"];
+    var goal_list = content["goal_list"];
 
     $('#object_words').append("<div class='col-auto text-center' > <p> Object List: </p> </div>");
     $('#object_words').append(load_list(object_list, "obj"));
@@ -33,7 +34,7 @@ $(window).on("load", function(){
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function List: </p> </div>");
   $("#key_words").append("<div class='col-auto text-center'> <p> Keyword List: </p> </div>")
   $("#lat_words").append("<div class='col-auto text-center'> <p> Latent List: </p> </div>")
-
+  $("#goal_words").append("<div class='col-auto text-center'> <p> Goal: </p> </div>")
   // for (; i < property_list.length; i++){
   //   $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
   // }
@@ -48,6 +49,11 @@ $(window).on("load", function(){
   for (i = 0; i < latent_list.length; i++){
     $("#lat_words").append("<button  id=lat_btn>" + latent_list[i] + "</button>");
   }
+
+  for (i = 0; i < goal_list.length; i++){
+    $("#goal_words").append("<button  id=goal_btn>" + goal_list[i] + "</button>");
+  }
+
   $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add custom latent' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
   $("#lat_add").on('click', function(){
     var text = $("#custom_lat").val();
@@ -90,8 +96,12 @@ $(window).on("load", function(){
       $("<div class='col-auto align-middle' id=lat>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
     });
   })
-
-
+  $("#goal_words #goal_btn").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=goal>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
 
 
  });

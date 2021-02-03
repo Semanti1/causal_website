@@ -24,16 +24,19 @@ def tutorial():
 def lamp():
     furnitureloader.set_furniture("lamp", index=2)
     image_path, img_json = furnitureloader.load()
+    causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description=img_json);
 @app.route("/chair")
 def chair():
     furnitureloader.set_furniture("chair")
     image_path, img_json = furnitureloader.load()
+    causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description=img_json);
 @app.route("/chair_exp")
 def chair_exp():
     furnitureloader.set_furniture("chair", index=3)
     image_path, img_json = furnitureloader.load()
+    causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description=img_json);
 
 

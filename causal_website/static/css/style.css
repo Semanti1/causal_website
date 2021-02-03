@@ -19,10 +19,14 @@ select{
 }
 #custom_lat{
   margin-left :5px;
-
 }
 
 #lat_btn{
+  background-color: #BEBEBE;
+  margin-left :5px;
+}
+
+#goal_btn{
   background-color: #f56042;
   margin-left :5px;
 }
@@ -56,6 +60,12 @@ body {
 }
 
 #lat{
+  margin-left:5px;
+  background-color: #BEBEBE;
+  display:inline-block;
+}
+
+#goal{
   margin-left:5px;
   background-color: #f56042;
   display:inline-block;
