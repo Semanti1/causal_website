@@ -42,7 +42,6 @@ class CausalGraph():
         self.APP_ROOT = os.path.dirname(os.path.abspath(__file__))
     def process_causal(self, all_sentences):
         #static i = 0;
-        print("CALLED")
         dot = Digraph(format="png")
         image_filename = "static/images/output_" + self.furniture + str(self.x) + ".gv";
         image_file = os.path.join(self.APP_ROOT, image_filename)

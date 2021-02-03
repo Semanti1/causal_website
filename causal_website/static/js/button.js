@@ -33,7 +33,7 @@ $(window).on("load", function(){
   var i = 0;
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function List: </p> </div>");
   $("#key_words").append("<div class='col-auto text-center'> <p> Keyword List: </p> </div>")
-  $("#lat_words").append("<div class='col-auto text-center'> <p> Latent List: </p> </div>")
+  $("#lat_words").append("<div class='col-auto text-center'> <p> Composite Function List: </p> </div>")
   $("#goal_words").append("<div class='col-auto text-center'> <p> Goal: </p> </div>")
   // for (; i < property_list.length; i++){
   //   $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
