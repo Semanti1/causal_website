@@ -43,6 +43,9 @@
 
 <script>
 var content = JSON.parse('{{description| tojson}}');
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 console.log(content);
 </script>
 
@@ -52,6 +55,7 @@ console.log(content);
 </div>
 <div class = "row" id="property_words">
 </div>
+
 <div class="row">
 <button class="btn btn-success" id="add_object_properties"> Add object's function</button>
 <button class="btn btn-success" id="submit"> Submit </button>
@@ -90,9 +94,8 @@ console.log(content);
 
 
 <div class="row">
-  <button class="btn btn-success" id="add_causal"> Add_Causal_Rule</button>
-  <button class="btn btn-success" id="generate_causal"> Generate_Causal_Graph</button>
-  <button class="btn btn-success" id="submit_causal"> Submit </button>
+  <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="add a new causal rule" id="add_causal"> Add_Causal_Rule</button>
+  <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="generate a causal graph based on the current causal rules" id="generate_causal"> Generate_Causal_Graph</button>
 </div>
 
 <div class=container>
@@ -109,7 +112,12 @@ console.log(content);
 <!-- <img src="/static/images/output2.gv.png" class='img-fluid' alt='Responsive Image'> -->
 
 </div>
+
+<div class="row">
+  <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="submit all the causal rules" id="submit_causal"> Submit </button>
+
 </div>
+
 <input type="hidden" value="1" id="total_prop">
 <input type="hidden" value="1" id="total_obj">
 <input type="hidden" value="0" id="total_pair">

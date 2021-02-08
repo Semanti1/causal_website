@@ -4,16 +4,27 @@ from causal_website.load_furniture import FurnitureLoader
 import json
 import os
 from causal_website import app
+import hashlib as hasher
+import string
+import random
 # app = Flask(__name__)
 #
 # socketio = SocketIO(app)
 furnitureloader = FurnitureLoader()
 causalgraph = CausalGraph(furnitureloader.furniture)
 causalinfo = CausalInfo()
+letters = string.ascii_lowercase
+random_string= 0;
+encoding  = 0;
 
 @app.route("/")
 def home():
     image_path, img_json = furnitureloader.load()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+
     causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description=img_json);
 
@@ -24,18 +35,30 @@ def tutorial():
 def lamp():
     furnitureloader.set_furniture("lamp", index=2)
     image_path, img_json = furnitureloader.load()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description=img_json);
 @app.route("/chair")
 def chair():
     furnitureloader.set_furniture("chair")
     image_path, img_json = furnitureloader.load()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description=img_json);
 @app.route("/chair_exp")
 def chair_exp():
     furnitureloader.set_furniture("chair", index=3)
     image_path, img_json = furnitureloader.load()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description=img_json);
 
@@ -43,7 +66,8 @@ def chair_exp():
 @app.route("/recieve_property", methods = ["POST"])
 def receive_data():
     data = request.get_json()
-    property_path = os.path.join(furnitureloader.furniture_path, "object_property.json")
+    global encoding
+    property_path = os.path.join(furnitureloader.furniture_path, "object_property_" + encoding + ".json")
     with open(property_path, "w") as file:
         json.dump(data, file);
     return "OK"
@@ -63,11 +87,13 @@ def receive_causal_data():
 
 @app.route("/submit_causal", methods=["POST"])
 def submit_causal_data():
-    causal_path = os.path.join(furnitureloader.furniture_path, "causal.json");
+    global encoding
+    causal_path = os.path.join(furnitureloader.furniture_path, "causal_" + encoding + ".json");
     content = request.get_json()
     success = causalinfo.create_causal_info(content, causal_path);
+    code = "adkfjaqier";
     if success:
-        return jsonify("successfully saved the causal model");
+        return jsonify("successfully saved the causal model, please copy this code: " + code + " to verify you've finished.");
     else:
         return jsonify("There is an error on the server end to save the causal model. Please report this to the developer.")
 
