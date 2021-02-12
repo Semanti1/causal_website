@@ -104,7 +104,7 @@ class CausalInfo():
                             self.graph[value] = []
                         children_list.append(value);
                     else:
-                        if name == "lat":
+                        if name == "lat" or name == "goal":
                             if value not in self.graph:
                                 self.graph[value] = []
                             for child in children_list:

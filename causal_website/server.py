@@ -7,6 +7,7 @@ from causal_website import app
 import hashlib as hasher
 import string
 import random
+from causal_website.planner.main import website_plan
 # app = Flask(__name__)
 #
 # socketio = SocketIO(app)
@@ -97,6 +98,12 @@ def submit_causal_data():
     else:
         return jsonify("There is an error on the server end to save the causal model. Please report this to the developer.")
 
+@app.route("/plan_causal", methods=["POST"])
+def plan_causal():
+    global encoding
+    str = website_plan(furnitureloader.furniture_path, encoding)
+    print(str)
+    return jsonify(str)
 
 if __name__ == '__main__':
     app.run(debug=True)

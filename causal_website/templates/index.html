@@ -43,9 +43,6 @@
 
 <script>
 var content = JSON.parse('{{description| tojson}}');
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
 console.log(content);
 </script>
 
@@ -113,9 +110,13 @@ console.log(content);
 
 </div>
 
+
 <div class="row">
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="submit all the causal rules" id="submit_causal"> Submit </button>
+  <button class="btn btn-success" id="planner"> Generate a plan </button>
+</div>
 
+<div class="row", id="plan">
 </div>
 
 <input type="hidden" value="1" id="total_prop">

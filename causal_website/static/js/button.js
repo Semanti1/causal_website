@@ -12,6 +12,7 @@
     $('#add_causal').on('click', add_causal);
     $('#generate_causal').on('click', generate_causal);
     $('#submit_causal').on('click', submit_causal);
+    $('#planner').on('click', plan_causal);
     // var socket = io.connect('http://127.0.0.1:5000');
 
     var object_list = content["object_list"];
@@ -384,6 +385,20 @@ function generate_causal(){
        $("#image_causal").append(content);
      }
    });
+}
+
+function plan_causal(){
+  $.ajax({
+    type:"POST",
+    url: "/plan_causal",
+    data:0,
+    contentType:"application/json; charset=utf-8",
+    success: function(msg){
+      console.log(msg)
+      $("#plan").empty();
+      $("#plan").append("<p>" + msg + "</p>");
+    }
+  });
 }
 //
 //  console.log(all_sentences)
