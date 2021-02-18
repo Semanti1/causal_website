@@ -55,7 +55,7 @@ $(window).on("load", function(){
     $("#goal_words").append("<button  id=goal_btn>" + goal_list[i] + "</button>");
   }
 
-  $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add custom latent' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
+  $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add custom functionality' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
   $("#lat_add").on('click', function(){
     var text = $("#custom_lat").val();
     var lat_no = parseInt($("#total_latent").val());
@@ -322,9 +322,10 @@ function add_causal(){
       url:"/check_correct",
       data: JSON.stringify(sentence),
       contentType:"application/json; charset=utf-8",
-      success: function(data){
-        console.log(data)
-        if (data){
+      success: function(msg){
+        console.log(msg)
+        if (msg=="success"){
+              $("#text_causal").empty()
               new_causal_no +=1;
               $('#total_object_causal').val(new_causal_no);
               var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
@@ -335,7 +336,7 @@ function add_causal(){
         }
         else{
           $("#text_causal").empty()
-          $("#text_causal").text("syntax error");
+          $("#text_causal").text(msg);
         }
       }
     });
@@ -345,6 +346,11 @@ function add_causal(){
 
 $(document).on('click', "#object_causal .row .close", function(){
   $(this).parent().remove();
+  $("#text_causal").empty()
+  var causal_no = parseInt($('#total_object_causal').val())
+  causal_no = causal_no -1;
+  console.log(causal_no)
+  $('#total_object_causal').val(causal_no)
 })
 
 

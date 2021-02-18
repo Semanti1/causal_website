@@ -11,6 +11,8 @@ all_sentences = [
 def check_correctness(sentence):
     #check for syntax error
     #rule1: AND/ OR between properties/latent
+    #rule2: No necessary/preferrable
+    extend_word = 0;
     try:
         for idx, field in enumerate(sentence[:-1]):
             name,value = field.split(":")
@@ -18,11 +20,16 @@ def check_correctness(sentence):
             if name == "prop" or name =="lat":
                 # print(sentence[idx+1], sentence[idx+1].find("key"))
                 if (sentence[idx+1].find("key") == -1):
-                    print("error")
-                    raise Exception("key word missing")
+                    return "missing keyword"
+            if name == "key":
+                if value.find("is/are") !=-1:
+                    extend_word +=1;
+        if extend_word ==0:
+            return "no necessary/preferrable is specified"
+
     except:
-        return False
-    return True
+        return "error"
+    return "success"
 
 def check_extend(sentence):
     try:
@@ -53,9 +60,14 @@ class CausalGraph():
                 name, value = field.split(':')
                 if before_key and (name == "prop" or name== "lat" or name =="goal"):
                     children_list.append(value);
+                    if name=="prop":
+                        dot.node(value, label=value, color='blue');
                 else:
                     if name == "lat" or name =="goal":
-                        dot.node(value, label=value, color='red');
+                        if name=="lat":
+                            dot.node(value, label=value, color='grey');
+                        if name=="goal":
+                            dot.node(value, label=value, color="red");
                         if optional:
                             for child in children_list:
                                 dot.edge(child, value, style="dashed");
@@ -90,13 +102,20 @@ class CausalGraph():
 class CausalInfo():
     def __init__(self):
         self.graph = {}
+        self.reverse_graph = {}
 
     def create_causal_info(self, all_sentences, info_path):
         try:
             self.graph = {}
+            self.reverse_graph = {}
+            syntax_error = False
+
             for sentence in all_sentences:
                 children_list = []
                 before_key = True
+                syntax_error = check_correctness(sentence);
+                if syntax_error == False:
+                    return 3; #status code3: syntax error
                 for idx, field in enumerate(sentence):
                     name, value = field.split(':')
                     if before_key and (name == "prop" or name== "lat"):
@@ -104,19 +123,28 @@ class CausalInfo():
                             self.graph[value] = []
                         children_list.append(value);
                     else:
-                        if name == "lat" or name == "goal":
+                        if (name == "lat") or (name == "goal"):
                             if value not in self.graph:
                                 self.graph[value] = []
+                                self.reverse_graph[value] = []
                             for child in children_list:
                                 self.graph[child].append(value);
+                                self.reverse_graph[value].append(child);
                     if name == "key" and value.find("is/are")!=-1:
                         before_key = False;
 
-            with open(info_path, "w") as file:
-                json.dump(self.graph, file)
-            return True;
+            leaf_node_count = 0;
+            for key, val in self.graph.items():
+                if len(val) == 0:
+                    leaf_node_count +=1
+            if leaf_node_count !=1:
+                return 2; #status code 2: more than 1 leaf node
+            else:
+                with open(info_path, "w") as file:
+                    json.dump(self.reverse_graph, file)
+                return 0; # status code 0: success
         except:
-            return False;
+            return 1; # status code 1: exception happened
 
 
 

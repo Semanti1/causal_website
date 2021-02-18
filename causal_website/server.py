@@ -93,17 +93,19 @@ def submit_causal_data():
     content = request.get_json()
     success = causalinfo.create_causal_info(content, causal_path);
     code = "adkfjaqier";
-    if success:
+    if success == 0:
         return jsonify("successfully saved the causal model, please copy this code: " + code + " to verify you've finished.");
-    else:
+    elif success ==1:
         return jsonify("There is an error on the server end to save the causal model. Please report this to the developer.")
+    elif success == 2:
+        return jsonify("More than one leaf node exist in the graph")
+    elif success == 3:
+        return jsonify("Syntax error: Missing And/Or")
 
 @app.route("/plan_causal", methods=["POST"])
 def plan_causal():
     global encoding
-    str = website_plan(furnitureloader.furniture_path, encoding)
-    print(str)
-    return jsonify(str)
+    return jsonify(website_plan(furnitureloader.furniture_path, encoding))
 
 if __name__ == '__main__':
     app.run(debug=True)
