@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script> -->
+<!-- <script src="/socket.io/socket.io.js"></script> -->
+
+</head>
+<div class="container">
+  <div class="jumbotron">
+    <h1>Object Causal Model Labeler</h1>
+  </div>
+</div>
+
+<div class=container>
+  <nav class="navbar navbar-expand-sm navbar-light bg-light">
+<ul class="navbar-nav">
+  <li class="nav-item">
+    <a class="nav-item nav-link dropdown-toggle" href="{{url_for('home')}}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home <span class="sr-only">(current)</span></a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
+      <a class="dropdown-item" href="{{url_for('chair')}}">Chair</a>
+      <a class="dropdown-item" href="{{url_for('lamp_lab')}}">Lamp(labeled)</a>
+      <a class="dropdown-item" href="{{url_for('chair_lab')}}">Chair(labeled)</a>
+    </div>
+  </li>
+  <li class="nav-item">
+    <a class="nav-item nav-link" href="{{url_for('tutorial')}}">Tutorial</a>
+  </li>
+</ul></nav>
+</div>
+
+<div class="container">
+<h1> Introduction </h1>
+<p> Welcome to object causal model labeler. The purpose of this interface is to allow you to explain how an object works in causal terms to help a robot better understand it. We will explain how the interface works and show you some examples. 
+ </p>
+  <h2> What is Object Causal Model?</h2>
+  <p>An object causal model explains how an object works in terms of the functional roles of the object parts and how these functions interact with each other to fulfill a specific purpose. These interactions are communicated through causal rules. You will encounter 5 types of words in the interface. These are explained below.</p>
+<p>Object parts: an object part refers to a specific part of an object. For instance, “seat” of a chair is an object part. Identical object parts are labelled using the same word. For instance, “legs” of a chair is considered a single object part.</p>
+
+<p>Functions: a function refers to a role or a purpose that an object part fulfills. An object part can have multiple functions. For instance, a function of “legs” of a chair is to “provide stability” and another function is to “provide elevation”. Different object parts can have the same function.</p>
+
+<p>Composite functions: a composite function refers to a complex, higher-level function resulting from the interaction of other functions. For instance, the functions “provide elevation” and “provide stability” and “provide seating” together may cause a composite function “affords seating”.</p>
+
+<p>Goal: goal is the object that you are trying to explain how it works (e.g. a dining chair). </p>
+<p>Keywords: a keyword is an operator that defines the relationship between functions, composite functions, or the goal in a causal rule. The four keywords are:</p>
+       <ul>
+         <li> AND, OR: these two keywords are logical operators.  </li>
+          <li> is/are necessary for causing; is/are preferable for causing:  these two keywords define whether a function(s) is necessary or preferable for causing a composite function or the goal object. </li>
+        </ul>
+  <h2> How to use the interface? </h2>
+  <p>The interface works in two steps. Step 1 involves associating object parts with their functions. Step 2 involves using these functions to specify the causal model of the object.</p>
+  <h4> Step1: associating object parts with their functions.</h4>
+  <img src="/static/instructions/example.jpg" style="height:300px; width:auto">
+
+  <img src="/static/instructions/step1.png" style="height:300px; width:auto">
+  <p> In Step 1, you will see a picture of the goal object and its labelled parts. You will then have to determine the functional roles of each object part.
+  The example below shows this process for a dining chair.</p>
+
+  <p>“Add a function of an object part” creates a line where you can choose the object part (the teal box) and associate it with its function that you need to type in (the blue box). If you want to associate multiple functions with the same object part, you need to create a new line by clicking “Add a function of an object part” button for each association separately. </p>
+
+  <p>All functions that you intend to use when expressing the causal model MUST be associated with one or more object parts. Once you are done, you need to click the “submit” button, which will allow you to use these functions in Step 2 when defining the causal model. If you realize you forgot to associate a function or want to add new functions at Step 2, you can return to Step 1, add them, and click the “submit” in Step 1 again. </p>
+  <p>When labelling your functions, please try to use simple and descriptive terms that are not ambiguous. Do not worry about the grammar. Some examples for the stability function are:</p>
+  <p>Good examples: “stability”, “provides stability”, “balance”, “ensures balance”</p> 
+  <p>Bad examples: “makes it kind of straight”, “structural integrity”</p>
+</p>
+  <h4> Step2: specifying the causal model</h4>
+  <img src="/static/instructions/step2.png" style="height:200px; width:auto">
+
+  <p> In Step 2, you will use the functions that you associated with object parts in Step 1. You can also create abstract, composite functions in Step 2. It may be harder to think of good labels for composite functions due to their abstract nature, but please try to make them as descriptive as possible. Some labels that are inappropriate for functions can be appropriate for composite functions (e.g. “structural integrity” can be appropriate for a composite function).</p>
+
+  <p>To add a composite function, simply write a label in the “add a composite function” box and then click “add”. You can add as many as you want.</p>
+
+  <p>Think of each causal rule as an equation. For each causal rule:</p>
+  <ul>
+  <li>You must choose between “is/are preferable for causing” or “is/are necessary for causing” keywords. Only one term is allowed on the right-hand side of these keywords, which must be either a composite function or the goal object. Multiple terms are allowed on the left-hand side, and they can be any combination of functions and composite functions.</li>
+  <li>If you choose “is/are preferable for causing”, then you must specify how important each term is on a scale of 1 (not very important), to 7 (very important) in causing the term on the right-hand side. Multiple terms can have the same importance rating.</li>
+  <li>If there are multiple terms on the left-hand side, they must be connected by either an AND or OR relation to each other (e.g., causal rule 1 in the example below).</li>
+  <li>More than one causal rule can have the same term on the right-hand side (e.g., causal rules 2 and 3)</li>
+  <li>The same term can be used in the left-hand side of different causal rules. (e.g. you could connect “provide stability” to both composite functions in the example)</li>
+  <li>For the entire causal model to be valid, all nodes in your graph must be connected to the goal object node either directly or indirectly (e.g. through composite functions). </li>
+</ul>
+
+
+  <p>To express a causal rule, click the “Add Causal Rule” button. To add a function, keyword, composite function, or the goal object to your causal rule, simply click on the box that you want to add. The elements will be added in the order you click them, and if you make a mistake you have to click the “x” next to the causal rule to delete it and start over.</p>
+
+  <p>If you are done with the causal rule, you can create a new one by clicking the “Add Causal Rule” button again. You can specify as many causal rules as you want.</p>
+
+  <p>To see your causal model in a graphical form, click the “Generate Causal Graph” button. You can add more rules and click this button again to update the graph.</p>
+  <p>We encourage you to generate a graph every time you are done with a causal rule to help you visualize it and determine if it corresponds to what you were thinking of. In the causal graph:</p>
+  <ul>
+  <li>An arrow connecting X to Y specifies that X is on the left-hand side of the causal rule and Y is on the right-hand side.</li>
+  <li>Solid arrows represent “necessary” relations and dashed arrows represent “preferable” relations.</li>
+  <li>AND/OR relations or the importance ratings are not shown.</li>
+</ul>
+
+<p>Once you are done with your causal model, click the “submit” button. The model will not be saved until you click submit.</p>
+  <img src="/static/instructions/step2_example.png" style="height:350px; width:auto">
+
+
+
+</div>
+</html>

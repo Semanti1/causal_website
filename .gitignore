@@ -12,10 +12,10 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-static/images/*
-static/instructions/*
-static/js/buttonv2.js
-static/furnitures/*
-templates/labelerv2.html
+causal_website/static/images/*
+causal_website/static/instructions/*
+causal_website/static/js/buttonv2.js
+causal_website/static/furnitures/*
+causal_website/templates/labelerv2.html
 .DS_Store
 !static/images/light.png
