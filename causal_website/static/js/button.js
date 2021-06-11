@@ -12,13 +12,17 @@
     $('#add_causal').on('click', add_causal);
     $('#generate_causal').on('click', generate_causal);
     $('#submit_causal').on('click', submit_causal);
+    $('#add_graph').on('click', add_graph)
     // var socket = io.connect('http://127.0.0.1:5000');
 
-    var object_list = content["object_list"];
+    //var object_list = content["object_list"];
+    var object_list = allobject;
     var property_list = content["property_list"];
-    var keyword_list = content["keyword_list"];
+    //var keyword_list = content["keyword_list"];
+    var keyword_list = ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"];
     var latent_list = content["latent_list"];
-    var goal_list = content["goal_list"];
+    //var goal_list = content["goal_list"];
+    var goal_list = ["Light"]
 
     $('#object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
     $('#object_words').append(load_list(object_list, "obj"));
@@ -300,16 +304,32 @@ function serialize(){
 //   $("#object_causal").append(new_input);
 //
 // }
+function add_graph(){
+  var causal_graph_no = parseInt($('#total_causal_graph').val())
+  var rel_causal_no = parseInt($('#relevant_object_causal').val())
+  causal_graph_no  = causal_graph_no + 1;
+  rel_causal_no = 0;
+  $('#relevant_object_causal').val(rel_causal_no); //reset relevant object causal rule no when create a new causal graph
+  $("#total_causal_graph").val(causal_graph_no);
+  new_input = "<div id='object_causal" + causal_graph_no + "'> <p> <strong>causal_graph " + causal_graph_no + "</strong></p>"
+  $("#causal_graph").append(new_input)
+}
+
 
 function add_causal(){
   var new_causal_no = parseInt($('#total_object_causal').val())
-  if (new_causal_no ==0){
-    new_causal_no =+1;
+  var rel_causal_no = parseInt($('#relevant_object_causal').val())
+  var causal_graph_no = parseInt($('#total_causal_graph').val())
+  console.log(rel_causal_no)
+  if (rel_causal_no ==0){
+    new_causal_no +=1;
+    rel_causal_no +=1;
     $('#total_object_causal').val(new_causal_no)
+    $("#relevant_object_causal").val(rel_causal_no);
     var new_input = " <div class='row' id='new_form" + new_causal_no +  "'>";
     new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
     new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
-    $("#object_causal").append(new_input);
+    $("#object_causal"+ causal_graph_no).append(new_input);
 
   }else{
     var prev_causal = $("#new_form" + (new_causal_no))
@@ -327,29 +347,39 @@ function add_causal(){
       sentence.push(obj_type + ":" + obj_name);
     })
     console.log(sentence)
-    $.ajax({
-      type:"POST",
-      url:"/check_correct",
-      data: JSON.stringify(sentence),
-      contentType:"application/json; charset=utf-8",
-      success: function(msg){
-        console.log(msg)
-        if (msg=="success"){
-              $("#text_causal").empty()
-              new_causal_no +=1;
-              $('#total_object_causal').val(new_causal_no);
-              var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
-              new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-              new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
-              // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-              $("#object_causal").append(new_input);
-        }
-        else{
-          $("#text_causal").empty()
-          $("#text_causal").text(msg);
-        }
-      }
-    });
+    $("#text_causal").empty()
+    new_causal_no +=1;
+    rel_causal_no +=1
+    $('#total_object_causal').val(new_causal_no);
+    $("#relevant_object_causal").val(rel_causal_no);
+    var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
+    new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+    new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+    // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+    $("#object_causal"+causal_graph_no).append(new_input);
+    // $.ajax({
+    //   type:"POST",
+    //   url:"/check_correct",
+    //   data: JSON.stringify(sentence),
+    //   contentType:"application/json; charset=utf-8",
+    //   success: function(msg){
+    //     console.log(msg)
+    //     if (msg=="success"){
+    //           $("#text_causal").empty()
+    //           new_causal_no +=1;
+    //           $('#total_object_causal').val(new_causal_no);
+    //           var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
+    //           new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+    //           new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+    //           // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+    //           $("#object_causal").append(new_input);
+    //     }
+    //     else{
+    //       $("#text_causal").empty()
+    //       $("#text_causal").text(msg);
+    //     }
+    //   }
+    // });
   }
 
 }

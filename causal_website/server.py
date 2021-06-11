@@ -40,27 +40,8 @@ def lamp():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description=img_json);
-@app.route("/lamp_lab")
-def lamp_lab():
-    furnitureloader.set_furniture("lamp", index=2)
-    image_path, img_json = furnitureloader.load()
-    global random_string
-    global encoding
-    random_string = ''.join(random.choice(letters) for i in range(10));
-    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
-    causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description=img_json);
-@app.route("/chair_lab")
-def chair_lab():
-    furnitureloader.set_furniture("chair")
-    image_path, img_json = furnitureloader.load()
-    global random_string
-    global encoding
-    random_string = ''.join(random.choice(letters) for i in range(10));
-    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
-    causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description=img_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json);
+
 @app.route("/chair")
 def chair():
     furnitureloader.set_furniture("chair", index=3)
@@ -70,7 +51,19 @@ def chair():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description=img_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json);
+
+@app.route("/light")
+def light():
+    image_path_list, json_file_list = furnitureloader.load_all()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    causalgraph.reset();
+    print(image_path_list)
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list);
+
 
 
 @app.route("/recieve_property", methods = ["POST"])

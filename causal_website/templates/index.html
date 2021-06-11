@@ -27,8 +27,7 @@
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
       <a class="dropdown-item" href="{{url_for('chair')}}">Chair</a>
-      <a class="dropdown-item" href="{{url_for('lamp_lab')}}">Lamp(labeled)</a>
-      <a class="dropdown-item" href="{{url_for('chair_lab')}}">Chair(labeled)</a>
+      <a class="dropdown-item" href="{{url_for('light')}}">Light</a>
 
     </div>
   </li>
@@ -38,13 +37,27 @@
 </ul></nav>
 </div>
 
-<div class="container">
+<!-- <div class="container">
   <img class="img-responsive" src={{furniture_image}} style="height:300px; width:auto">
+</div> -->
+
+
+{% for each in furniture_image %}
+<div class="container">
+  <img class="img-responsive" src={{each}} style="height:300px; width:auto">
 </div>
+{% endfor %}
+
 
 <script>
+var allobject = [];
+{% for description in description_list %}
 var content = JSON.parse('{{description| tojson}}');
+for (var i = 0; i < content["object_list"].length; i++){
+  allobject.push(content["object_list"][i]);
+}
 console.log(content);
+{% endfor %}
 </script>
 
 <div class=container>
@@ -96,8 +109,9 @@ console.log(content);
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="generate a causal graph based on the current causal rules" id="generate_causal"> Generate_Causal_Graph</button>
 </div>
 
-<div class=container>
-<div id="object_causal">
+<div class=container, id="causal_graph">
+<div id="object_causal0">
+  <p> <strong>causal_graph 0 </strong></p>
 </div>
 </div>
 
@@ -112,6 +126,7 @@ console.log(content);
 </div>
 
 <div class="row">
+  <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="add a new causal graph" id="add_graph"> Add_Causal_Graph </button>
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="submit all the causal rules" id="submit_causal"> Submit </button>
 
 </div>
@@ -122,6 +137,8 @@ console.log(content);
 <input type="hidden" value="1" id="total_kw">
 <input type="hidden" value="1" id="total_latent">
 <input type="hidden" value="0" id="total_object_causal">
+<input type="hidden" value="0" id="relevant_object_causal">
+<input type="hidden" value= "0" id="total_causal_graph">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

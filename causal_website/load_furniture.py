@@ -4,6 +4,7 @@ import json
 class FurnitureLoader():
     def __init__(self, furniture=None):
         self.index = 1;
+        self.furniture_list = ["lamp", "flashlight", "kerosene_lamp", "candle"]
         if furniture is None:
             self.furniture="table"
         else:
@@ -23,4 +24,17 @@ class FurnitureLoader():
             json_file = json.load(file)
         #self.index +=1;
         image_path = os.path.join("/static/furnitures/", self.furniture, '{0:02}'.format(self.index), "image.png");
-        return image_path, json_file
+        return [image_path], [json_file]
+
+    def load_all(self):
+        image_path_list = []
+        json_file_list = []
+        for furniture in self.furniture_list:
+            furniture_path = os.path.join(self.APP_ROOT, "static/furnitures/", furniture, "01")
+            image_path = os.path.join("/static/furnitures/", furniture, "01", "image.png")
+            json_path = os.path.join(furniture_path, "description.json")
+            with open(json_path) as file:
+                json_file = json.load(file)
+            image_path_list.append(image_path)
+            json_file_list.append(json_file)
+        return image_path_list, json_file_list
