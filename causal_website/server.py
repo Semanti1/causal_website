@@ -70,7 +70,9 @@ def light():
 def receive_data():
     data = request.get_json()
     global encoding
-    property_path = os.path.join(furnitureloader.furniture_path, "object_property_" + encoding + ".json")
+    root = os.path.dirname(os.path.abspath(__file__))
+    property_path = os.path.join(root,"static/causal_graph/" "object_property_" + encoding + ".json");
+    #property_path = os.path.join(furnitureloader.furniture_path, "object_property_" + encoding + ".json")
     with open(property_path, "w") as file:
         json.dump(data, file);
     return "OK"
@@ -91,7 +93,8 @@ def receive_causal_data():
 @app.route("/submit_causal", methods=["POST"])
 def submit_causal_data():
     global encoding
-    causal_path = os.path.join(furnitureloader.furniture_path, "causal_" + encoding + ".json");
+    root = os.path.dirname(os.path.abspath(__file__))
+    causal_path = os.path.join(root,"static/causal_graph/" "causal_" + encoding + ".json");
     content = request.get_json()
     success = causalinfo.create_causal_info(content, causal_path);
     code = "adkfjaqier";

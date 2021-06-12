@@ -113,7 +113,22 @@ $(window).on("load", function(){
   })
 
 
+
  });
+
+ // $("#add_causal").each(function(index){
+ //   $(this).on('click', function(){
+ //     var causal_graph_no = parseInt($('#total_causal_graph').val());
+ //     var input = "<select id='graph'>";
+ //     for (var i = 0; i < causal_graph_no+1; i++){
+ //       input += "<option value='" + i +"'>" + "causal_graph" + i + "</option>";
+ //     }
+ //     input += "</select>";
+ //
+ //     $("#add_causal").append(input);
+ //
+ //   });
+ // })
 
 
 
@@ -313,14 +328,20 @@ function add_graph(){
   $("#total_causal_graph").val(causal_graph_no);
   new_input = "<div id='object_causal" + causal_graph_no + "'> <p> <strong>causal_graph " + causal_graph_no + "</strong></p>"
   $("#causal_graph").append(new_input)
+  var input = "<option value='" + causal_graph_no +"'> causal_graph " + causal_graph_no + "</option>";
+  $("#graph").append(input)
+  $("#graph").val(causal_graph_no).change();
+  $("graph").text("causal_graph "+ causal_graph_no).change()
+  add_causal();
 }
 
 
 function add_causal(){
   var new_causal_no = parseInt($('#total_object_causal').val())
   var rel_causal_no = parseInt($('#relevant_object_causal').val())
-  var causal_graph_no = parseInt($('#total_causal_graph').val())
-  console.log(rel_causal_no)
+  //var causal_graph_no = parseInt($('#total_causal_graph').val())
+  var causal_graph_no = $("#graph").val()
+  console.log(causal_graph_no)
   if (rel_causal_no ==0){
     new_causal_no +=1;
     rel_causal_no +=1;
@@ -341,62 +362,54 @@ function add_causal(){
 
       if(obj_type == "score"){
         obj_name = $(this).find(":selected").text();
-;
         //obj_name = $(this).attr("selected", "selected")
       }
       sentence.push(obj_type + ":" + obj_name);
     })
     console.log(sentence)
-    $("#text_causal").empty()
-    new_causal_no +=1;
-    rel_causal_no +=1
-    $('#total_object_causal').val(new_causal_no);
-    $("#relevant_object_causal").val(rel_causal_no);
-    var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
-    new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-    new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
-    // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-    $("#object_causal"+causal_graph_no).append(new_input);
-    // $.ajax({
-    //   type:"POST",
-    //   url:"/check_correct",
-    //   data: JSON.stringify(sentence),
-    //   contentType:"application/json; charset=utf-8",
-    //   success: function(msg){
-    //     console.log(msg)
-    //     if (msg=="success"){
-    //           $("#text_causal").empty()
-    //           new_causal_no +=1;
-    //           $('#total_object_causal').val(new_causal_no);
-    //           var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
-    //           new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-    //           new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
-    //           // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-    //           $("#object_causal").append(new_input);
-    //     }
-    //     else{
-    //       $("#text_causal").empty()
-    //       $("#text_causal").text(msg);
-    //     }
-    //   }
-    // });
+
+    $.ajax({
+      type:"POST",
+      url:"/check_correct",
+      data: JSON.stringify(sentence),
+      contentType:"application/json; charset=utf-8",
+      success: function(msg){
+        console.log(msg)
+        if (msg=="success"){
+          $("#text_causal").empty()
+          new_causal_no +=1;
+          rel_causal_no +=1
+          $('#total_object_causal').val(new_causal_no);
+          $("#relevant_object_causal").val(rel_causal_no);
+          var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
+          new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+          new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+          // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+          $("#object_causal"+causal_graph_no).append(new_input);
+        }
+        else{
+          $("#text_causal").empty()
+          $("#text_causal").text(msg);
+        }
+      }
+    });
   }
 
 }
 
-$(document).on('click', "#object_causal .row .close", function(){
+$(document).on('click',  ".row .close", function(){
   $(this).parent().remove();
   $("#text_causal").empty()
-  var causal_no = parseInt($('#total_object_causal').val())
-  causal_no = causal_no -1;
+  //var causal_no = parseInt($('#total_object_causal').val())
+  //causal_no = causal_no -1;
   console.log(causal_no)
-  $('#total_object_causal').val(causal_no)
+  //$('#total_object_causal').val(causal_no)
 })
 
 
 
-function extract_causal(){
-  var row = $("#object_causal").find(".row");
+function extract_causal(i){
+  var row = $("#object_causal"+i).find(".row");
   all_sentences = []
   $.each(row, function(){
     sentence = []
@@ -422,7 +435,15 @@ function extract_causal(){
 }
 
 function generate_causal(){
-  var all_sentences = extract_causal();
+  var i = 0;
+  var all_sentences = []
+  var total_causal_graph_no = parseInt($("#total_causal_graph").val());
+  for(; i < (total_causal_graph_no+1); i++){
+    //var row = $("#object_causal" + i).find(".row");
+    var sentences = extract_causal(i);
+    console.log(sentences);
+    all_sentences.push(sentences);
+  }
   console.log(all_sentences);
    $.ajax({
      type:"POST",
@@ -432,8 +453,10 @@ function generate_causal(){
      success:function(msg){
        $("#image_causal").empty();
        console.log(msg)
-       var content = "<img src='/" + msg + ".png' class='img-fluid' alt='Responsive Image'>"
-       $("#image_causal").append(content);
+       for (var i = 0; i < msg.length; i++){
+         var content = "<img src='/" + msg[i] + ".png' class='img-fluid' alt='Responsive Image'>"
+         $("#image_causal").append(content);
+       }
      }
    });
 }
@@ -460,8 +483,17 @@ function generate_causal(){
 
 function submit_causal(){
    // console.log($("#object_causal")[0])
-   var row = $("#object_causal").find(".row");
-   var all_sentences = extract_causal();
+   var i = 0;
+   var all_sentences = []
+   var total_causal_graph_no = parseInt($("#total_causal_graph").val());
+   console.log(total_causal_graph_no)
+   for(; i < (total_causal_graph_no+1); i++){
+     //var row = $("#object_causal" + i).find(".row");
+     var sentences = extract_causal(i);
+     console.log(sentences);
+     all_sentences.push(sentences);
+   }
+
 
    $.ajax({
      type:"POST",

@@ -66,10 +66,18 @@ class CausalGraph():
         self.x = 0;
         self.furniture = furniture
         self.APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
     def process_causal(self, all_sentences):
+        all_causal_graph_path = []
+        for idx, line in enumerate(all_sentences):
+            image_path = self.process_causal_single(line, idx);
+            all_causal_graph_path.append(image_path);
+        return all_causal_graph_path;
+
+    def process_causal_single(self, all_sentences, index):
         #static i = 0;
         dot = Digraph(format="png")
-        image_filename = "static/images/output_" + self.furniture + str(self.x) + ".gv";
+        image_filename = "static/images/output_" + self.furniture + str(index)+ "_" + str(self.x) + ".gv";
         image_file = os.path.join(self.APP_ROOT, image_filename)
         for sentence in all_sentences:
             children_list = []
@@ -121,12 +129,24 @@ class CausalGraph():
 class CausalInfo():
     def __init__(self):
         self.graph = {}
-        self.reverse_graph = {}
 
     def create_causal_info(self, all_sentences, info_path):
+        success_final = 0
+        all_graph = []
+        for model in all_sentences:
+            reverse_graph = {}
+            success = self.create_single_causal_info(model, reverse_graph)
+            if success !=0:
+                return success
+            all_graph.append(reverse_graph)
+        with open(info_path, "w") as file:
+            json.dump(all_graph, file)
+        return success_final;
+
+    def create_single_causal_info(self, all_sentences, reverse_graph):
         try:
             self.graph = {}
-            self.reverse_graph = {}
+            #self.reverse_graph = {}
             syntax_error = False
 
             for sentence in all_sentences:
@@ -147,14 +167,14 @@ class CausalInfo():
                         if (name == "lat") or (name == "goal"):
                             if value not in self.graph:
                                 self.graph[value] = []
-                                self.reverse_graph[value] = []
+                                reverse_graph[value] = []
                             for child in children_list:
                                 self.graph[child[0]].append(value);
                                 if optional:
                                     score = int(sentence[child[1]].split(":")[1]);
-                                    self.reverse_graph[value].append((child[0], score))
+                                    reverse_graph[value].append((child[0], score))
                                 else:
-                                    self.reverse_graph[value].append((child[0], -1));
+                                    reverse_graph[value].append((child[0], -1));
                     if name == "key" and value.find("is/are")!=-1:
                         before_key = False;
 
@@ -165,8 +185,6 @@ class CausalInfo():
             if leaf_node_count !=1:
                 return 2; #status code 2: more than 1 leaf node
             else:
-                with open(info_path, "w") as file:
-                    json.dump(self.reverse_graph, file)
                 return 0; # status code 0: success
         except:
             return 1; # status code 1: exception happened
