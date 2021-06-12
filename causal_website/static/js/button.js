@@ -13,6 +13,7 @@
     $('#generate_causal').on('click', generate_causal);
     $('#submit_causal').on('click', submit_causal);
     $('#add_graph').on('click', add_graph)
+    $('#planner').on('click', plan_causal);
     // var socket = io.connect('http://127.0.0.1:5000');
 
     //var object_list = content["object_list"];

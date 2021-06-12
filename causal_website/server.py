@@ -7,6 +7,7 @@ from causal_website import app
 import hashlib as hasher
 import string
 import random
+from causal_website.planner.main import website_plan
 # app = Flask(__name__)
 #
 # socketio = SocketIO(app)
@@ -106,6 +107,14 @@ def submit_causal_data():
         return jsonify("All nodes must be connected to the goal node directly or indirectly")
     elif success == 3:
         return jsonify("Threr are syntax error in your causal rules")
+
+@app.route("/plan_causal", methods=["POST"])
+def plan_causal():
+    global encoding
+    root = os.path.dirname(os.path.abspath(__file__))
+    causal_path = os.path.join(root,"static/causal_graph/")
+    print(causal_path)
+    return jsonify(website_plan(causal_path, encoding))
 
 if __name__ == '__main__':
     app.run(debug=True)
