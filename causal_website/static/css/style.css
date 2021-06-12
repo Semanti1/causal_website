@@ -32,7 +32,7 @@ select{
 }
 
 button[id^="lat_add_btn"]{
-  background-color: #f56042;
+  background-color: #BEBEBE;
   margin-left :5px;
 }
 
