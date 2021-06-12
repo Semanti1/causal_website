@@ -27,8 +27,7 @@
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
       <a class="dropdown-item" href="{{url_for('chair')}}">Chair</a>
-      <a class="dropdown-item" href="{{url_for('lamp_lab')}}">Lamp(labeled)</a>
-      <a class="dropdown-item" href="{{url_for('chair_lab')}}">Chair(labeled)</a>
+      <a class="dropdown-item" href="{{url_for('light')}}">Light</a>
     </div>
   </li>
   <li class="nav-item">
@@ -39,7 +38,7 @@
 
 <div class="container">
 <h1> Introduction </h1>
-<p> Welcome to object causal model labeler. The purpose of this interface is to allow you to explain how an object works in causal terms to help a robot better understand it. We will explain how the interface works and show you some examples. 
+<p> Welcome to object causal model labeler. The purpose of this interface is to allow you to explain how an object works in causal terms to help a robot better understand it. We will explain how the interface works and show you some examples.
  </p>
   <h2> What is Object Causal Model?</h2>
   <p>An object causal model explains how an object works in terms of the functional roles of the object parts and how these functions interact with each other to fulfill a specific purpose. These interactions are communicated through causal rules. You will encounter 5 types of words in the interface. These are explained below.</p>
@@ -68,7 +67,7 @@
 
   <p>All functions that you intend to use when expressing the causal model MUST be associated with one or more object parts. Once you are done, you need to click the “submit” button, which will allow you to use these functions in Step 2 when defining the causal model. If you realize you forgot to associate a function or want to add new functions at Step 2, you can return to Step 1, add them, and click the “submit” in Step 1 again. </p>
   <p>When labelling your functions, please try to use simple and descriptive terms that are not ambiguous. Do not worry about the grammar. Some examples for the stability function are:</p>
-  <p>Good examples: “stability”, “provides stability”, “balance”, “ensures balance”</p> 
+  <p>Good examples: “stability”, “provides stability”, “balance”, “ensures balance”</p>
   <p>Bad examples: “makes it kind of straight”, “structural integrity”</p>
 </p>
   <h4> Step2: specifying the causal model</h4>
