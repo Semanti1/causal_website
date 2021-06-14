@@ -99,12 +99,12 @@ def submit_causal_data():
     content = request.get_json()
     success = causalinfo.create_causal_info(content, causal_path);
     code = "adkfjaqier";
-    if success == 0:
+    if success == 0 or success ==2:
         return jsonify("successfully saved the causal model.");
     elif success ==1:
         return jsonify("There is an error on the server end to save the causal model. Please report this to the developer.")
-    elif success == 2:
-        return jsonify("All nodes must be connected to the goal node directly or indirectly")
+    # elif success == 2:
+    #     return jsonify("All nodes must be connected to the goal node directly or indirectly")
     elif success == 3:
         return jsonify("Threr are syntax error in your causal rules")
 

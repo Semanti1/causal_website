@@ -40,7 +40,7 @@ $(window).on("load", function(){
   var i = 0;
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function(s) of object parts List: </p> </div>");
   $("#key_words").append("<div class='col-auto text-center'> <p> Keywords: </p> </div>")
-  $("#lat_words").append("<div class='col-auto text-center'> <p> Composite Functions: </p> </div>")
+  $("#lat_words").append("<div class='col-auto text-center'> <p> Effect: </p> </div>")
   $("#goal_words").append("<div class='col-auto text-center'> <p> Goal: </p> </div>")
   // for (; i < property_list.length; i++){
   //   $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
@@ -61,7 +61,7 @@ $(window).on("load", function(){
     $("#goal_words").append("<button  id=goal_btn>" + goal_list[i] + "</button>");
   }
 
-  $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add a composite function' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
+  $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add an effect' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
   $("#lat_add").on('click', function(){
     var text = $("#custom_lat").val();
     var lat_no = parseInt($("#total_latent").val());
@@ -327,12 +327,12 @@ function add_graph(){
   rel_causal_no = 0;
   $('#relevant_object_causal').val(rel_causal_no); //reset relevant object causal rule no when create a new causal graph
   $("#total_causal_graph").val(causal_graph_no);
-  new_input = "<div id='object_causal" + causal_graph_no + "'> <p> <strong>causal_graph " + causal_graph_no + "</strong></p>"
+  new_input = "<div id='object_causal" + causal_graph_no + "'> <p> <strong>causal_graph " + (causal_graph_no+1) + "</strong></p>"
   $("#causal_graph").append(new_input)
-  var input = "<option value='" + causal_graph_no +"'> causal_graph " + causal_graph_no + "</option>";
+  var input = "<option value='" + causal_graph_no +"'> to causal_graph " + (causal_graph_no+1) + "</option>";
   $("#graph").append(input)
   $("#graph").val(causal_graph_no).change();
-  $("graph").text("to causal_graph "+ causal_graph_no).change()
+  $("graph").text("to causal_graph "+ (causal_graph_no+1)).change()
   add_causal();
 }
 
@@ -340,10 +340,11 @@ function add_graph(){
 function add_causal(){
   var new_causal_no = parseInt($('#total_object_causal').val())
   var rel_causal_no = parseInt($('#relevant_object_causal').val())
+  var reset_causal_delete = parseInt($('#reset_causal_delete').val())
   //var causal_graph_no = parseInt($('#total_causal_graph').val())
   var causal_graph_no = $("#graph").val()
   console.log(causal_graph_no)
-  if (rel_causal_no ==0){
+  if (rel_causal_no ==0 ){
     new_causal_no +=1;
     rel_causal_no +=1;
     $('#total_object_causal').val(new_causal_no)
@@ -352,8 +353,19 @@ function add_causal(){
     new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
     new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
     $("#object_causal"+ causal_graph_no).append(new_input);
-
-  }else{
+  }
+  else if(reset_causal_delete){
+    new_causal_no +=1;
+    rel_causal_no +=1;
+    $('#total_object_causal').val(new_causal_no)
+    $("#relevant_object_causal").val(rel_causal_no);
+    var new_input = " <div class='row' id='new_form" + new_causal_no +  "'>";
+    new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
+    new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+    $("#object_causal"+ causal_graph_no).append(new_input);
+    $("#reset_causal_delete").val(0);
+  }
+    else{
     var prev_causal = $("#new_form" + (new_causal_no))
     var prev_causal_obj = prev_causal.find(".col-auto, select");
     sentence = []
@@ -403,8 +415,9 @@ $(document).on('click',  ".row .close", function(){
   $("#text_causal").empty()
   //var causal_no = parseInt($('#total_object_causal').val())
   //causal_no = causal_no -1;
-  console.log(causal_no)
+  //console.log(causal_no)
   //$('#total_object_causal').val(causal_no)
+  $('#reset_causal_delete').val(1);
 })
 
 
