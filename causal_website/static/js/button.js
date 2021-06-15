@@ -521,7 +521,9 @@ function submit_causal(){
      console.log(sentences);
      all_sentences.push(sentences);
    }
-
+   var submit_time = parseInt($("#total_submit_times").val())
+   submit_time +=1;
+   $("#total_submit_times").val(submit_time);
 
    $.ajax({
      type:"POST",
@@ -531,6 +533,14 @@ function submit_causal(){
      success: function(msg){
        $("#text_causal").empty();
        $("#text_causal").append("<p style='color:blue;' >" + msg + "</p>");
+     }
+   });
+   $.ajax({
+     type:"POST",
+     url: "/record_time",
+     data: JSON.stringify({"time": submit_time}),
+     contentType:"application/json; charset=utf-8",
+     success: function(msg){
      }
    });
 
