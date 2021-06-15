@@ -96,7 +96,7 @@ def submit_causal_data():
     global encoding
     root = os.path.dirname(os.path.abspath(__file__))
     causal_path = os.path.join(root,"static/causal_graph/" "causal_" + encoding + ".json");
-    content = request.get_json()
+    content = request.get_json();
     success = causalinfo.create_causal_info(content, causal_path);
     code = "adkfjaqier";
     if success == 0 or success ==2:
@@ -107,6 +107,16 @@ def submit_causal_data():
     #     return jsonify("All nodes must be connected to the goal node directly or indirectly")
     elif success == 3:
         return jsonify("Threr are syntax error in your causal rules")
+@app.route("/record_time", methods=["POST"])
+def record_time():
+    global encoding
+    root = os.path.dirname(os.path.abspath(__file__))
+    time_path = os.path.join(root,"static/causal_graph/" "submit_time_" + encoding + ".json");
+    submit_time = request.get_json()
+    with open(time_path, "w") as f:
+        f.write(str(submit_time["time"]))
+    print(submit_time)
+    return "success";
 
 @app.route("/plan_causal", methods=["POST"])
 def plan_causal():
