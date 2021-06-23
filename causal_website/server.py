@@ -17,6 +17,7 @@ causalinfo = CausalInfo()
 letters = string.ascii_lowercase
 random_string= 0;
 encoding  = 0;
+plan_object=None
 
 @app.route("/")
 def home():
@@ -32,16 +33,37 @@ def home():
 @app.route("/tutorial")
 def tutorial():
     return render_template("tutorial.html")
+
 @app.route("/lamp")
 def lamp():
-    furnitureloader.set_furniture("lamp", index=3)
+    global plan_object
+    plan_object = "flashlight"
+    furnitureloader.set_furniture(plan_object, index=1)
+    plan_image_path, plan_json = furnitureloader.load()
+    furnitureloader.set_furniture("lamp", index=1)
     image_path, img_json = furnitureloader.load()
     global random_string
     global encoding
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description_list=img_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="flashlight", plan_object_image=plan_image_path, plan_description=plan_json);
+
+@app.route("/candle")
+def candle():
+    global plan_object
+    plan_object = "kerosene_lamp"
+    furnitureloader.set_furniture(plan_object, index=1)
+    plan_image_path, plan_json = furnitureloader.load()
+    furnitureloader.set_furniture("candle", index=1)
+    image_path, img_json = furnitureloader.load()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    causalgraph.reset();
+
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="Korestine lamp", plan_object_image=plan_image_path, plan_description=plan_json);
 
 @app.route("/chair")
 def chair():
@@ -62,7 +84,7 @@ def light():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    print(image_path_list)
+    print(image_path_list, furnitureloader.furniture_path)
     return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list);
 
 
@@ -74,6 +96,17 @@ def receive_data():
     root = os.path.dirname(os.path.abspath(__file__))
     property_path = os.path.join(root,"static/causal_graph/" "object_property_" + encoding + ".json");
     #property_path = os.path.join(furnitureloader.furniture_path, "object_property_" + encoding + ".json")
+    with open(property_path, "w") as file:
+        json.dump(data, file);
+    return "OK"
+
+@app.route("/recieve_plan_property", methods=["POST"])
+def receive_plan_data():
+    data = request.get_json()
+    global encoding
+    global plan_object
+    furnitureloader.set_furniture(plan_object, index=1)
+    property_path = os.path.join(furnitureloader.furniture_path, "object_property_" + encoding + ".json")
     with open(property_path, "w") as file:
         json.dump(data, file);
     return "OK"
@@ -123,8 +156,9 @@ def plan_causal():
     global encoding
     root = os.path.dirname(os.path.abspath(__file__))
     causal_path = os.path.join(root,"static/causal_graph/")
-    print(causal_path)
-    return jsonify(website_plan(causal_path, encoding))
+    furniture_path = furnitureloader.furniture_path
+    print(causal_path, plan_object, furniture_path)
+    return jsonify(website_plan(furniture_path, causal_path, encoding, plan_object))
 
 if __name__ == '__main__':
     app.run(debug=True)

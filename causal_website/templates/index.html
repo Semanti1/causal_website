@@ -26,7 +26,7 @@
     <a class="nav-item nav-link dropdown-toggle" href="{{url_for('home')}}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home <span class="sr-only">(current)</span></a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
-      <a class="dropdown-item" href="{{url_for('chair')}}">Chair</a>
+      <a class="dropdown-item" href="{{url_for('candle')}}">Canle</a>
       <a class="dropdown-item" href="{{url_for('light')}}">Light</a>
 
     </div>
@@ -59,6 +59,7 @@ for (var i = 0; i < content["object_list"].length; i++){
 }
 console.log(content);
 {% endfor %}
+
 </script>
 
 <div class=container>
@@ -132,9 +133,47 @@ console.log(content);
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="add a new causal graph" id="add_graph"> Add_Causal_Graph </button>
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="generate a causal graph based on the current causal rules" id="generate_causal"> Generate_Causal_Graph</button>
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="submit all the causal rules" id="submit_causal"> Submit </button>
-  <button class="btn btn-success" id="planner"> Generate a plan </button>
 
 </div>
+{% if plan_object %}
+<script>
+var all_planobject = []
+{% for description in plan_description %}
+var plan_content = JSON.parse('{{description| tojson}}');
+for (var i = 0; i < plan_content["object_list"].length; i++){
+  all_planobject.push(plan_content["object_list"][i]);
+}
+console.log(all_planobject);
+{% endfor %}
+</script>
+
+<h2> Step3: Associate {{plan_object}}  parts with functions in Step1</h2>
+<div class="container">
+<div class="row">
+{% for each in plan_object_image %}
+<div class="col">
+  <img class="img-responsive" src={{each}} style="height:auto; width:200px">
+</div>
+{% endfor %}
+</div>
+</div>
+
+<div class ="row" id="plan_object_words">
+</div>
+<div class = "row" id="plan_property_words">
+</div>
+<div class="row">
+<button class="btn btn-success" id="add_plan_object_properties"> Add a function of an object part</button>
+<button class="btn btn-success" id="plan_submit"> Submit </button>
+</div>
+<div class="row">
+  <form id="plan_obj_property_form">
+  </form>
+</div>
+<h2> Step4: Generate a plan for {{plan_object}}</h2>
+{% endif %}
+
+<button class="btn btn-success" id="planner"> Generate a plan </button>
 
 <div class="row", id="plan">
 </div>

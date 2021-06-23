@@ -29,6 +29,7 @@ class FurnitureLoader():
     def load_all(self):
         image_path_list = []
         json_file_list = []
+        self.furniture_path = os.path.join(self.APP_ROOT, "static/causal_graph/");
         for furniture in self.furniture_list:
             furniture_path = os.path.join(self.APP_ROOT, "static/furnitures/", furniture, "01")
             image_path = os.path.join("/static/furnitures/", furniture, "01", "image.png")

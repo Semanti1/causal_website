@@ -14,23 +14,39 @@
     $('#submit_causal').on('click', submit_causal);
     $('#add_graph').on('click', add_graph)
     $('#planner').on('click', plan_causal);
+    $('#add_plan_object_properties').on('click', add_plan_object_properties);
+    $('#plan_submit').on('click', plan_submit);
     // var socket = io.connect('http://127.0.0.1:5000');
 
     //var object_list = content["object_list"];
     var object_list = allobject;
     var property_list = content["property_list"];
+    var total_property_list = [];
     //var keyword_list = content["keyword_list"];
     var keyword_list = ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"];
     var latent_list = content["latent_list"];
     //var goal_list = content["goal_list"];
     var goal_list = ["Light"]
+    var plan_object_list=[]
+    var plan_property_list = []
+    if(typeof all_planobject !== 'undefined'){
+      plan_property_list = plan_content["property_list"];
+      plan_object_list = all_planobject
+
+    }
 
     $('#object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
     $('#object_words').append(load_list(object_list, "obj"));
-    if (property_list.length !=0){
-      $('#property_words').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
-      $('#property_words').append(load_list(property_list, "prop"));
-    }
+    // if (property_list.length !=0){
+    //   $('#property_words').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
+    //   $('#property_words').append(load_list(property_list, "prop"));
+    // }
+
+    $('#plan_object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
+    $('#plan_object_words').append(load_list(plan_object_list, "obj"));
+
+
+
     // $('#property_words2').prepend(load_list(property_list, "prop"));
     // $('#key_words').prepend(load_list(keyword_list, "key"));
     // $('#lat_words').prepend(load_list(latent_list, "lat"));
@@ -113,6 +129,10 @@ $(window).on("load", function(){
     });
   })
 
+  $('#plan_property_words').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
+  if (plan_property_list.length !=0){
+    $('#plan_property_words').append(load_list(plan_property_list, "prop"));
+  }
 
 
  });
@@ -253,6 +273,29 @@ function add_object_properties(object_list, property_list) {
 
 }
 
+function add_plan_object_properties(){
+  var i = 0;
+  var new_pair_no = parseInt($('#total_pair').val()) + 1;
+  var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
+  new_input += "<div class ='col-auto'> <input id='object' name='object' class='form-control' list='plan_object_list'>"+ " <datalist id='plan_object_list'>";
+  console.log(plan_object_list)
+  console.log(plan_object_list.length, total_property_list.length)
+  for(; i < plan_object_list.length; i++){
+    new_input += " <option value='" + plan_object_list[i] + "'>"
+  }
+ new_input += "</datalist> </div>"
+ new_input += "<div class = ' my-auto'>  's function is to </div>"
+
+  i = 0;
+  new_input += "<div class ='col-auto'> <input id='property' name='property' class='form-control' list='total_property_list'>"+ " <datalist id='total_property_list'>";
+  for(; i < total_property_list.length; i++){
+   new_input += " <option value='" + total_property_list[i] + "'>"
+ }
+ new_input += "</datalist> </div></div>"
+ $('#plan_obj_property_form').prepend(new_input);
+ $('#total_pair').val(new_pair_no)
+}
+
 function getFormData($form){
   var unindexed_array = $form.serializeArray();
   var indexed_array = {};
@@ -295,6 +338,7 @@ function serialize(){
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
   for (var key in set){
       $("#property_words2").append("<button  id=prop_btn>" + key + "</button>");
+      total_property_list.push(key)
   }
   $("#property_words2 #prop_btn").each(function(index){
     $(this).on('click', function(){
@@ -303,7 +347,25 @@ function serialize(){
     });
   })
 
+  $("#plan_property_words").empty()
+  $("#plan_property_words").append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
+  for (var key in set){
+      $("#plan_property_words").append( "<div class='col-auto align-middle' id='prop'><p>" + key + "</p></div>");
+  }
+
   // $("#text_obj").text(content);
+}
+
+function plan_submit(){
+  var form = $("#plan_obj_property_form");
+  var content = JSON.stringify(form.serializeArray());
+  //$.post("/recieve_property", content)
+  $.ajax({
+    type:"POST",
+    url: "/recieve_plan_property",
+    data: content,
+    contentType:"application/json; charset=utf-8",
+  });
 }
 
 // function add_causal(){
