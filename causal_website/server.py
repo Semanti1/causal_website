@@ -47,7 +47,22 @@ def lamp():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="flashlight", plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+
+@app.route("/kerosene_lamp")
+def kerosene_lamp():
+    global plan_object
+    plan_object = "candle"
+    furnitureloader.set_furniture(plan_object, index=1)
+    plan_image_path, plan_json = furnitureloader.load()
+    furnitureloader.set_furniture("kerosene_lamp", index=1)
+    image_path, img_json = furnitureloader.load()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    causalgraph.reset();
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
 
 @app.route("/candle")
 def candle():
@@ -62,8 +77,23 @@ def candle():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-
     return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="Korestine lamp", plan_object_image=plan_image_path, plan_description=plan_json);
+
+@app.route("/flashlight")
+def flashlight():
+    global plan_object
+    plan_object = "lamp"
+    furnitureloader.set_furniture(plan_object, index=1)
+    plan_image_path, plan_json = furnitureloader.load()
+    furnitureloader.set_furniture("flashlight", index=1)
+    image_path, img_json = furnitureloader.load()
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    causalgraph.reset();
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+
 
 @app.route("/chair")
 def chair():
