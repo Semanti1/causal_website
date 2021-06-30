@@ -136,6 +136,7 @@ console.log(content);
 
 </div>
 {% if plan_object %}
+<div id="MORESTEP">
 <script>
 var all_planobject = []
 {% for description in plan_description %}
@@ -172,7 +173,7 @@ console.log(all_planobject);
 </div>
 <h2> Step4: Generate a plan for {{plan_object}}</h2>
 {% endif %}
-
+</div>
 <button class="btn btn-success" id="planner"> Generate a plan </button>
 
 <div class="row", id="plan">

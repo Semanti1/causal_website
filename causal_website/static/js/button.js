@@ -53,6 +53,7 @@
 
 $(window).on("load", function(){
 //   console.log("hello")
+  document.getElementById("MORESTEP").style.display='none'
   var i = 0;
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function(s) of object parts List: </p> </div>");
   $("#key_words").append("<div class='col-auto text-center'> <p> Keywords: </p> </div>")
@@ -590,6 +591,11 @@ function submit_causal(){
    var submit_time = parseInt($("#total_submit_times").val())
    submit_time +=1;
    $("#total_submit_times").val(submit_time);
+
+   var x = document.getElementById("MORESTEP");
+   if(x.style.display == "none"){
+     x.style.display = "block";
+   }
 
    $.ajax({
      type:"POST",
