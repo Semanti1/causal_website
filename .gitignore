@@ -12,8 +12,6 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-causal_website/static/images/*
-causal_website/static/instructions/*
 causal_website/static/js/buttonv2.js
 causal_website/static/furnitures/*
 causal_website/static/causal_graph/
