@@ -23,7 +23,7 @@
     var property_list = content["property_list"];
     var total_property_list = [];
     //var keyword_list = content["keyword_list"];
-    var keyword_list = ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"];
+    var keyword_list = ["AND", "OR", "is/are neccesary for causing"];
     var latent_list = content["latent_list"];
     //var goal_list = content["goal_list"];
     var goal_list = ["Light"]
@@ -45,7 +45,10 @@
     $('#plan_object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
     $('#plan_object_words').append(load_list(plan_object_list, "obj"));
 
-
+    console.log(alldescription)
+    if(alldescription.length == 1){
+      $("#furniture_img").append("<div class='col'> <p>" + alldescription[0]+"</p></div>");
+    }
 
     // $('#property_words2').prepend(load_list(property_list, "prop"));
     // $('#key_words').prepend(load_list(keyword_list, "key"));
@@ -53,7 +56,16 @@
 
 $(window).on("load", function(){
 //   console.log("hello")
-  document.getElementById("MORESTEP").style.display='none'
+  var href = window.location.href;
+  var rel_href = href.replace(/^(?:\/\/|[^/]+)*\//, '')
+  console.log(rel_href)
+  if(rel_href == "light"){
+    console.log("here")
+    $("#txt_for_all").append("<p> In this task, your goal is to create a single causal model that can explain how all four objects create light. That is, you need to consider which object parts from different objects plays the same role in creating light, and use these functions in creating a generalized causal model for producing light</p>")
+  }else{
+      document.getElementById("MORESTEP").style.display='none'
+
+  }
   var i = 0;
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function(s) of object parts List: </p> </div>");
   $("#key_words").append("<div class='col-auto text-center'> <p> Keywords: </p> </div>")
@@ -596,7 +608,8 @@ function submit_causal(){
    if(x.style.display == "none"){
      x.style.display = "block";
    }
-
+   //checking for resubmit
+   if (submit_time <= 1){
    $.ajax({
      type:"POST",
      url: "/submit_causal",
@@ -615,6 +628,11 @@ function submit_causal(){
      success: function(msg){
      }
    });
+  }else{
+    $("#text_causal").empty();
+    $("#text_causal").append("<p style='color:red;' > you cannot resubmit causal model </p>" );
+  }
+
 
 
    console.log(all_sentences)

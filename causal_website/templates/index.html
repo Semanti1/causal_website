@@ -42,30 +42,36 @@
 <!-- <div class="container">
   <img class="img-responsive" src={{furniture_image}} style="height:300px; width:auto">
 </div> -->
+<div class="container" id="txt_for_all">
+  </div>
 <div class="container">
-<div class="row">
+<div class="row align-items-end"  id="furniture_img">
 {% for each in furniture_image %}
-<div class="col">
-  <img class="img-responsive" src={{each}} style="height:auto; width:200px">
-</div>
+  <div class="col">
+  <img class="img-responsive" src={{each}} style="height:auto; width:250px">
+  </div>
 {% endfor %}
 </div>
 </div>
 
 <script>
 var allobject = [];
+var alldescription = [];
 {% for description in description_list %}
 var content = JSON.parse('{{description| tojson}}');
 for (var i = 0; i < content["object_list"].length; i++){
   allobject.push(content["object_list"][i]);
 }
+console.log(content["description"])
+alldescription.push(content["description"]);
+
 console.log(content);
 {% endfor %}
 
 </script>
 
 <div class=container>
-<h2> Step1: Associate object parts with their functions </h2>
+<h2> Step1: Associate the object parts with their functions that's neccesary for producing light </h2>
 <div class ="row" id="object_words">
 </div>
 <div class = "row" id="property_words">
@@ -132,7 +138,7 @@ console.log(content);
 
 
 <div class="row">
-  <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="add a new causal graph" id="add_graph"> Add_Causal_Graph </button>
+<!--   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="add a new causal graph" id="add_graph"> Add_Causal_Graph </button> -->
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="generate a causal graph based on the current causal rules" id="generate_causal"> Generate_Causal_Graph</button>
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="submit all the causal rules" id="submit_causal"> Submit </button>
 
@@ -151,11 +157,12 @@ console.log(all_planobject);
 </script>
 
 <h2> Step3: Associate {{plan_object}}  parts with functions in Step1</h2>
+<p> In this task, you need to associate the parts of {{plan_object}} with the functions that you created in step1 by considering which parts of the {{plan_object}} plays a similar role in creating light.
 <div class="container">
 <div class="row">
 {% for each in plan_object_image %}
 <div class="col">
-  <img class="img-responsive" src={{each}} style="height:auto; width:200px">
+  <img class="img-responsive" src={{each}} style="height:auto; width:250px">
 </div>
 {% endfor %}
 </div>
@@ -174,12 +181,14 @@ console.log(all_planobject);
   </form>
 </div>
 <h2> Step4: Generate a plan for {{plan_object}}</h2>
-{% endif %}
-</div>
 <button class="btn btn-success" id="planner"> Generate a plan </button>
 
 <div class="row", id="plan">
 </div>
+</div>
+
+{% endif %}
+
 
 <input type="hidden" value="1" id="total_prop">
 <input type="hidden" value="1" id="total_obj">
