@@ -135,8 +135,9 @@ def receive_plan_data():
     data = request.get_json()
     global encoding
     global plan_object
-    furnitureloader.set_furniture(plan_object, index=1)
-    property_path = os.path.join(furnitureloader.furniture_path, "object_property_" + encoding + ".json")
+    # furnitureloader.set_furniture(plan_object, index=1)
+    root = os.path.dirname(os.path.abspath(__file__))
+    property_path = os.path.join(root,"static/causal_graph/", "object_property_" + plan_object+ "_" + encoding + ".json")
     with open(property_path, "w") as file:
         json.dump(data, file);
     return "OK"
@@ -158,7 +159,8 @@ def receive_causal_data():
 def submit_causal_data():
     global encoding
     root = os.path.dirname(os.path.abspath(__file__))
-    causal_path = os.path.join(root,"static/causal_graph/" "causal_" + encoding + ".json");
+    causal_path = os.path.join(root,"static/causal_graph/", "causal_" + encoding + ".json")
+    # causal_path = os.path.join(furnitureloader.furniture_path, "causal_" + encoding + ".json")
     content = request.get_json();
     success = causalinfo.create_causal_info(content, causal_path);
     code = "adkfjaqier";
@@ -188,7 +190,7 @@ def plan_causal():
     causal_path = os.path.join(root,"static/causal_graph/")
     furniture_path = furnitureloader.furniture_path
     print(causal_path, plan_object, furniture_path)
-    return jsonify(website_plan(furniture_path, causal_path, encoding, plan_object))
+    return jsonify(website_plan(causal_path, causal_path, encoding, plan_object))
 
 if __name__ == '__main__':
     app.run(debug=True)

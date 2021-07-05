@@ -23,7 +23,7 @@
   <nav class="navbar navbar-expand-sm navbar-light bg-light">
 <ul class="navbar-nav">
   <li class="nav-item">
-    <a class="nav-item nav-link dropdown-toggle" href="{{url_for('home')}}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home <span class="sr-only">(current)</span></a>
+    <a class="nav-item nav-link dropdown-toggle" href="{{url_for('lamp')}}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home <span class="sr-only">(current)</span></a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
       <a class="dropdown-item" href="{{url_for('candle')}}">Candle</a>
@@ -141,7 +141,11 @@ console.log(content);
 <!--   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="add a new causal graph" id="add_graph"> Add_Causal_Graph </button> -->
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="generate a causal graph based on the current causal rules" id="generate_causal"> Generate_Causal_Graph</button>
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="submit all the causal rules" id="submit_causal"> Submit </button>
+  <button class="btn btn-success" id="planner"> Generate a plan </button>
+  <button class="btn btn-success" id="next_step"> Next Step</button>
+</div>
 
+<div class="row", id="plan">
 </div>
 {% if plan_object %}
 <div id="MORESTEP">
@@ -180,12 +184,7 @@ console.log(all_planobject);
   <form id="plan_obj_property_form">
   </form>
 </div>
-<h2> Step4: Generate a plan for {{plan_object}}</h2>
-<button class="btn btn-success" id="planner"> Generate a plan </button>
 
-<div class="row", id="plan">
-</div>
-</div>
 
 {% endif %}
 

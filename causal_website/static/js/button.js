@@ -16,6 +16,7 @@
     $('#planner').on('click', plan_causal);
     $('#add_plan_object_properties').on('click', add_plan_object_properties);
     $('#plan_submit').on('click', plan_submit);
+    $("#next_step").on('click', next_step);
     // var socket = io.connect('http://127.0.0.1:5000');
 
     //var object_list = content["object_list"];
@@ -586,7 +587,14 @@ function plan_causal(){
 //     // $("#image_causal").attr("src", "/"+msg+".png");
 //   });
 
+function next_step(){
+    var x = document.getElementById("MORESTEP");
+   if(x.style.display == "none"){
+     x.style.display = "block";
+   }
+   document.getElementById("submit_causal").disabled = true;
 
+}
 
 function submit_causal(){
    // console.log($("#object_causal")[0])
@@ -604,12 +612,7 @@ function submit_causal(){
    submit_time +=1;
    $("#total_submit_times").val(submit_time);
 
-   var x = document.getElementById("MORESTEP");
-   if(x.style.display == "none"){
-     x.style.display = "block";
-   }
    //checking for resubmit
-   if (submit_time <= 1){
    $.ajax({
      type:"POST",
      url: "/submit_causal",
@@ -628,10 +631,6 @@ function submit_causal(){
      success: function(msg){
      }
    });
-  }else{
-    $("#text_causal").empty();
-    $("#text_causal").append("<p style='color:red;' > you cannot resubmit causal model </p>" );
-  }
 
 
 

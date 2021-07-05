@@ -17,4 +17,4 @@ causal_website/static/furnitures/*
 causal_website/static/causal_graph/
 causal_website/templates/labelerv2.html
 .DS_Store
-!static/images/light.png
+causal_website/static/images/
