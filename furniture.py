@@ -241,23 +241,24 @@ class FurnitureState(State):
 		super().__init__()
 		# #Normal
 		self.all_object = {}
+		print(prop_path)
 		# print("here",  plan_object)
 		# if plan_object=="kerosene_lamp":
 		# 	self.addObjectwithName("fuel tank");
 		# 	self.addObjectwithName("burner");
 		# 	self.addObjectwithName("chimney");
-		# if plan_object == "flashlight":
+		# elif plan_object == "flashlight":
 		# 	self.addObjectwithName("head");
 		# 	self.addObjectwithName("batteries");
 		# 	self.addObjectwithName("case");
-		# if plan_object =="candle":
+		# elif plan_object =="candle":
 		# 	self.addObjectwithName("wax");
 		# 	self.addObjectwithName("wick");
-		# if plan_object =="lamp":
+		# elif plan_object =="lamp":
 		# 	self.addObjectwithName("base with cables");
 		# 	self.addObjectwithName("light bulb");
 		# 	self.addObjectwithName("shade");
-		# else:
+		# elif plan_object != None:
 		# 	self.addObjectwithName("wax");
 		# 	self.addObjectwithName("wick");
 		# 	self.addObjectwithName("fuel tank");
@@ -269,7 +270,7 @@ class FurnitureState(State):
 		# 	self.addObjectwithName("base with cables");
 		# 	self.addObjectwithName("light bulb");
 		# 	self.addObjectwithName("shade");
-
+		# else:
 		self.addObjectFromfile(prop_path);
 
 		print(self.obj_dict)
@@ -290,7 +291,7 @@ class FurnitureState(State):
 		for i in range(int(len(data)/2)):
 			obj_name = data[2*i]["value"];
 			obj_prop = data[2*i+1]["value"];
-
+			print(obj_name, obj_prop)
 			try:
 				obj_prop_dict[obj_name].append(obj_prop);
 			except KeyError as e:

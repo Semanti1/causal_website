@@ -52,7 +52,10 @@ def runSimulation(myplanner):
 
 def website_plan( furniture_path, causal_path, encoding, plan_object):
 	causal_path = os.path.join(causal_path, "causal_"+encoding+".json")
-	prop_path = os.path.join(furniture_path, "object_property_"+encoding+".json")
+	if plan_object == None:
+		prop_path = os.path.join(furniture_path, "object_property_"+encoding+".json")
+	else:
+		prop_path = os.path.join(furniture_path, "object_property_" + plan_object + "_" + encoding+".json")
 	domain = Furniture(causal_path, prop_path, plan_object)
 	myPlan = Planner(domain)
 	# heur = FurnitureHeuristicGenerator(domain)
@@ -111,9 +114,9 @@ if __name__ == "__main__":
 	# myPlan.setAlgo(functools.partial(myPlan.Causal, self=myPlan, pickBestAction=heur.chooseNextAction, repick=heur.repickNextAction))
 	# res=myPlan.plan()
 	# Planner.printHistory(res)
-	furniture_path = "../static/causal_graph/"
-	encoding = "8c8b786575bd29608d8d2ff360c2d8aac9ae0f27e21cc8d31f80efa812184c76"
-	str = website_plan(furniture_path, encoding)
+	furniture_path = "./causal_models/new_7_15/"
+	encoding = "ea5709909ea33f286f4df2c1b1a5d4e50d8a76d2e9214c76c264e64b2f23d25e"
+	str = website_plan(furniture_path, furniture_path, encoding, None)
 	print(str)
 	# runSimulation(myPlan)
 
