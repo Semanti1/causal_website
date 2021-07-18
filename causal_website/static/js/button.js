@@ -379,6 +379,12 @@ function plan_submit(){
     url: "/recieve_plan_property",
     data: content,
     contentType:"application/json; charset=utf-8",
+    success: function(msg){
+      console.log(msg)
+      if(msg=="OK"){
+        $("#text_step3").text("successfully saved.")
+      }
+    }
   });
 }
 
