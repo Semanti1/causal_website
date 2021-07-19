@@ -151,11 +151,13 @@ console.log(content);
 <div id="MORESTEP">
 <script>
 var all_planobject = []
+var allplandescription = []
 {% for description in plan_description %}
 var plan_content = JSON.parse('{{description| tojson}}');
 for (var i = 0; i < plan_content["object_list"].length; i++){
   all_planobject.push(plan_content["object_list"][i]);
 }
+allplandescription.push(plan_content["description"]);
 console.log(all_planobject);
 {% endfor %}
 </script>
@@ -163,7 +165,7 @@ console.log(all_planobject);
 <h2> Step3: Associate {{plan_object}}  parts with functions in Step1</h2>
 <p> In this task, you need to associate the parts of {{plan_object}} with the functions that you created in step1 by considering which parts of the {{plan_object}} plays a similar role in creating light.
 <div class="container">
-<div class="row">
+<div class="row align-items-end" id="plan_furniture_img">
 {% for each in plan_object_image %}
 <div class="col">
   <img class="img-responsive" src={{each}} style="height:auto; width:250px">

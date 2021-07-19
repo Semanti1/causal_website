@@ -77,7 +77,7 @@ def candle():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="Korestine lamp", plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="Koresene lamp", plan_object_image=plan_image_path, plan_description=plan_json);
 
 @app.route("/flashlight")
 def flashlight():
