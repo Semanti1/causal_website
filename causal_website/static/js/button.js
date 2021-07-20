@@ -50,8 +50,10 @@
     if(alldescription.length == 1){
       $("#furniture_img").append("<div class='col'> <p>" + alldescription[0]+"</p></div>");
     }
-    if(allplandescription.length == 1){
-      $("#plan_furniture_img").append("<div class='col' <p>" + allplandescription[0] + "</p></div>")
+    if(typeof allplandescription !=="undefined"){
+      if(allplandescription.length == 1){
+        $("#plan_furniture_img").append("<div class='col' <p>" + allplandescription[0] + "</p></div>")
+      }
     }
 
     // $('#property_words2').prepend(load_list(property_list, "prop"));
