@@ -56,8 +56,11 @@ def website_plan( furniture_path, causal_path, encoding, plan_object):
 		prop_path = os.path.join(furniture_path, "object_property_"+encoding+".json")
 	else:
 		prop_path = os.path.join(furniture_path, "object_property_" + plan_object + "_" + encoding+".json")
+
+	print(causal_path, prop_path)
 	domain = Furniture(causal_path, prop_path, plan_object)
 	myPlan = Planner(domain)
+	print("here")
 	# heur = FurnitureHeuristicGenerator(domain)
 	# myPlan.setAlgo(functools.partial(myPlan.Causal, self=myPlan, pickBestAction=heur.chooseNextAction, repick=heur.repickNextAction))
 	# res= myPlan.plan()
@@ -73,7 +76,7 @@ def website_plan( furniture_path, causal_path, encoding, plan_object):
 	all_plan = {}
 	for i in range(20):
 		plan = myPlan.policy_iteration()
-		if str(plan) not in all_plan:
+		if str(plan) not in all_plan and len(plan) > 0:
 			all_plan[str(plan)] = True
 
 	duration = time.time() - start_time
@@ -81,6 +84,7 @@ def website_plan( furniture_path, causal_path, encoding, plan_object):
 	plan_str = []
 	for plan, _ in all_plan.items():
 		plan_str.append(str(plan))
+
 	return plan_str
 
 	# for i in range(20):
