@@ -174,48 +174,51 @@ class Planner():
 		return retarr
 
 	def MDP_Init(self):
-		queue = []
-		queue.append([self.domain.state, None, None])
-		done = False
-		while(len(queue) > 0):
-			state, prev_action, prev_score = queue.pop(0)
-			# print("state: " ,state)
-			self.value_graph.node(str(state), label=str(state) + str(prev_score))
-			self.MDP[state] = dict()
-			valid_actions = self.domain.getValidActions(state)
-			done = self.domain.isGoalSatisfied(state)
-			score = state.causal_graph.getScore()
-			# if done:
-			# 	print("done")
-			# 	print(state)
+		try:
+			queue = []
+			queue.append([self.domain.state, None, None])
+			done = False
+			while(len(queue) > 0):
+				state, prev_action, prev_score = queue.pop(0)
+				# print("state: " ,state)
+				self.value_graph.node(str(state), label=str(state) + str(prev_score))
+				self.MDP[state] = dict()
+				valid_actions = self.domain.getValidActions(state)
+				done = self.domain.isGoalSatisfied(state)
+				score = state.causal_graph.getScore()
+				# if done:
+				# 	print("done")
+				# 	print(state)
 
-			if len(valid_actions) ==0 :
-				if not done:
-					self.MDP[state][0] = [1, 0, -10, 0]
-					self.value_graph.node(str(state), label=str(state) + str(-10))
-				else:
-					self.MDP[state][0] = [1, 0, 10, 1]
-					self.value_graph.node(str(state), label=str(state) + str(10))
+				if len(valid_actions) ==0 :
+					if not done:
+						self.MDP[state][0] = [1, 0, -10, 0]
+						self.value_graph.node(str(state), label=str(state) + str(-10))
+					else:
+						self.MDP[state][0] = [1, 0, 10, 1]
+						self.value_graph.node(str(state), label=str(state) + str(10))
 
-				continue
+					continue
 
-			for action in valid_actions:
-				# print("valid action: ", action)
-				score = action.state.causal_graph.runModel(action.state, action)
-				done = self.domain.isGoalSatisfied(action.state)
-				#print(action, action.state.causal_graph, done)
-				action.action.doAction(action.state, action.parameters)
-				self.value_graph.edge(str(state), str(action.state))
+				for action in valid_actions:
+					# print("valid action: ", action)
+					score = action.state.causal_graph.runModel(action.state, action)
+					done = self.domain.isGoalSatisfied(action.state)
+					#print(action, action.state.causal_graph, done)
+					action.action.doAction(action.state, action.parameters)
+					self.value_graph.edge(str(state), str(action.state))
 
-				#next_valid_actions = self.domain.getValidActions(action.state)
-				#print(len(next_valid_actions), action.state	)
-				if done:
-					score = 10
-				self.MDP[state][action] = [1, action.state, score, done ]
-				# if not (action.state in self.MDP):
-				queue.append([action.state, action, score])
-			#print("\n")
-		#self.value_graph.render("image", view=True)
+					#next_valid_actions = self.domain.getValidActions(action.state)
+					#print(len(next_valid_actions), action.state	)
+					if done:
+						score = 10
+					self.MDP[state][action] = [1, action.state, score, done ]
+					# if not (action.state in self.MDP):
+					queue.append([action.state, action, score])
+				#print("\n")
+			#self.value_graph.render("image", view=True)
+		except Exception as err:
+			print("MDP_Init error: ", err);
 
 
 		#TESTING:
@@ -227,70 +230,73 @@ class Planner():
 
 
 	def policy_iteration(self):
-		v_old = dict() #dict[state] = value
-		discount_factor = 0.4
-		#initilize value
-		for state, _ in self.MDP.items():
-			v_old[state] = 0
+		try:
+			v_old = dict() #dict[state] = value
+			discount_factor = 0.4
+			#initilize value
+			for state, _ in self.MDP.items():
+				v_old[state] = 0
 
-		while True:
-			delta = 0
-			v_new = dict()
-			for state , action_next_state in self.MDP.items():
-				v_f = 0
-				v_list = []
-				for action, next_state in self.MDP[state].items():
+			while True:
+				delta = 0
+				v_new = dict()
+				for state , action_next_state in self.MDP.items():
+					v_f = 0
+					v_list = []
+					for action, next_state in self.MDP[state].items():
+						[prob, ns, reward, done] = next_state
+						if ns not in v_old.keys(): # termination state
+							v_f = prob * (reward)
+						else:
+							v_f = prob * (reward + discount_factor * v_old[ns])
+						v_list.append(v_f)
+					delta = max(delta, abs(max(v_list) - v_old[state]))
+					v_new[state] = max(v_list)
+				v_old = v_new
+				if(delta < 0.2):
+					break;
+
+			#TEST:
+			# for state, value in v_old.items():
+			# 	print(state, value)
+			#FIND POLICY //value iteration:
+			policy = []
+			done = False
+			current_state = self.init_state
+			while (not done):
+			#for i in range(0):
+				best_action = None
+				max_score = -100
+				next_s = None
+				score_list = []
+				next_state_list = []
+
+				for action, next_state in self.MDP[current_state].items():
 					[prob, ns, reward, done] = next_state
-					if ns not in v_old.keys(): # termination state
-						v_f = prob * (reward)
+					if ns not in v_old.keys():
+						continue
 					else:
-						v_f = prob * (reward + discount_factor * v_old[ns])
-					v_list.append(v_f)
-				delta = max(delta, abs(max(v_list) - v_old[state]))
-				v_new[state] = max(v_list)
-			v_old = v_new
-			if(delta < 0.2):
-				break;
+						score = prob * (reward + discount_factor * v_old[ns])
+						score_list.append(score)
+						next_state_list.append((action, ns, done))
+						# print(action, score)
+				if len(score_list) !=0:
+					for idx, s in enumerate(score_list):
+						a, _, _ = next_state_list[idx];
+					picked_idx = self.sampleProbs(score_list)
+					best_action, next_s, done = next_state_list[picked_idx]
+					#print(best_action, next_s, done)
+					# print("best_action: ", best_action)
 
-		#TEST:
-		# for state, value in v_old.items():
-		# 	print(state, value)
-		#FIND POLICY //value iteration:
-		policy = []
-		done = False
-		current_state = self.init_state
-		while (not done):
-		#for i in range(0):
-			best_action = None
-			max_score = -100
-			next_s = None
-			score_list = []
-			next_state_list = []
-
-			for action, next_state in self.MDP[current_state].items():
-				[prob, ns, reward, done] = next_state
-				if ns not in v_old.keys():
-					continue
-				else:
-					score = prob * (reward + discount_factor * v_old[ns])
-					score_list.append(score)
-					next_state_list.append((action, ns, done))
-					# print(action, score)
-			if len(score_list) !=0:
-				for idx, s in enumerate(score_list):
-					a, _, _ = next_state_list[idx];
-				picked_idx = self.sampleProbs(score_list)
-				best_action, next_s, done = next_state_list[picked_idx]
-				#print(best_action, next_s, done)
-				# print("best_action: ", best_action)
-
-			if best_action is not None:
-				policy.append(type(best_action.action).__name__ +": "+ ",".join(best_action.parameters))
-				#print(best_action)
-			if next_s == None and done !=True:
-				done = True
-				print("failed to generate a plan. The current plan is as follows: ")
-			current_state = next_s
+				if best_action is not None:
+					policy.append(type(best_action.action).__name__ +": "+ ",".join(best_action.parameters))
+					#print(best_action)
+				if next_s == None and done !=True:
+					done = True
+					print("failed to generate a plan. The current plan is as follows: ")
+				current_state = next_s
+		except Exception as err:
+			print("planning error: ", err);
 
 		return policy
 

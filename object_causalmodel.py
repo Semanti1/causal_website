@@ -104,43 +104,45 @@ class Function_Causal_Graph():
 	def addNode(self, causal_node):
 		self.all_node[causal_node.name] = causal_node
 	def addCausalGraphFromfile(self, filepath):
-
-		with open(filepath) as f:
-			data = json.load(f)
-		#self.causal_graph.show(data)
-		#swap between parent and children
-		# causal_dict = {}
-		# for parent, children in data.items():
-		# 	for child in children:
-		# 		try:
-		# 			causal_dict[child].append(parent)
-		# 		except KeyError:
-		# 			causal_dict[child] = [parent]
-		for graph in data:
-			causal_graph = {}
-			nodes_dict = {}
-			for parent, children in graph.items():
-				causal_node = Function_Causal_Node(name=parent);
-				print("parent: ", parent)
-				for child_pair in children:
-					print("child: ", child_pair)
-					child, coef = child_pair
-					if child not in nodes_dict:
-						new_node = Function_Causal_Node(name=child);
-						nodes_dict[new_node.name] = new_node
-						causal_graph[new_node.name] = new_node
-
-
-					self.coef_map[parent][child] = coef;
-					causal_node.children_node.append(child)
+		try:
+			with open(filepath) as f:
+				data = json.load(f)
+			#self.causal_graph.show(data)
+			#swap between parent and children
+			# causal_dict = {}
+			# for parent, children in data.items():
+			# 	for child in children:
+			# 		try:
+			# 			causal_dict[child].append(parent)
+			# 		except KeyError:
+			# 			causal_dict[child] = [parent]
+			for graph in data:
+				causal_graph = {}
+				nodes_dict = {}
+				for parent, children in graph.items():
+					causal_node = Function_Causal_Node(name=parent);
+					print("parent: ", parent)
+					for child_pair in children:
+						print("child: ", child_pair)
+						child, coef = child_pair
+						if child not in nodes_dict:
+							new_node = Function_Causal_Node(name=child);
+							nodes_dict[new_node.name] = new_node
+							causal_graph[new_node.name] = new_node
 
 
-				# self.addNode(causal_node)
-				nodes_dict[causal_node.name] = causal_node
-				causal_graph[causal_node.name] = causal_node
-				self.all_graph.append(causal_graph)
-				self.all_nodes.append(nodes_dict)
-		print(self.coef_map)
+						self.coef_map[parent][child] = coef;
+						causal_node.children_node.append(child)
+
+
+					# self.addNode(causal_node)
+					nodes_dict[causal_node.name] = causal_node
+					causal_graph[causal_node.name] = causal_node
+					self.all_graph.append(causal_graph)
+					self.all_nodes.append(nodes_dict)
+			print(self.coef_map)
+		except Exception as err:
+			print("error from addCausalGraphFromfile: ", err);
 
 
 	def subtreeUtil(self, root, nodes_dict):
@@ -173,19 +175,21 @@ class Function_Causal_Graph():
 		return root.value
 
 	def runModel(self, state, action):
+		try:
+			for param in action.parameters:
+				for func in state.obj_dict[param].function:
+					for i in range(len(self.all_nodes)):
+						if func in self.all_nodes[i]:
+							self.all_nodes[i][func].value = 1
 
-		for param in action.parameters:
-			for func in state.obj_dict[param].function:
-				for i in range(len(self.all_nodes)):
-					if func in self.all_nodes[i]:
-						self.all_nodes[i][func].value = 1
-
-		for idx, graph in enumerate(self.all_graph):
-			value = self.subtreeUtil(graph[self.goal_name], self.all_nodes[idx]);
-			if(value > self.value):
-				self.value = value
-		print("run model: ", self.value, action)
-		return self.value
+			for idx, graph in enumerate(self.all_graph):
+				value = self.subtreeUtil(graph[self.goal_name], self.all_nodes[idx]);
+				if(value > self.value):
+					self.value = value
+			print("run model: ", self.value, action)
+			return self.value
+		except Exception as err:
+			print("error from runModel: ", err)
 
 	def runModelfromState(self, state):
 		for tower_name, tower in state.tower.items():

@@ -285,28 +285,29 @@ class FurnitureState(State):
 
 
 	def addObjectFromfile(self, file_path):
-		with open(file_path) as f:
-			 data = json.load(f)
-		obj_prop_dict = {}
-		for i in range(int(len(data)/2)):
-			obj_name = data[2*i]["value"];
-			obj_prop = data[2*i+1]["value"];
-			print(obj_name, obj_prop)
-			try:
-				obj_prop_dict[obj_name].append(obj_prop);
-			except KeyError as e:
-				obj_prop_dict[obj_name] = [obj_prop];
-		for obj_name, obj_prop_list in obj_prop_dict.items():
-			block = Block(obj_name, shape=obj_name, func=obj_prop_list, clear=[True]);
-			self.all_object[obj_name] = block
-			self.addObject(block)
+		try:
+			with open(file_path) as f:
+				 data = json.load(f)
+			obj_prop_dict = {}
+			for i in range(int(len(data)/2)):
+				obj_name = data[2*i]["value"];
+				obj_prop = data[2*i+1]["value"];
+				print(obj_name, obj_prop)
+				try:
+					obj_prop_dict[obj_name].append(obj_prop);
+				except KeyError as e:
+					obj_prop_dict[obj_name] = [obj_prop];
+			for obj_name, obj_prop_list in obj_prop_dict.items():
+				block = Block(obj_name, shape=obj_name, func=obj_prop_list, clear=[True]);
+				self.all_object[obj_name] = block
+				self.addObject(block)
+		except Exception as err:
+			print("error from addObjectFromfile", err);
 
 
 	def addObjectwithName(self, name):
 		block = Block(name, shape=name, func=[], clear=[True])
 		self.addObject(block)
-
-
 
 	def __eq__(self, other):
 		if other == None:

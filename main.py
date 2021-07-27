@@ -73,7 +73,7 @@ def website_plan( furniture_path, causal_path, encoding, plan_object):
 	all_plan = {}
 	for i in range(20):
 		plan = myPlan.policy_iteration()
-		if str(plan) not in all_plan:
+		if str(plan) not in all_plan and len(plan) > 0:
 			all_plan[str(plan)] = True
 
 	duration = time.time() - start_time
@@ -81,6 +81,7 @@ def website_plan( furniture_path, causal_path, encoding, plan_object):
 	plan_str = []
 	for plan, _ in all_plan.items():
 		plan_str.append(str(plan))
+
 	return plan_str
 
 	# for i in range(20):
