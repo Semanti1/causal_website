@@ -273,7 +273,7 @@ function add_object_properties(object_list, property_list) {
   	var i = 0;
     var new_pair_no = parseInt($('#total_pair').val()) + 1;
     var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
-    new_input += "<div class ='col-auto'> <input id='object' name='object' class='form-control' list='object_list'>"+ " <datalist id='object_list'>";
+    new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='object_list'>"+ " <datalist id='object_list'>";
   for(; i < object_list.length; i++){
      new_input += " <option value='" + object_list[i] + "'>"
    }
@@ -296,7 +296,7 @@ function add_plan_object_properties(){
   var i = 0;
   var new_pair_no = parseInt($('#total_pair').val()) + 1;
   var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
-  new_input += "<div class ='col-auto'> <input id='object' name='object' class='form-control' list='plan_object_list'>"+ " <datalist id='plan_object_list'>";
+  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list'>"+ " <datalist id='plan_object_list'>";
   console.log(plan_object_list)
   console.log(plan_object_list.length, total_property_list.length)
   for(; i < plan_object_list.length; i++){
@@ -306,7 +306,7 @@ function add_plan_object_properties(){
  new_input += "<div class = ' my-auto'>  's function is to </div>"
 
   i = 0;
-  new_input += "<div class ='col-auto'> <input id='property' name='property' class='form-control' list='total_property_list'>"+ " <datalist id='total_property_list'>";
+  new_input += "<div class ='col-auto'> <input id='property' onkeydown='return false;' name='property' class='form-control' list='total_property_list'>"+ " <datalist id='total_property_list'>";
   for(; i < total_property_list.length; i++){
    new_input += " <option value='" + total_property_list[i] + "'>"
  }
@@ -572,8 +572,12 @@ function plan_causal(){
       console.log(msg)
       $("#plan").empty();
       $("#plan").append("<p>")
-      for(var i = 0; i < msg.length; i++){
-        $("#plan").append("Plan " + i + " : " + msg[i] + "<br>");
+      if(msg.length == 0){
+        $("#plan").append("Failed to generate a plan");
+      }else{
+        for(var i = 0; i < msg.length; i++){
+          $("#plan").append("Plan " + i + " : " + msg[i] + "<br>");
+        }
       }
       $("#plan").append("</p>")
     }

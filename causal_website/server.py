@@ -164,14 +164,18 @@ def submit_causal_data():
     content = request.get_json();
     success = causalinfo.create_causal_info(content, causal_path);
     code = "adkfjaqier";
-    if success == 0 or success ==2:
+    if success == 0 :
         return jsonify("successfully saved the causal model.");
     elif success ==1:
         return jsonify("There is an error on the server end to save the causal model. Please report this to the developer.")
-    # elif success == 2:
-    #     return jsonify("All nodes must be connected to the goal node directly or indirectly")
+    elif success == 2:
+        return jsonify("All nodes must be connected to the goal node directly or indirectly")
     elif success == 3:
-        return jsonify("Threr are syntax error in your causal rules")
+        return jsonify("There are syntax error in your causal rules")
+    elif success == 4:
+        return jsonify("Object property cannot be used as effect")
+    elif success == 5:
+        return jsonify("Effect nodes must be caused by at least one of the functions")
 @app.route("/record_time", methods=["POST"])
 def record_time():
     global encoding

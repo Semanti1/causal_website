@@ -146,7 +146,7 @@ class CausalInfo():
     def create_single_causal_info(self, all_sentences, reverse_graph):
         try:
             self.graph = {}
-            #self.reverse_graph = {}
+            self.reverse_graph = {}
             syntax_error = False
 
             for sentence in all_sentences:
@@ -162,19 +162,25 @@ class CausalInfo():
                     if before_key and (name == "prop" or name== "lat"):
                         if (value not in self.graph):
                             self.graph[value] = []
+                            self.reverse_graph[(value, name)] = []
                         children_list.append((value, idx+1));
                     else:
                         if (name == "lat") or (name == "goal"):
                             if value not in self.graph:
                                 self.graph[value] = []
                                 reverse_graph[value] = []
+                                self.reverse_graph[(value, name)] = []
                             for child in children_list:
                                 self.graph[child[0]].append(value);
                                 if optional:
                                     score = int(sentence[child[1]].split(":")[1]);
                                     reverse_graph[value].append((child[0], score))
+                                    self.reverse_graph[(value,name)].append((child[0], score));
                                 else:
                                     reverse_graph[value].append((child[0], -1));
+                                    self.reverse_graph[(value, name)].append((child[0], -1));
+                        if(name == "prop"):
+                            return 4; # status code 4: function is used as intermidate effect
                     if name == "key" and value.find("is/are")!=-1:
                         before_key = False;
 
@@ -184,9 +190,15 @@ class CausalInfo():
                     leaf_node_count +=1
             if leaf_node_count !=1:
                 return 2; #status code 2: more than 1 leaf node
-            else:
-                return 0; # status code 0: success
-        except:
+            for key, val in self.reverse_graph.items():
+                if len(val) == 0:
+                    name = key[1]
+                    if name == "lat":
+                        return 5; #status code 5: effect node cannot be leaf node
+
+            return 0; # status code 0: success
+        except Exception as err:
+            print("exception in create_single_causal_info: ", err)
             return 1; # status code 1: exception happened
 
 
