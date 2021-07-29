@@ -25,11 +25,13 @@
   <li class="nav-item">
     <a class="nav-item nav-link dropdown-toggle" href="{{url_for('lamp')}}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home <span class="sr-only">(current)</span></a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
+<!--       <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
       <a class="dropdown-item" href="{{url_for('candle')}}">Candle</a>
       <a class="dropdown-item" href="{{url_for('kerosene_lamp')}}"> Kerosene_lamp </a>
-      <a class="dropdown-item" href="{{url_for('flashlight')}}"> Flashlight </a>
+      <a class="dropdown-item" href="{{url_for('flashlight')}}"> Flashlight </a> -->
       <a class="dropdown-item" href="{{url_for('light')}}">Light</a>
+      <a class="dropdown-item" href="{{url_for('heat_based')}}">Heat-based</a>
+      <a class="dropdown-item" href="{{url_for('electric_based')}}">Electric-based</a>
 
     </div>
   </li>
@@ -43,25 +45,32 @@
   <img class="img-responsive" src={{furniture_image}} style="height:300px; width:auto">
 </div> -->
 <div class="container" id="txt_for_all">
-  </div>
+</div>
+
 <div class="container">
 <div class="row align-items-end"  id="furniture_img">
 {% for each in furniture_image %}
   <div class="col">
+  <figure>
   <img class="img-responsive" src={{each}} style="height:auto; width:250px">
+  </figure>
   </div>
 {% endfor %}
+</div>
+<div class="row align-items-end" id="furntiure_description">
 </div>
 </div>
 
 <script>
-var allobject = [];
+var allobject = {};
+
 var alldescription = [];
 {% for description in description_list %}
 var content = JSON.parse('{{description| tojson}}');
-for (var i = 0; i < content["object_list"].length; i++){
-  allobject.push(content["object_list"][i]);
-}
+// for (var i = 0; i < content["object_list"].length; i++){
+//   allobject.push(content["object_list"][i]);
+// }
+allobject[content["name"]] = content["object_list"];
 console.log(content["description"])
 alldescription.push(content["description"]);
 
@@ -72,7 +81,7 @@ console.log(content);
 
 <div class=container>
 <h2> Step1: Associate the object parts with their functions that's neccesary for producing light </h2>
-<div class ="row" id="object_words">
+<div class ="container" id="object_words">
 </div>
 <div class = "row" id="property_words">
 </div>
@@ -93,7 +102,7 @@ console.log(content);
 
 <div class=container>
 
-<h2> Step2: Enter the object causal model for the object </h2>
+<h2> Step2: Enter a causal model to explain how the above objects produce light </h2>
 <div class="row" id="property_words2">
 <!-- <button class="btn btn-success" id="add_property">Add_Property</button>
 <button class= "btn btn-info" id="remove_property">remove_property</button> -->
@@ -150,13 +159,12 @@ console.log(content);
 {% if plan_object %}
 <div id="MORESTEP">
 <script>
-var all_planobject = []
+var all_planobject = {}
 var allplandescription = []
 {% for description in plan_description %}
 var plan_content = JSON.parse('{{description| tojson}}');
-for (var i = 0; i < plan_content["object_list"].length; i++){
-  all_planobject.push(plan_content["object_list"][i]);
-}
+all_planobject[plan_content["name"]] = plan_content["object_list"];
+
 allplandescription.push(plan_content["description"]);
 console.log(all_planobject);
 {% endfor %}
@@ -174,7 +182,7 @@ console.log(all_planobject);
 </div>
 </div>
 
-<div class ="row" id="plan_object_words">
+<div class ="container" id="plan_object_words">
 </div>
 <div class = "row" id="plan_property_words">
 </div>

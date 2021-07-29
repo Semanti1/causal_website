@@ -20,7 +20,8 @@
     // var socket = io.connect('http://127.0.0.1:5000');
 
     //var object_list = content["object_list"];
-    var object_list = allobject;
+    var object_dict = allobject;
+    var object_list=[]
     var property_list = content["property_list"];
     var total_property_list = [];
     //var keyword_list = content["keyword_list"];
@@ -28,27 +29,40 @@
     var latent_list = content["latent_list"];
     //var goal_list = content["goal_list"];
     var goal_list = ["Light"]
-    var plan_object_list=[]
+    var plan_object_list = []
+    var plan_object_dict = {}
     var plan_property_list = []
     if(typeof all_planobject !== 'undefined'){
       plan_property_list = plan_content["property_list"];
-      plan_object_list = all_planobject
+      plan_object_dict = all_planobject
 
     }
-
-    $('#object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
-    $('#object_words').append(load_list(object_list, "obj"));
+    for(var key in object_dict){
+      // $('#object_words').append();
+      $('#object_words').append(load_list(object_dict[key], "obj", key));
+      for (var key2 in object_dict[key]){
+        object_list.push(object_dict[key][key2]);
+      }
+    }
     // if (property_list.length !=0){
     //   $('#property_words').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
     //   $('#property_words').append(load_list(property_list, "prop"));
     // }
 
-    $('#plan_object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
-    $('#plan_object_words').append(load_list(plan_object_list, "obj"));
+    // $('#plan_object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
+    for(var key in plan_object_dict){
+      console.log(key, plan_object_dict[key])
+      $('#plan_object_words').append(load_list(plan_object_dict[key], "obj", key));
+      for(var key2 in plan_object_dict[key]){
+        plan_object_list.push(plan_object_dict[key][key2]);
+      }
+    }
 
     console.log(alldescription)
-    if(alldescription.length == 1){
-      $("#furniture_img").append("<div class='col'> <p>" + alldescription[0]+"</p></div>");
+    if(alldescription.length < 4){
+      for(var i = 0; i < alldescription.length; i++){
+      $("#furntiure_description").append("<div class='col'> <p>" + alldescription[i]+"</p></div>");
+      }
     }
     if(typeof allplandescription !=="undefined"){
       if(allplandescription.length == 1){
@@ -65,13 +79,13 @@ $(window).on("load", function(){
   var href = window.location.href;
   var rel_href = href.replace(/^(?:\/\/|[^/]+)*\//, '')
   console.log(rel_href)
-  if(rel_href == "light"){
-    console.log("here")
-    $("#txt_for_all").append("<p> In this task, your goal is to create a single causal model that can explain how all four objects create light. That is, you need to consider which object parts from different objects plays the same role in creating light, and use these functions in creating a generalized causal model for producing light</p>")
-  }else{
-      document.getElementById("MORESTEP").style.display='none'
+  // if(rel_href == "light"){
+  //   console.log("here")
+  //   $("#txt_for_all").append("<p> In this task, your goal is to create a single causal model that can explain how all four objects create light. That is, you need to consider which object parts from different objects plays the same role in creating light, and use these functions in creating a generalized causal model for producing light</p>")
+  // }else {
+  document.getElementById("MORESTEP").style.display='none'
 
-  }
+  // }
   var i = 0;
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function(s) of object parts List: </p> </div>");
   $("#key_words").append("<div class='col-auto text-center'> <p> Keywords: </p> </div>")
@@ -172,12 +186,13 @@ $(window).on("load", function(){
 
 
 
-function load_list(list, id){
+function load_list(list, id, name){
 	var i = 0;
-  var new_input ="";
+  var new_input ="<div class='row'> <div class='col-auto text-center' > <p> Object parts for " + name +  ":  </p> </div>";
 for(; i < list.length; i++){
    new_input += " <div class='col-auto align-middle' id='" +id +"'> <p>" + list[i] + "</p></div>";
  }
+ new_input+= "</div> "
  return new_input;
 }
 function add_object_handler(){
@@ -273,9 +288,10 @@ function add_object_properties(object_list, property_list) {
   	var i = 0;
     var new_pair_no = parseInt($('#total_pair').val()) + 1;
     var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
-    new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='object_list'>"+ " <datalist id='object_list'>";
+  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='object_list'>"+ " <datalist id='object_list'>";
+  // new_input += "<div class= 'col-auto'> <select id='object'> "
   for(; i < object_list.length; i++){
-     new_input += " <option value='" + object_list[i] + "'>"
+     new_input += " <option value='" + object_list[i] + "'>" + object_list[i] + "</option>"
    }
    new_input += "</datalist> </div>"
    new_input += "<div class = ' my-auto'>  's function is to </div>"
@@ -290,6 +306,10 @@ function add_object_properties(object_list, property_list) {
    console.log(new_input);
    $('#total_pair').val(new_pair_no)
 
+   $('#object').on('click', function() {
+    $(this).val('');
+  });
+
 }
 
 function add_plan_object_properties(){
@@ -298,9 +318,8 @@ function add_plan_object_properties(){
   var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
   new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list'>"+ " <datalist id='plan_object_list'>";
   console.log(plan_object_list)
-  console.log(plan_object_list.length, total_property_list.length)
   for(; i < plan_object_list.length; i++){
-    new_input += " <option value='" + plan_object_list[i] + "'>"
+    new_input += " <option value='" + plan_object_list[i] + "'>" + plan_object_list[i] + "</option>"
   }
  new_input += "</datalist> </div>"
  new_input += "<div class = ' my-auto'>  's function is to </div>"
@@ -308,11 +327,20 @@ function add_plan_object_properties(){
   i = 0;
   new_input += "<div class ='col-auto'> <input id='property' onkeydown='return false;' name='property' class='form-control' list='total_property_list'>"+ " <datalist id='total_property_list'>";
   for(; i < total_property_list.length; i++){
-   new_input += " <option value='" + total_property_list[i] + "'>"
+   new_input += " <option value='" + total_property_list[i] + "'>" + total_property_list[i] + "</option>"
  }
+ new_input += " <option value='None of above'> None of above </option>"
  new_input += "</datalist> </div></div>"
  $('#plan_obj_property_form').prepend(new_input);
  $('#total_pair').val(new_pair_no)
+
+  $('#plan_obj_property_form #object').on('click', function() {
+    $(this).val('');
+  });
+
+  $('#plan_obj_property_form #property').on('click', function() {
+    $(this).val('');
+  });
 }
 
 function getFormData($form){
@@ -332,6 +360,7 @@ function onlyUnique(value, index, self) {
 function serialize(){
   var form = $("#obj_property_form");
   var content = JSON.stringify(form.serializeArray());
+  console.log(content)
   //$.post("/recieve_property", content)
   $.ajax({
     type:"POST",

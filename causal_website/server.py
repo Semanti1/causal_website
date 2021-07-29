@@ -106,16 +106,63 @@ def chair():
     causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description_list=img_json);
 
-@app.route("/light")
-def light():
-    image_path_list, json_file_list = furnitureloader.load_all()
+@app.route("/heat_based")
+def heat_based():
+    global plan_object
+    heat_based_list = ["kerosene_lamp", "candle", "oil_lamp"]
+    rand_indx = random.randint(0, len(heat_based_list)-1)
+    plan_object=heat_based_list[rand_indx]
+    furnitureloader.set_furniture(plan_object, index=1)
+    plan_image_path, plan_json = furnitureloader.load()
+    display_object = [o for i, o in enumerate(heat_based_list) if i != rand_indx]
+    image_path_list, json_file_list = furnitureloader.load_category(display_object);
     global random_string
     global encoding
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    print(image_path_list, furnitureloader.furniture_path)
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list);
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+
+
+@app.route("/electric_based")
+def electric_based():
+    global plan_object
+    electric_based_list = ["lamp", "flashlight", "wall_lamp"]
+    rand_indx = random.randint(0, len(electric_based_list)-1)
+    plan_object=electric_based_list[rand_indx]
+    furnitureloader.set_furniture(plan_object, index=1)
+    plan_image_path, plan_json = furnitureloader.load()
+    display_object = [o for i, o in enumerate(electric_based_list) if i != rand_indx]
+    image_path_list, json_file_list = furnitureloader.load_category(display_object);
+    global random_string
+    global encoding
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    causalgraph.reset();
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+
+
+@app.route("/light")
+# def light():
+#     image_path_list, json_file_list = furnitureloader.load_all()
+#     global random_string
+#     global encoding
+#     random_string = ''.join(random.choice(letters) for i in range(10));
+#     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+#     causalgraph.reset();
+#     print(image_path_list, furnitureloader.furniture_path)
+#     return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object="", plan_object_image=);
+def light():
+    image_path_list, json_file_list, plan_image_path_list, plan_json_file_list = furnitureloader.load_all2();
+    print(image_path_list)
+    global random_string
+    global encoding
+    global plan_object
+    plan_object = "all"
+    random_string = ''.join(random.choice(letters) for i in range(10));
+    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    causalgraph.reset();
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object="two objects", plan_object_image=plan_image_path_list, plan_description=plan_json_file_list);
 
 
 
