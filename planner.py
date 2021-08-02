@@ -175,13 +175,12 @@ class Planner():
 		return retarr
 
 	def MDP_Init(self):
-		# try:
+		try:
 			queue = []
 			queue.append([self.domain.state, None, None])
 			done = False
 			while(len(queue) > 0):
 				state, prev_action, prev_score = queue.pop(0)
-				# print("state: " ,state.obj_names, self.domain.state.obj_names)
 				self.value_graph.node(str(state), label=str(state) + str(prev_score))
 				self.MDP[state] = dict()
 				valid_actions = self.domain.getValidActions(state)
@@ -218,8 +217,9 @@ class Planner():
 					queue.append([action.state, action, score])
 				#print("\n")
 			#self.value_graph.render("image", view=True)
-		# except Exception as err:
-		# 	print("MDP_Init error: ", err);
+
+		except Exception as err:
+			print("MDP_Init error: ", err);
 
 
 		#TESTING:
