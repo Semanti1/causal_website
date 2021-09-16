@@ -592,11 +592,14 @@ function generate_causal(){
 }
 
 function plan_causal(){
+  var href = window.location.href;
+  var rel_href = href.replace(/^(?:\/\/|[^/]+)*\//, '')
+  console.log(rel_href)
   $.ajax({
     type:"POST",
     url: "/plan_causal",
-    data:0,
-    contentType:"application/json; charset=utf-8",
+    data:{"obj": rel_href},
+    //contentType:"application/json; charset=utf-8",
     success: function(msg){
       console.log(msg)
       $("#plan").empty();
