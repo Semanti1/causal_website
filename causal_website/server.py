@@ -18,6 +18,7 @@ letters = string.ascii_lowercase
 random_string= 0;
 encoding  = 0;
 plan_object=None
+display_object=[]
 
 @app.route("/")
 def home():
@@ -114,6 +115,7 @@ def heat_based():
     plan_object=heat_based_list[rand_indx]
     furnitureloader.set_furniture(plan_object, index=1)
     plan_image_path, plan_json = furnitureloader.load()
+    global display_object
     display_object = [o for i, o in enumerate(heat_based_list) if i != rand_indx]
     image_path_list, json_file_list = furnitureloader.load_category(display_object);
     global random_string
@@ -132,6 +134,7 @@ def electric_based():
     plan_object=electric_based_list[rand_indx]
     furnitureloader.set_furniture(plan_object, index=1)
     plan_image_path, plan_json = furnitureloader.load()
+    global display_object
     display_object = [o for i, o in enumerate(electric_based_list) if i != rand_indx]
     image_path_list, json_file_list = furnitureloader.load_category(display_object);
     global random_string
@@ -237,13 +240,12 @@ def record_time():
 @app.route("/plan_causal", methods=["POST"])
 def plan_causal():
     global encoding
-    main_obj = request.form["obj"];
-    print(main_obj)
     root = os.path.dirname(os.path.abspath(__file__))
     causal_path = os.path.join(root,"static/causal_graph/")
     furniture_path = furnitureloader.furniture_path
     #print(causal_path, plan_object, furniture_path)
-    return jsonify(website_plan(causal_path, causal_path, encoding, main_obj, False))
+    global display_object
+    return jsonify(website_plan(causal_path, causal_path, encoding, display_object, gen=False))
 
 
 if __name__ == '__main__':
