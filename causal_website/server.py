@@ -190,11 +190,14 @@ def record_time():
 @app.route("/plan_causal", methods=["POST"])
 def plan_causal():
     global encoding
+    main_obj = request.form["obj"];
+    print(main_obj)
     root = os.path.dirname(os.path.abspath(__file__))
     causal_path = os.path.join(root,"static/causal_graph/")
     furniture_path = furnitureloader.furniture_path
     #print(causal_path, plan_object, furniture_path)
-    return jsonify(website_plan(causal_path, causal_path, encoding, None))
+    return jsonify(website_plan(causal_path, causal_path, encoding, main_obj, False))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
