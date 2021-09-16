@@ -1,0 +1,10 @@
+{
+  "name" : "wall_lamp",
+  "id": 1,
+  "object_list": ["base with cables", "light bulb", "shade"],
+  "property_list": [],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": [],
+  "description": "this is a wall lamp",
+  "goal_list": ["Lamp"]
+}
