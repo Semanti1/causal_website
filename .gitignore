@@ -5,3 +5,4 @@ pypddl_parser/
 causal_models/
 image*
 output*
+env/
