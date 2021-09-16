@@ -180,7 +180,7 @@ class Planner():
 			done = False
 			while(len(queue) > 0):
 				state, prev_action, prev_score = queue.pop(0)
-				# print("state: " ,state)
+				print("state: ", state)
 				self.value_graph.node(str(state), label=str(state) + str(prev_score))
 				self.MDP[state] = dict()
 				valid_actions = self.domain.getValidActions(state)
@@ -231,6 +231,7 @@ class Planner():
 
 	def policy_iteration(self):
 		try:
+			policy = []
 			v_old = dict() #dict[state] = value
 			discount_factor = 0.4
 			#initilize value
@@ -260,7 +261,6 @@ class Planner():
 			# for state, value in v_old.items():
 			# 	print(state, value)
 			#FIND POLICY //value iteration:
-			policy = []
 			done = False
 			current_state = self.init_state
 			while (not done):

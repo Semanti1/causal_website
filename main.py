@@ -50,10 +50,10 @@ def runSimulation(myplanner):
 			domain.state = e.message
 			runSimulation(myplanner)
 
-def website_plan( furniture_path, causal_path, encoding, plan_object):
+def website_plan( furniture_path, causal_path, encoding, plan_object, gen=False):
 	causal_path = os.path.join(causal_path, "causal_"+encoding+".json")
-	if plan_object == None:
-		prop_path = os.path.join(furniture_path, "object_property_"+encoding+".json")
+	if gen == False:
+		prop_path = os.path.join(furniture_path, "object_property_" + encoding+".json")
 	else:
 		prop_path = os.path.join(furniture_path, "object_property_" + plan_object + "_" + encoding+".json")
 	domain = Furniture(causal_path, prop_path, plan_object)
