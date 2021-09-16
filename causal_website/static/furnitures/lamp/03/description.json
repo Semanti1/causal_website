@@ -1,0 +1,9 @@
+{
+  "name" : "lamp",
+  "id": 3,
+  "object_list": ["base", "electric cables", "rod", "light bulb", "head"],
+  "property_list": [],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": [],
+  "goal_list": ["Lamp"]
+}

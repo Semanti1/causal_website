@@ -1,0 +1,9 @@
+{
+  "name" : "chair",
+  "id": 1,
+  "object_list": ["wheels", "base", "cylinder column", "seat", "back frame", "arm rest"],
+  "property_list": ["provide mobility", "provide stability", "provide elevation", "provide seat", "provide seating comfort", "provide back support", "provide arm support"],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": ["affords seating", "office chair structure"],
+  "goal_list": ["Office chair"]
+}

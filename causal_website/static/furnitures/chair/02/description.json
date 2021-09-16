@@ -1,0 +1,10 @@
+{
+  "name" : "chair",
+  "id": 2,
+  "object_list": ["legs", "seat", "back frame", "cushion"],
+  "property_list": ["stability", "elevation", "seat", "seating comfort", "back support"],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": ["Seating; main function", "Dining chair structure"],
+  "goal_list": ["Dining chair"]
+
+}

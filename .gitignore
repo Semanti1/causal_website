@@ -13,7 +13,7 @@ dist/
 build/
 *.egg-info/
 causal_website/static/js/buttonv2.js
-causal_website/static/furnitures/*
+#causal_website/static/furnitures/*
 causal_website/static/causal_graph/
 causal_website/templates/labelerv2.html
 .DS_Store

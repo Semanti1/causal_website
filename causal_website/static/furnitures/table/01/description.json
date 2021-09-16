@@ -1,0 +1,9 @@
+{
+  "name" : "table",
+  "id": 1,
+  "object_list": ["base", "leg", "top surface"],
+  "property_list": ["stability", "extension", "support", "production"],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are perferrable for causing"],
+  "latent_list": [],
+  "goal_list":["Table"]
+}

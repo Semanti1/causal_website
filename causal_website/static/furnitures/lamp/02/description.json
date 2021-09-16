@@ -1,0 +1,9 @@
+{
+  "name" : "lamp",
+  "id": 2,
+  "object_list": ["base", "electric cables", "rod", "light bulb", "head"],
+  "property_list": ["provide connection to power source", "produce light", "provide stability", "provide extension", "provide protection"],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": ["Light", "Lamp structure"],
+  "goal_list": ["Lamp"]
+}
