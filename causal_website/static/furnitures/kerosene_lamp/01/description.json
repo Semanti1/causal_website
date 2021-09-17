@@ -6,5 +6,5 @@
   "keyword_list": [],
   "latent_list": [],
   "description": "The lamp burner has a wick whose lower part dips into the fuel tank and absorbs the kerosene. The top part of the wick extends out of the burner. When the lamp is lit, the kerosene that the wick has absorbed burns and produces a flame. As the kerosene burns, capillary action draws more kerosene up from the fuel tank. The glass chimney prevents the flame from being blown out.",
-  "goal_list": ["Lamp"]
+  "goal_list": ["Produce Light"]
 }
