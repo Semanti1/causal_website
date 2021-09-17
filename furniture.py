@@ -241,38 +241,49 @@ class FurnitureState(State):
 		super().__init__()
 		# #Normal
 		self.all_object = {}
-		# print("here",  plan_object)
-		# if plan_object=="kerosene_lamp":
+		print(prop_path)
+
+		for object in plan_object:
+			if object=="kerosene_lamp":
+				self.addObjectwithName("fuel tank");
+				self.addObjectwithName("burner");
+				self.addObjectwithName("chimney");
+			elif object == "flashlight":
+				self.addObjectwithName("head");
+				self.addObjectwithName("batteries");
+				self.addObjectwithName("case");
+			elif object =="candle":
+				self.addObjectwithName("wax");
+				self.addObjectwithName("wick");
+			elif object =="lamp":
+				self.addObjectwithName("base with cables");
+				self.addObjectwithName("light bulb");
+				self.addObjectwithName("shade");
+			elif object == "wall_lamp":
+				self.addObjectwithName("backplate");
+				self.addObjectwithName("lamp body");
+				self.addObjectwithName("light bulb");
+			elif object == "oil_lamp":
+				self.addObjectwithName("container");
+				self.addObjectwithName("wick");
+		# if plan_object != None:
+		# 	self.addObjectwithName("wax");
+		# 	self.addObjectwithName("wick");
 		# 	self.addObjectwithName("fuel tank");
 		# 	self.addObjectwithName("burner");
 		# 	self.addObjectwithName("chimney");
-		# elif plan_object == "flashlight":
 		# 	self.addObjectwithName("head");
 		# 	self.addObjectwithName("batteries");
 		# 	self.addObjectwithName("case");
-		# elif plan_object =="candle":
-		# 	self.addObjectwithName("wax");
-		# 	self.addObjectwithName("wick");
-		# elif plan_object =="lamp":
 		# 	self.addObjectwithName("base with cables");
 		# 	self.addObjectwithName("light bulb");
 		# 	self.addObjectwithName("shade");
-		# elif plan_object != None:
-		self.addObjectwithName("wax");
-		self.addObjectwithName("wick");
-		self.addObjectwithName("fuel tank");
-		self.addObjectwithName("burner");
-		self.addObjectwithName("chimney");
-		self.addObjectwithName("head");
-		self.addObjectwithName("batteries");
-		self.addObjectwithName("case");
-		self.addObjectwithName("base with cables");
-		self.addObjectwithName("light bulb");
-		self.addObjectwithName("shade");
-		# else:
+
 		self.addObjectFromfile(prop_path);
 
-		print(self.obj_dict)
+		#print
+		for key, obj in self.obj_dict.items():
+			print(key, obj.function)
 
 		FurnitureVisualModel().initState(self)
 
@@ -283,6 +294,25 @@ class FurnitureState(State):
 		self.no_placement_yet = True
 
 
+	# def addObjectFromfile(self, file_path):
+	# 	try:
+	# 		with open(file_path) as f:
+	# 			 data = json.load(f)
+	# 		obj_prop_dict = {}
+	# 		for i in range(int(len(data)/2)):
+	# 			obj_name = data[2*i]["value"];
+	# 			obj_prop = data[2*i+1]["value"];
+	# 			print(obj_name, obj_prop)
+	# 			try:
+	# 				obj_prop_dict[obj_name].append(obj_prop);
+	# 			except KeyError as e:
+	# 				obj_prop_dict[obj_name] = [obj_prop];
+	# 		for obj_name, obj_prop_list in obj_prop_dict.items():
+	# 			block = Block(obj_name, shape=obj_name, func=obj_prop_list, clear=[True]);
+	# 			self.all_object[obj_name] = block
+	# 			self.addObject(block)
+	# 	except Exception as err:
+	# 		print("error from addObjectFromfile", err);
 	def addObjectFromfile(self, file_path):
 		try:
 			with open(file_path) as f:
@@ -293,13 +323,10 @@ class FurnitureState(State):
 				obj_prop = data[2*i+1]["value"];
 				print(obj_name, obj_prop)
 				try:
-					obj_prop_dict[obj_name].append(obj_prop);
+					self.obj_dict[obj_name].function.append(obj_prop);
 				except KeyError as e:
-					obj_prop_dict[obj_name] = [obj_prop];
-			for obj_name, obj_prop_list in obj_prop_dict.items():
-				block = Block(obj_name, shape=obj_name, func=obj_prop_list, clear=[True]);
-				self.all_object[obj_name] = block
-				self.addObject(block)
+					block = Block(obj_name, shape=obj_name, func=[obj_prop], clear=[True]);
+					self.addObject(block)
 		except Exception as err:
 			print("error from addObjectFromfile", err);
 
@@ -311,14 +338,16 @@ class FurnitureState(State):
 	def __eq__(self, other):
 		if other == None:
 			return False
-
-		for objname in self.obj_names:
-			if self.get(objname) == other.get(objname):
-				pass
-			else:
-				return False
-
-		return self.total_height == other.total_height
+		# print(self.obj_names, other.obj_names)
+		# for objname in self.obj_names:
+		# 	if self.get(objname) == other.get(objname):
+		# 		pass
+		# 	else:
+		# 		return False
+		#
+		# return self.total_height == other.total_height
+		
+		return str(self.tower) == str(other.tower)
 
 
 	def __str__(self):
