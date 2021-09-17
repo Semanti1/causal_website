@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from causal_website.causal_graph import CausalGraph, CausalInfo, check_correctness, check_extend
 from causal_website.load_furniture import FurnitureLoader
 import json
@@ -19,21 +19,66 @@ random_string= 0;
 encoding  = 0;
 plan_object=None
 display_object=[]
+first_page = None
+second_page = 0
 
 @app.route("/")
 def home():
-    image_path, img_json = furnitureloader.load()
-    global random_string
-    global encoding
-    random_string = ''.join(random.choice(letters) for i in range(10));
-    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    # image_path, img_json = furnitureloader.load()
+    # global random_string
+    # global encoding
+    # random_string = ''.join(random.choice(letters) for i in range(10));
+    # encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    #
+    # rand_indx = random.randint(0, 1)
+    # if rand_indx ==0 :
+    #     return redirect(url_for("heat_based"))
+    # else:
+    #     return redirect(url_for("electric_based"))
+    # causalgraph.reset();
+    # return render_template("index.html", furniture_image=image_path, description=img_json);
+    return render_template("tutorial.html")
 
-    causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description=img_json);
 
 @app.route("/tutorial")
 def tutorial():
+    global first_page
+    global second_page
+    first_page = None
+    second_page  = 0
     return render_template("tutorial.html")
+
+@app.route("/after_tutorial", methods=["GET", "POST"])
+def after_tutorial():
+    global first_page
+    first_page = random.randint(0, 1)
+    if first_page ==0 :
+        return redirect(url_for("heat_based"))
+    else:
+        return redirect(url_for("electric_based"))
+
+@app.route("/next_experiment", methods=["GET","POST"])
+def next_experiment():
+    global first_page
+    global second_page
+    if first_page == 0:
+        if second_page == 0:
+            second_page = 1
+            return redirect(url_for("electric_based"))
+        else:
+            second_page = 2
+            return redirect(url_for("light"))
+    else:
+        if second_page == 0:
+            second_page = 1
+            return redirect(url_for("heat_based"))
+        else:
+            second_page = 2
+            return redirect(url_for("light"))
+@app.route("/complete", methods=["GET", "POST"])
+def complete():
+    code = ''.join(random.choice(letters) for i in range(10));
+    return render_template("complete.html", code=code)
 
 @app.route("/lamp")
 def lamp():
@@ -123,7 +168,7 @@ def heat_based():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json, second_page=second_page);
 
 
 @app.route("/electric_based")
@@ -142,7 +187,7 @@ def electric_based():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json, second_page=second_page);
 
 
 @app.route("/light")
@@ -161,11 +206,12 @@ def light():
     global random_string
     global encoding
     global plan_object
+    global second_page
     plan_object = "all"
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object="two objects", plan_object_image=plan_image_path_list, plan_description=plan_json_file_list);
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object="two objects", plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, second_page=second_page);
 
 
 

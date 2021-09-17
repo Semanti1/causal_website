@@ -65,6 +65,8 @@
 var allobject = {};
 
 var alldescription = [];
+var second_page = {{second_page}}
+console.log(second_page)
 {% for description in description_list %}
 var content = JSON.parse('{{description| tojson}}');
 // for (var i = 0; i < content["object_list"].length; i++){
@@ -197,7 +199,15 @@ console.log(all_planobject);
 <div class="row" id="text_step3">
 </div>
 
+</div>
+<div id="NEXTEXP">
+  <button class="btn btn-success" id="nextexp" > Next Experiment </button>
+  <!-- onclick="window.location.href='{{url_for('next_experiment')}}';" -->
+</div>
 
+<div id="FINISH">
+  <button class="btn btn-success" id="finish" onclick="window.location.href='{{url_for('complete')}}';"> Complete Experiment </button>
+</div>
 {% endif %}
 
 

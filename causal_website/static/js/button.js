@@ -17,9 +17,12 @@
     $('#add_plan_object_properties').on('click', add_plan_object_properties);
     $('#plan_submit').on('click', plan_submit);
     $("#next_step").on('click', next_step);
+    $("#nextexp").on("click", next_experiment);
+    // $('#after_tutorial').on('click', after_tutorial);
     // var socket = io.connect('http://127.0.0.1:5000');
 
     //var object_list = content["object_list"];
+    var second_page;
     var object_dict = allobject;
     var object_list=[]
     var property_list = content["property_list"];
@@ -84,6 +87,8 @@ $(window).on("load", function(){
   //   $("#txt_for_all").append("<p> In this task, your goal is to create a single causal model that can explain how all four objects create light. That is, you need to consider which object parts from different objects plays the same role in creating light, and use these functions in creating a generalized causal model for producing light</p>")
   // }else {
   document.getElementById("MORESTEP").style.display='none'
+  document.getElementById("NEXTEXP").style.display='none'
+  document.getElementById("FINISH").style.display='none'
 
   // }
   var i = 0;
@@ -640,8 +645,20 @@ function next_step(){
      x.style.display = "block";
    }
    document.getElementById("submit_causal").disabled = true;
-
+   var y = document.getElementById("NEXTEXP");
+   if(y.style.display == "none" && second_page != 2){
+     y.style.display = "block";
+   }
+   var z = document.getElementById("FINISH");
+   if(z.style.display=="none" && second_page == 2){
+     z.style.display ="block"
+   }
 }
+
+function next_experiment(){
+  window.location.href="/next_experiment";
+}
+
 
 function submit_causal(){
    // console.log($("#object_causal")[0])
@@ -684,7 +701,16 @@ function submit_causal(){
    console.log(all_sentences)
   }
 
-
+// function after_tutorial(){
+//   console.log("event here")
+//   $.ajax({
+//     type:"GET",
+//     url:"/after_tutorial",
+//     data:0,
+//     success:function(msg){
+//     }
+//   });
+// }
 
 function remove_property() {
   var last_prop_no = $('#total_prop').val();
