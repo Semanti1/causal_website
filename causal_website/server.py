@@ -107,8 +107,8 @@ def chair():
     causalgraph.reset();
     return render_template("index.html", furniture_image=image_path, description_list=img_json);
 
-@app.route("/heat_based")
-def heat_based():
+@app.route("/light_h")
+def light_h():
     global plan_object
     heat_based_list = ["kerosene_lamp", "candle", "oil_lamp"]
     rand_indx = random.randint(0, len(heat_based_list)-1)
@@ -126,8 +126,8 @@ def heat_based():
     return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
 
 
-@app.route("/electric_based")
-def electric_based():
+@app.route("/light_e")
+def light_e():
     global plan_object
     electric_based_list = ["lamp", "flashlight", "wall_lamp"]
     rand_indx = random.randint(0, len(electric_based_list)-1)
