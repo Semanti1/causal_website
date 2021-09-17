@@ -174,7 +174,7 @@ class Planner():
 		return retarr
 
 	def MDP_Init(self):
-		try:
+		# try:
 			queue = []
 			queue.append([self.domain.state, None, None])
 			done = False
@@ -217,8 +217,8 @@ class Planner():
 					queue.append([action.state, action, score])
 				#print("\n")
 			#self.value_graph.render("image", view=True)
-		except Exception as err:
-			print("MDP_Init error: ", err);
+		# except Exception as err:
+		# 	print("MDP_Init error: ", err);
 
 
 		#TESTING:
