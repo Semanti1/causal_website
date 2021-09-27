@@ -15,14 +15,17 @@
     $('#add_graph').on('click', add_graph)
     $('#add_plan_object_properties').on('click', add_plan_object_properties);
     $('#plan_submit').on('click', plan_submit);
-    if(document.getElementById("#next_step") != null){
+    // if(document.getElementById("#next_step") != null){
       $("#next_step").on('click', next_step);
       $('#planner').on('click', plan_causal);
 
-    }
+    // }
+    $("#nextexp").on("click", next_experiment);
+    // $('#after_tutorial').on('click', after_tutorial);
     // var socket = io.connect('http://127.0.0.1:5000');
 
     //var object_list = content["object_list"];
+    // var second_page;
     var object_dict = allobject;
     var object_list=[]
     var property_list = content["property_list"];
@@ -89,6 +92,9 @@ $(window).on("load", function(){
   if(document.getElementById("MORESTEP") != null){
     document.getElementById("MORESTEP").style.display='none'
   }
+  // document.getElementById("NEXTEXP").style.display='none'
+  // document.getElementById("FINISH").style.display='none'
+
 
   // }
   var i = 0;
@@ -644,9 +650,12 @@ function next_step(){
    if(x.style.display == "none"){
      x.style.display = "block";
    }
-   document.getElementById("submit_causal").disabled = true;
-
 }
+
+function next_experiment(){
+  window.location.href="/next_experiment";
+}
+
 
 function submit_causal(){
    // console.log($("#object_causal")[0])
@@ -689,7 +698,16 @@ function submit_causal(){
    console.log(all_sentences)
   }
 
-
+// function after_tutorial(){
+//   console.log("event here")
+//   $.ajax({
+//     type:"GET",
+//     url:"/after_tutorial",
+//     data:0,
+//     success:function(msg){
+//     }
+//   });
+// }
 
 function remove_property() {
   var last_prop_no = $('#total_prop').val();
