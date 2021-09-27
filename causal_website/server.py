@@ -37,10 +37,10 @@ def tutorial():
 
 @app.route("/lamp")
 def lamp():
-    global plan_object
-    plan_object = "flashlight"
-    furnitureloader.set_furniture(plan_object, index=1)
-    plan_image_path, plan_json = furnitureloader.load()
+    # global plan_object
+    # plan_object = "flashlight"
+    # furnitureloader.set_furniture(plan_object, index=1)
+    # plan_image_path, plan_json = furnitureloader.load()
     furnitureloader.set_furniture("lamp", index=1)
     image_path, img_json = furnitureloader.load()
     global random_string
@@ -48,14 +48,15 @@ def lamp():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    # return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=None);
 
 @app.route("/kerosene_lamp")
 def kerosene_lamp():
-    global plan_object
-    plan_object = "candle"
-    furnitureloader.set_furniture(plan_object, index=1)
-    plan_image_path, plan_json = furnitureloader.load()
+    # global plan_object
+    # plan_object = "candle"
+    # furnitureloader.set_furniture(plan_object, index=1)
+    # plan_image_path, plan_json = furnitureloader.load()
     furnitureloader.set_furniture("kerosene_lamp", index=1)
     image_path, img_json = furnitureloader.load()
     global random_string
@@ -63,14 +64,16 @@ def kerosene_lamp():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    # return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=None);
+
 
 @app.route("/candle")
 def candle():
-    global plan_object
-    plan_object = "kerosene_lamp"
-    furnitureloader.set_furniture(plan_object, index=1)
-    plan_image_path, plan_json = furnitureloader.load()
+    # global plan_object
+    # plan_object = "kerosene_lamp"
+    # furnitureloader.set_furniture(plan_object, index=1)
+    # plan_image_path, plan_json = furnitureloader.load()
     furnitureloader.set_furniture("candle", index=1)
     image_path, img_json = furnitureloader.load()
     global random_string
@@ -78,14 +81,15 @@ def candle():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="Kerosene lamp", plan_object_image=plan_image_path, plan_description=plan_json);
+    # return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object="Kerosene lamp", plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=None);
 
 @app.route("/flashlight")
 def flashlight():
-    global plan_object
-    plan_object = "lamp"
-    furnitureloader.set_furniture(plan_object, index=1)
-    plan_image_path, plan_json = furnitureloader.load()
+    # global plan_object
+    # plan_object = "lamp"
+    # furnitureloader.set_furniture(plan_object, index=1)
+    # plan_image_path, plan_json = furnitureloader.load()
     furnitureloader.set_furniture("flashlight", index=1)
     image_path, img_json = furnitureloader.load()
     global random_string
@@ -93,7 +97,8 @@ def flashlight():
     random_string = ''.join(random.choice(letters) for i in range(10));
     encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    # return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json);
+    return render_template("index.html", furniture_image=image_path, description_list=img_json, plan_object=None);
 
 
 @app.route("/chair")
@@ -230,7 +235,7 @@ def submit_causal_data():
 def record_time():
     global encoding
     root = os.path.dirname(os.path.abspath(__file__))
-    time_path = os.path.join(root,"static/causal_graph/" "submit_time_" + encoding + ".json");
+    time_path = os.path.join(root,"static/causal_graph/"  + "submit_time_" + encoding + ".json");
     submit_time = request.get_json()
     with open(time_path, "w") as f:
         f.write(str(submit_time["time"]))

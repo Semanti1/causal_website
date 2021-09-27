@@ -25,10 +25,10 @@
   <li class="nav-item">
     <a class="nav-item nav-link dropdown-toggle" href="{{url_for('lamp')}}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home <span class="sr-only">(current)</span></a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-<!--       <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
+      <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
       <a class="dropdown-item" href="{{url_for('candle')}}">Candle</a>
       <a class="dropdown-item" href="{{url_for('kerosene_lamp')}}"> Kerosene_lamp </a>
-      <a class="dropdown-item" href="{{url_for('flashlight')}}"> Flashlight </a> -->
+      <a class="dropdown-item" href="{{url_for('flashlight')}}"> Flashlight </a>
       <a class="dropdown-item" href="{{url_for('light')}}">Light0</a>
       <a class="dropdown-item" href="{{url_for('light_e')}}">Light1</a>
       <a class="dropdown-item" href="{{url_for('light_h')}}">Light2</a>
@@ -150,8 +150,10 @@ console.log(content);
 <!--   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="add a new causal graph" id="add_graph"> Add_Causal_Graph </button> -->
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="generate a causal graph based on the current causal rules" id="generate_causal"> Generate_Causal_Graph</button>
   <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="submit all the causal rules" id="submit_causal"> Submit </button>
+  {% if plan_object %}
   <button class="btn btn-success" id="planner"> Generate a plan </button>
   <button class="btn btn-success" id="next_step"> Next Step</button>
+  {% endif %}
 </div>
 
 <div class="row", id="plan">

@@ -13,10 +13,13 @@
     $('#generate_causal').on('click', generate_causal);
     $('#submit_causal').on('click', submit_causal);
     $('#add_graph').on('click', add_graph)
-    $('#planner').on('click', plan_causal);
     $('#add_plan_object_properties').on('click', add_plan_object_properties);
     $('#plan_submit').on('click', plan_submit);
-    $("#next_step").on('click', next_step);
+    if(document.getElementById("#next_step") != null){
+      $("#next_step").on('click', next_step);
+      $('#planner').on('click', plan_causal);
+
+    }
     // var socket = io.connect('http://127.0.0.1:5000');
 
     //var object_list = content["object_list"];
@@ -83,7 +86,9 @@ $(window).on("load", function(){
   //   console.log("here")
   //   $("#txt_for_all").append("<p> In this task, your goal is to create a single causal model that can explain how all four objects create light. That is, you need to consider which object parts from different objects plays the same role in creating light, and use these functions in creating a generalized causal model for producing light</p>")
   // }else {
-  document.getElementById("MORESTEP").style.display='none'
+  if(document.getElementById("MORESTEP") != null){
+    document.getElementById("MORESTEP").style.display='none'
+  }
 
   // }
   var i = 0;
