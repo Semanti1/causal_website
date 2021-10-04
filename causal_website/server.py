@@ -226,7 +226,7 @@ def light_h():
     # random_string = ''.join(random.choice(letters) for i in range(10));
     # encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp=False);
+    return render_template("index_gen.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp=False);
 
 
 @app.route("/light_e")
@@ -253,7 +253,7 @@ def light_e():
     # random_string = ''.join(random.choice(letters) for i in range(10));
     # encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp =False);
+    return render_template("index_gen.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp =False);
 
 
 @app.route("/light")
@@ -277,7 +277,7 @@ def light():
     # random_string = ''.join(random.choice(letters) for i in range(10));
     # encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp=True);
+    return render_template("index_gen.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp=True);
 
 
 
