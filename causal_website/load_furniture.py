@@ -60,6 +60,7 @@ class FurnitureLoader():
         json_file_list = []
         plan_image_path_list = []
         plan_json_file_list = []
+        plan_object_list = list([plan_object_1, plan_object_2])
         for furniture in list([display_object_1 , display_object_2]):
             furniture_path = os.path.join(self.APP_ROOT, "static/furnitures/", furniture, "01")
             image_path = os.path.join("/static/furnitures/", furniture, "01", "image.png")
@@ -78,7 +79,7 @@ class FurnitureLoader():
             plan_image_path_list.append(image_path)
             plan_json_file_list.append(json_file)
 
-        return image_path_list, json_file_list, plan_image_path_list, plan_json_file_list
+        return image_path_list, json_file_list, plan_image_path_list, plan_json_file_list, plan_object_list
 
 
     def load_category(self, category_list):

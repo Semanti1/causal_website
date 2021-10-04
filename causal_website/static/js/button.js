@@ -13,8 +13,12 @@
     $('#generate_causal').on('click', generate_causal);
     $('#submit_causal').on('click', submit_causal);
     $('#add_graph').on('click', add_graph)
-    $('#add_plan_object_properties').on('click', add_plan_object_properties);
-    $('#plan_submit').on('click', plan_submit);
+    $('#add_plan_object_properties_0').on('click', add_plan_object_properties);
+    $('#add_plan_object_properties_1').on('click', add_plan_object_properties_2);
+
+    $('#plan_submit_0').on('click', plan_submit_0);
+    $('#plan_submit_1').on('click', plan_submit_1);
+
     // if(document.getElementById("#next_step") != null){
       $("#next_step").on('click', next_step);
       $('#planner').on('click', plan_causal);
@@ -56,12 +60,16 @@
     // }
 
     // $('#plan_object_words').append("<div class='col-auto text-center' > <p> Object parts: </p> </div>");
+    var count = 0
     for(var key in plan_object_dict){
       console.log(key, plan_object_dict[key])
-      $('#plan_object_words').append(load_list(plan_object_dict[key], "obj", key));
+      $('#plan_object_words_'+ count).append(load_list(plan_object_dict[key], "obj", key));
+      var obj_list = [] 
       for(var key2 in plan_object_dict[key]){
-        plan_object_list.push(plan_object_dict[key][key2]);
+        obj_list.push(plan_object_dict[key][key2]);
       }
+      plan_object_list.push(obj_list)
+      count +=1
     }
 
     console.log(alldescription)
@@ -92,7 +100,7 @@ $(window).on("load", function(){
   if(document.getElementById("MORESTEP") != null){
     document.getElementById("MORESTEP").style.display='none'
   }
-  // document.getElementById("NEXTEXP").style.display='none'
+  document.getElementById("TRANS_BUTT").style.display='none'
   // document.getElementById("FINISH").style.display='none'
 
 
@@ -106,7 +114,7 @@ $(window).on("load", function(){
   //   $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
   // }
   for (i = 0; i < keyword_list.length; i++){
-    if (keyword_list[i].indexOf("preferrable") !=-1){
+    if (keyword_list[i].indexOf("pferrable") !=-1){
       $("#key_words").append("<button id=key_btn_special>" + keyword_list[i] + "</button> ");
     }else{
       $("#key_words").append("<button id=key_btn>" + keyword_list[i] + "</button>");
@@ -173,11 +181,15 @@ $(window).on("load", function(){
     });
   })
 
-  $('#plan_property_words').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
+  $('#plan_property_words_0').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
   if (plan_property_list.length !=0){
-    $('#plan_property_words').append(load_list(plan_property_list, "prop"));
+    $('#plan_property_words_0').append(load_list(plan_property_list, "prop"));
   }
 
+  $('#plan_property_words_1').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
+  if (plan_property_list.length !=0){
+    $('#plan_property_words_1').append(load_list(plan_property_list, "prop"));
+  }
 
  });
 
@@ -329,8 +341,8 @@ function add_plan_object_properties(){
   var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
   new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list'>"+ " <datalist id='plan_object_list'>";
   console.log(plan_object_list)
-  for(; i < plan_object_list.length; i++){
-    new_input += " <option value='" + plan_object_list[i] + "'>" + plan_object_list[i] + "</option>"
+  for(; i < plan_object_list[0].length; i++){
+    new_input += " <option value='" + plan_object_list[0][i] + "'>" + plan_object_list[0][i] + "</option>"
   }
  new_input += "</datalist> </div>"
  new_input += "<div class = ' my-auto'>  's function is to </div>"
@@ -342,14 +354,45 @@ function add_plan_object_properties(){
  }
  new_input += " <option value='None of above'> None of above </option>"
  new_input += "</datalist> </div></div>"
- $('#plan_obj_property_form').prepend(new_input);
+ $('#plan_obj_property_form_0').prepend(new_input);
  $('#total_pair').val(new_pair_no)
 
-  $('#plan_obj_property_form #object').on('click', function() {
+  $('#plan_obj_property_form_0 #object').on('click', function() {
     $(this).val('');
   });
 
-  $('#plan_obj_property_form #property').on('click', function() {
+  $('#plan_obj_property_form_0 #property').on('click', function() {
+    $(this).val('');
+  });
+}
+
+
+function add_plan_object_properties_2(){
+  var i = 0;
+  var new_pair_no = parseInt($('#total_pair').val()) + 1;
+  var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
+  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list_2'>"+ " <datalist id='plan_object_list_2'>";
+  for(; i < plan_object_list[1].length; i++){
+    new_input += " <option value='" + plan_object_list[1][i] + "'>" + plan_object_list[1][i] + "</option>"
+  }
+ new_input += "</datalist> </div>"
+ new_input += "<div class = ' my-auto'>  's function is to </div>"
+
+  i = 0;
+  new_input += "<div class ='col-auto'> <input id='property' onkeydown='return false;' name='property' class='form-control' list='total_property_list'>"+ " <datalist id='total_property_list'>";
+  for(; i < total_property_list.length; i++){
+   new_input += " <option value='" + total_property_list[i] + "'>" + total_property_list[i] + "</option>"
+ }
+ new_input += " <option value='None of above'> None of above </option>"
+ new_input += "</datalist> </div></div>"
+ $('#plan_obj_property_form_1').prepend(new_input);
+ $('#total_pair').val(new_pair_no)
+
+  $('#plan_obj_property_form_1 #object').on('click', function() {
+    $(this).val('');
+  });
+
+  $('#plan_obj_property_form_1 #property').on('click', function() {
     $(this).val('');
   });
 }
@@ -406,18 +449,24 @@ function serialize(){
     });
   })
 
-  $("#plan_property_words").empty()
-  $("#plan_property_words").append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
+  $("#plan_property_words_0").empty()
+  $("#plan_property_words_0").append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
   for (var key in set){
-      $("#plan_property_words").append( "<div class='col-auto align-middle' id='prop'><p>" + key + "</p></div>");
+      $("#plan_property_words_0").append( "<div class='col-auto align-middle' id='prop'><p>" + key + "</p></div>");
+  }
+    $("#plan_property_words_1").empty()
+  $("#plan_property_words_1").append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
+  for (var key in set){
+      $("#plan_property_words_1").append( "<div class='col-auto align-middle' id='prop'><p>" + key + "</p></div>");
   }
 
   // $("#text_obj").text(content);
 }
 
-function plan_submit(){
-  var form = $("#plan_obj_property_form");
-  var content = JSON.stringify(form.serializeArray());
+function plan_submit_0(){
+  var form = $("#plan_obj_property_form_0").serializeArray();
+  form.push({"obj_name": plan_object[0]})
+  var content = JSON.stringify(form);
   //$.post("/recieve_property", content)
   $.ajax({
     type:"POST",
@@ -432,6 +481,28 @@ function plan_submit(){
     }
   });
 }
+
+function plan_submit_1(){
+  var form = $("#plan_obj_property_form_1").serializeArray();
+  form.push({"obj_name": plan_object[1]})
+  var content = JSON.stringify(form);
+  //$.post("/recieve_property", content)
+  $.ajax({
+    type:"POST",
+    url: "/recieve_plan_property",
+    data: content,
+    contentType:"application/json; charset=utf-8",
+    success: function(msg){
+      console.log(msg)
+      if(msg=="OK"){
+        $("#text_step4").text("successfully saved.")
+      }
+    }
+  });
+  document.getElementById("TRANS_BUTT").style.display = "block"
+
+}
+
 
 // function add_causal(){
 //   var new_causal_no = parseInt($('#total_object_causal').val())+1;
@@ -693,8 +764,9 @@ function submit_causal(){
      }
    });
 
-
-
+   if (document.getElementById("MORESTEP") == null){
+      document.getElementById("TRANS_BUTT").style.display = "block"
+   }
    console.log(all_sentences)
   }
 

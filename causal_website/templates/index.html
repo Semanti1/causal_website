@@ -165,45 +165,77 @@ console.log(content);
 <script>
 var all_planobject = {}
 var allplandescription = []
+var plan_idx = 0
+var plan_object = []
 {% for description in plan_description %}
 var plan_content = JSON.parse('{{description| tojson}}');
 all_planobject[plan_content["name"]] = plan_content["object_list"];
-
+plan_object.push(plan_content["name"])
 allplandescription.push(plan_content["description"]);
 console.log(all_planobject);
 {% endfor %}
 </script>
 
-<h2> Step3: Associate {{plan_object}}  parts with functions in Step1</h2>
-<p> In this task, you need to associate the parts of {{plan_object}} with the functions that you created in step1 by considering which parts of the {{plan_object}} plays a similar role in creating light.
+
+<h2> Associate {{plan_object[0]}}  parts with functions in Step1</h2>
+<p> In this task, you need to associate the parts of {{plan_object[0]}}  with the functions that you created in step1 by considering which parts of the {{plan_object[0]}} plays a similar role in creating light.
 <div class="container">
 <div class="row align-items-end" id="plan_furniture_img">
-{% for each in plan_object_image %}
 <div class="col">
-  <img class="img-responsive" src={{each}} style="height:auto; width:250px">
+  <img class="img-responsive" src={{plan_object_image[0]}} style="height:auto; width:250px">
 </div>
-{% endfor %}
 </div>
 </div>
 
-<div class ="container" id="plan_object_words">
+<div class ="container" id="plan_object_words_0">
+
 </div>
-<div class = "row" id="plan_property_words">
-</div>
-<div class="row">
-<button class="btn btn-success" id="add_plan_object_properties"> Add a function of an object part</button>
-<button class="btn btn-success" id="plan_submit"> Submit </button>
+<div class = "row" id="plan_property_words_0">
 </div>
 <div class="row">
-  <form id="plan_obj_property_form">
+<button class="btn btn-success" id="add_plan_object_properties_0"> Add a function of an object part</button>
+<button class="btn btn-success" id="plan_submit_0"> Submit </button>
+</div>
+<div class="row">
+  <form id="plan_obj_property_form_0">
   </form>
 </div>
 <div class="row" id="text_step3">
 </div>
 
+
+<h2> Associate {{plan_object[1]}}  parts with functions in Step1</h2>
+<p> In this task, you need to associate the parts of {{plan_object[1]}}  with the functions that you created in step1 by considering which parts of the {{plan_object[1]}} plays a similar role in creating light.
+<div class="container">
+<div class="row align-items-end" id="plan_furniture_img">
+<div class="col">
+  <img class="img-responsive" src={{plan_object_image[1]}}  style="height:auto; width:250px">
+</div>
+</div>
+</div>
+
+<div class ="container" id="plan_object_words_1">
+
+</div>
+<div class = "row" id="plan_property_words_1">
+</div>
+<div class="row">
+<button class="btn btn-success" id="add_plan_object_properties_1"> Add a function of an object part</button>
+<button class="btn btn-success" id="plan_submit_1"> Submit </button>
+</div>
+<div class="row">
+  <form id="plan_obj_property_form_1">
+  </form>
+</div>
+<div class="row" id="text_step4">
+</div>
+
 </div>
 
 {% endif %}
+
+
+<div id="TRANS_BUTT">
 {% if end_exp %}
 <div id="FINISH">
   <button class="btn btn-success" id="finish" onclick="window.location.href='{{url_for('complete')}}';"> Complete Experiment </button>
@@ -215,6 +247,7 @@ console.log(all_planobject);
   <!-- onclick="window.location.href='{{url_for('next_experiment')}}';" -->
 </div>
 {% endif %}
+</div>
 
 <input type="hidden" value="1" id="total_prop">
 <input type="hidden" value="1" id="total_obj">

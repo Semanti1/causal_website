@@ -205,39 +205,55 @@ def chair():
 @app.route("/light_h")
 def light_h():
     global plan_object
-    # heat_based_list = ["kerosene_lamp", "candle", "oil_lamp"]
-    # rand_indx = random.randint(0, len(heat_based_list)-1)
-    # plan_object=heat_based_list[rand_indx]
+    global display_object
+
+    electric_based_list = ["lamp", "flashlight", "wall_lamp"]
+    rand_indx = random.randint(0, len(electric_based_list)-1)
+    far_obj =electric_based_list[rand_indx]
     furnitureloader.set_furniture(plan_object, index=1)
     plan_image_path, plan_json = furnitureloader.load()
-    global display_object
+    furnitureloader.set_furniture(far_obj, index = 1)
+    plan_image_path_2, plan_json_2 = furnitureloader.load()
+    plan_image_path_list = [plan_image_path[0], plan_image_path_2[0]]
+    print(plan_image_path_list)
+    plan_json_file_list = [plan_json[0], plan_json_2[0]]
+    plan_object_list = list([plan_object, far_obj])
+
     # display_object = [o for i, o in enumerate(heat_based_list) if i != rand_indx]
     image_path_list, json_file_list = furnitureloader.load_category(display_object);
-    global random_string
-    global encoding
-    random_string = ''.join(random.choice(letters) for i in range(10));
-    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    # global random_string
+    # global encoding
+    # random_string = ''.join(random.choice(letters) for i in range(10));
+    # encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json, end_exp=False);
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp=False);
 
 
 @app.route("/light_e")
 def light_e():
     global plan_object
-    # electric_based_list = ["lamp", "flashlight", "wall_lamp"]
-    # rand_indx = random.randint(0, len(electric_based_list)-1)
-    # plan_object=electric_based_list[rand_indx]
+    global display_object
+
+    heat_based_list = ["kerosene_lamp", "candle", "oil_lamp"]
+    rand_indx = random.randint(0, len(heat_based_list)-1)
+    far_obj =heat_based_list[rand_indx]
     furnitureloader.set_furniture(plan_object, index=1)
     plan_image_path, plan_json = furnitureloader.load()
-    global display_object
+    furnitureloader.set_furniture(far_obj, index = 1)
+    plan_image_path_2, plan_json_2 = furnitureloader.load()
+    plan_image_path_list = [plan_image_path[0], plan_image_path_2[0]]
+    plan_json_file_list = [plan_json[0], plan_json_2[0]]
+    plan_object_list = list([plan_object, far_obj])
+    print(plan_image_path_list)
+
     # display_object = [o for i, o in enumerate(electric_based_list) if i != rand_indx]
     image_path_list, json_file_list = furnitureloader.load_category(display_object);
-    global random_string
-    global encoding
-    random_string = ''.join(random.choice(letters) for i in range(10));
-    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    # global random_string
+    # global encoding
+    # random_string = ''.join(random.choice(letters) for i in range(10));
+    # encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object, plan_object_image=plan_image_path, plan_description=plan_json, end_exp =False);
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp =False);
 
 
 @app.route("/light")
@@ -251,17 +267,17 @@ def light_e():
 #     print(image_path_list, furnitureloader.furniture_path)
 #     return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object="", plan_object_image=);
 def light():
-    image_path_list, json_file_list, plan_image_path_list, plan_json_file_list = furnitureloader.load_all2();
+    image_path_list, json_file_list, plan_image_path_list, plan_json_file_list, plan_object_list = furnitureloader.load_all2();
     print(image_path_list)
-    global random_string
-    global encoding
+    # global random_string
+    # global encoding
     global plan_object
     global second_page
-    plan_object = "all"
-    random_string = ''.join(random.choice(letters) for i in range(10));
-    encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
+    plan_object = "far"
+    # random_string = ''.join(random.choice(letters) for i in range(10));
+    # encoding = hasher.sha256(random_string.encode('utf-8')).hexdigest();
     causalgraph.reset();
-    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object="two objects", plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp=True);
+    return render_template("index.html", furniture_image=image_path_list, description_list=json_file_list, plan_object=plan_object_list, plan_object_image=plan_image_path_list, plan_description=plan_json_file_list, end_exp=True);
 
 
 
@@ -290,12 +306,19 @@ def receive_data():
 def receive_plan_data():
     data = request.get_json()
     global encoding
-    global plan_object
+    global step
     # furnitureloader.set_furniture(plan_object, index=1)
     root = os.path.dirname(os.path.abspath(__file__))
-    property_path = os.path.join(root,"static/causal_graph/", "object_property_" + plan_object+ "_" + encoding + ".json")
+    obj = data[-1]["obj_name"]
+    property_path = os.path.join(root,"static/causal_graph/", "object_property_" + obj+ "_" + encoding + ".json")
+
+    if step ==3:
+        property_path = os.path.join(root,"static/causal_graph/", "object_property_near_test_" + obj+ "_" + encoding + ".json")
+    if step ==4:
+        property_path = os.path.join(root,"static/causal_graph/", "object_property_far_test_" + obj+ "_" + encoding + ".json")
+
     with open(property_path, "w") as file:
-        json.dump(data, file);
+        json.dump(data[:-1], file);
     return "OK"
 
 @app.route("/check_correct", methods=["POST"])
