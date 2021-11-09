@@ -61,6 +61,7 @@ class State(ABC):
 		self.obj_names = []
 		self.objects = []
 		self.obj_types = {}
+		self.obj_functions = set()
 
 	def addObject(self, obj):
 		self.obj_dict[obj.name] = obj

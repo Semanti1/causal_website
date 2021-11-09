@@ -282,6 +282,7 @@ class FurnitureState(State):
 		self.addObjectFromfile(prop_path);
 
 		#print
+		print("-----init state--------")
 		for key, obj in self.obj_dict.items():
 			print(key, obj.function)
 
@@ -321,6 +322,7 @@ class FurnitureState(State):
 			for i in range(int(len(data)/2)):
 				obj_name = data[2*i]["value"];
 				obj_prop = data[2*i+1]["value"];
+				self.obj_functions.add(obj_prop)
 				print(obj_name, obj_prop)
 				try:
 					self.obj_dict[obj_name].function.append(obj_prop);
@@ -448,6 +450,7 @@ class Furniture(Domain):
 		# self.state.causal_graph.runModel(self.state, action)
 
 		#self.goal = Goal(weight=5, height=9)
+		print("----causal graph ------")
 		print(self.state.causal_graph)
 
 		# self.unstack = unstack(self)

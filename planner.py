@@ -201,7 +201,7 @@ class Planner():
 					continue
 
 				for action in valid_actions:
-					# print("valid action: ", action)
+					#print("valid action: ", action)
 					score = action.state.causal_graph.runModel(action.state, action)
 					done = self.domain.isGoalSatisfied(action.state)
 					#print(action, action.state.causal_graph, done)
@@ -216,7 +216,7 @@ class Planner():
 					# if not (action.state in self.MDP):
 					queue.append([action.state, action, score])
 				#print("\n")
-			#self.value_graph.render("image", view=True)
+			self.value_graph.render("image", view=True)
 
 		except Exception as err:
 			print("MDP_Init error: ", err);
@@ -294,7 +294,9 @@ class Planner():
 					#print(best_action)
 				if next_s == None and done !=True:
 					done = True
+					policy = []
 					print("failed to generate a plan. The current plan is as follows: ")
+					return("failed to generate a plan")
 				current_state = next_s
 		except Exception as err:
 			print("planning error: ", err);
