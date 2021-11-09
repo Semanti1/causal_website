@@ -121,9 +121,9 @@ class Function_Causal_Graph():
 				nodes_dict = {}
 				for parent, children in graph.items():
 					causal_node = Function_Causal_Node(name=parent);
-					print("parent: ", parent)
+					#print("parent: ", parent)
 					for child_pair in children:
-						print("child: ", child_pair)
+						#print("child: ", child_pair)
 						child, coef = child_pair
 						if child not in nodes_dict:
 							new_node = Function_Causal_Node(name=child);
@@ -140,12 +140,11 @@ class Function_Causal_Graph():
 					causal_graph[causal_node.name] = causal_node
 					self.all_graph.append(causal_graph)
 					self.all_nodes.append(nodes_dict)
-			print(self.coef_map)
 		except Exception as err:
 			print("error from addCausalGraphFromfile: ", err);
 
 
-	def subtreeUtil(self, root, nodes_dict):
+	def subtreeUtil(self, root, nodes_dict, state):
 		if(len(root.children_node) ==0):
 			return root.value;
 		value = 1
@@ -160,14 +159,18 @@ class Function_Causal_Graph():
 			#print("child: ", child.name, child.value)
 			coef = self.coef_map[root.name][child]
 			if coef == -1:
-				value *= self.subtreeUtil(nodes_dict[child], nodes_dict);
+				value *=  self.subtreeUtil(nodes_dict[child], nodes_dict, state);
 				all_plus=False;
 			elif coef == 1:
-				value += self.subtreeUtil(nodes_dict[child], nodes_dict)
+				value += self.subtreeUtil(nodes_dict[child], nodes_dict, state)
 			# 	all_plus=False
 			else:
-				value += (coef/coef_sum) * self.subtreeUtil(nodes_dict[child], nodes_dict)
-		#print(root.name, value)
+				value += (coef/coef_sum) * self.subtreeUtil(nodes_dict[child], nodes_dict, state)
+		if root.name in state.obj_functions: #if the current node is a function node, then need to check if its parents =1 and itself=1
+			value *= root.value
+		else:
+			value = value
+
 		if all_plus:
 			root.value = value-1;
 		else:
@@ -181,9 +184,13 @@ class Function_Causal_Graph():
 					for i in range(len(self.all_nodes)):
 						if func in self.all_nodes[i]:
 							self.all_nodes[i][func].value = 1
+			# print("----state function-------")
+			# for node in self.all_nodes:
+			# 	for func, func_node in node.items():
+			# 		print(func, func_node.value)
 
 			for idx, graph in enumerate(self.all_graph):
-				value = self.subtreeUtil(graph[self.goal_name], self.all_nodes[idx]);
+				value = self.subtreeUtil(graph[self.goal_name], self.all_nodes[idx], state);
 				if(value > self.value):
 					self.value = value
 			print("run model: ", self.value, action)
@@ -199,7 +206,7 @@ class Function_Causal_Graph():
 						if func in self.all_nodes[i]:
 							self.all_nodes[i][func].value = 1
 		for idx, graph in enumerate(self.all_graph):
-			value = self.subtreeUtil(graph[self.goal_name], self.all_nodes[idx]);
+			value = self.subtreeUtil(graph[self.goal_name], self.all_nodes[idx], state);
 			if(value > self.value):
 				self.value = value;
 			# print("run model: ", self.value, action)
