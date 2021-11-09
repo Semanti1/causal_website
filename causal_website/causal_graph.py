@@ -4,9 +4,8 @@ import shutil
 import json
 
 all_sentences = [
-['property:production', 'keyword:AND', 'property:connection to power source', 'keyword:is/are neccesary for', 'latent:Light'],
-['property:stability', 'keyword:AND', 'property:extension', 'keyword:is/are neccesary for', 'latent:Lamp structure'],
-["latent:Lamp structure", "keyword:AND", 'latent:Light', 'keyword:is/are neccesary for', 'latent:Lamp'],
+['prop:provide fuel',  'key:is/are neccesary for causing', 'prop:feul to heat'],
+['prop:feul to heat',  'key:is/are neccesary for causing', 'goal:light'],
 ]
 
 def check_optional(sentence):
@@ -90,11 +89,13 @@ class CausalGraph():
                     if name=="prop":
                         dot.node(value, label=value, color='blue');
                 else:
-                    if name == "lat" or name =="goal":
+                    if name == "lat" or name =="goal" or name =="prop":
                         if name=="lat":
                             dot.node(value, label=value);
                         if name=="goal":
                             dot.node(value, label=value, color="red");
+                        if name=="prop":
+                            dot.node(value, label=value, color="blue")
                         if optional:
                             for child in children_list:
                                 dot.edge(child, value, style="dashed");
@@ -154,6 +155,7 @@ class CausalInfo():
                 before_key = True
                 syntax_error = check_correctness(sentence);
                 if syntax_error != "success":
+                    print(syntax_error)
                     return 3; #status code3: syntax error
 
                 optional,_ = check_optional(sentence);
@@ -165,7 +167,7 @@ class CausalInfo():
                             self.reverse_graph[(value, name)] = []
                         children_list.append((value, idx+1));
                     else:
-                        if (name == "lat") or (name == "goal"):
+                        if (name == "lat") or (name == "goal") or (name =="prop"):
                             if value not in self.graph:
                                 self.graph[value] = []
                                 reverse_graph[value] = []
@@ -179,13 +181,14 @@ class CausalInfo():
                                 else:
                                     reverse_graph[value].append((child[0], -1));
                                     self.reverse_graph[(value, name)].append((child[0], -1));
-                        if(name == "prop"):
-                            return 4; # status code 4: function is used as intermidate effect
+                        # if(name == "prop"):
+                        #     return 4; # status code 4: function is used as intermidate effect
                     if name == "key" and value.find("is/are")!=-1:
                         before_key = False;
 
             leaf_node_count = 0;
             for key, val in self.graph.items():
+                print(key, val)
                 if len(val) == 0:
                     leaf_node_count +=1
             if leaf_node_count !=1:
@@ -203,5 +206,6 @@ class CausalInfo():
 
 
 
-# causalgraph = CausalGraph();
-# causalgraph.process_causal(all_sentences);
+causalgraph = CausalInfo();
+val = causalgraph.create_single_causal_info(all_sentences, {});
+print(val)
