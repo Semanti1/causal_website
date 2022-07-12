@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import itertools
 import customerrors
 from copy import deepcopy
+from collections import defaultdict
 
 class Domain():
 	def __init__(self, state):
@@ -62,6 +63,7 @@ class State(ABC):
 		self.objects = []
 		self.obj_types = {}
 		self.obj_functions = set()
+		self.obj_func = defaultdict(list)
 
 	def addObject(self, obj):
 		self.obj_dict[obj.name] = obj
