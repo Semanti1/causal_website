@@ -117,8 +117,8 @@ if __name__ == "__main__":
 	# res=myPlan.plan()
 	# Planner.printHistory(res)
 	furniture_path = "../static/causal_graph"
-	encoding = "952279706fbaf1e4dd83e0df2f1771962ce9cca4c225fa2c9a59bcea8edd69a8"
-	str = website_plan(furniture_path, furniture_path, encoding, ["flashlight"], "near")
+	encoding = "d5fb0b55baaf0b1a2abe5565ebb0bcb8830364601137925797be6687d1cec8d9"
+	str = website_plan(furniture_path, furniture_path, encoding, ["lamp"], "specific_lamp")
 	print(str)
 	# runSimulation(myPlan)
 
