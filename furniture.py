@@ -323,6 +323,7 @@ class FurnitureState(State):
 				obj_name = data[2*i]["value"];
 				obj_prop = data[2*i+1]["value"];
 				self.obj_functions.add(obj_prop)
+				self.obj_func[obj_prop].append(obj_name)
 				print(obj_name, obj_prop)
 				try:
 					self.obj_dict[obj_name].function.append(obj_prop);

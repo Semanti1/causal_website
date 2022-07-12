@@ -300,6 +300,7 @@ class Planner():
 				current_state = next_s
 		except Exception as err:
 			print("planning error: ", err);
+			return("failed to generate a plan")
 
 		return policy
 
@@ -317,6 +318,42 @@ class Planner():
 			if c > r:
 				return idx
 		return len(score)-1;
+
+
+
+	def plan_causal(self, state):
+		causal_graph = state.causal_graph.all_graph[0]
+		causal_obj = state.causal_graph
+		causal_node_dict = state.causal_graph.all_nodes[0]
+		root = causal_graph[causal_obj.goal_name]
+		action_list = []
+
+		def dfs(root):
+			if len(root.children_node) ==0:
+				if root.name in state.obj_func:
+					return state.obj_func[root.name][0]
+			prev_obj = None
+			for child in root.children_node: #connect subtree children object together
+				obj = dfs(causal_node_dict[child])
+				if prev_obj:
+					action = SpecificAction(self.domain.connect, [prev_obj, obj], state)
+					action_list.append(type(action.action).__name__ +": "+ ",".join(action.parameters))
+					action.action.doAction(state, action.parameters)
+					#print(state)
+				prev_obj = obj
+			if root.name in state.obj_func: # connect subtree root object with the children (if subtree root is a function node)
+				obj = state.obj_func[root.name][0]
+				action = SpecificAction(self.domain.connect, [prev_obj, obj], state)
+				action_list.append(type(action.action).__name__ +": "+ ",".join(action.parameters))
+				action.action.doAction(state, action.parameters)
+				#print(state)
+				prev_obj = obj
+			return prev_obj
+
+		dfs(root)
+
+		print(action_list)
+		return action_list
 
 	@staticmethod
 	def Causal(self, pickBestAction, repick=None):

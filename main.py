@@ -64,31 +64,32 @@ def website_plan( furniture_path, causal_path, encoding, plan_object, gen=""):
 	# res= myPlan.plan()
 	# str = Planner.HistoryString(res)
 	# return str;
+
+
 	# MCTreePlan = MonteCarloSearch(domain)
 	# start_time = time.time()
 	# plan = MCTreePlan.run_tree(domain.state)
 	# duration = time.time() - start_time
 	# print("mcts one plan time", duration)
-	myPlan.MDP_Init()
-	start_time = time.time()
-	all_plan = {}
-	for i in range(20):
-		plan = myPlan.policy_iteration()
-		if str(plan) not in all_plan and len(plan) > 0:
-			all_plan[str(plan)] = True
 
-	duration = time.time() - start_time
-	print("MDP plan time: ", duration)
-	plan_str = []
-	for plan, _ in all_plan.items():
-		plan_str.append(str(plan))
 
-	return plan_str
-
+	# myPlan.MDP_Init()
+	# start_time = time.time()
+	# all_plan = {}
 	# for i in range(20):
-	# 	print(myPlan.policy_iteration())
-	# return myPlan.policy_iteration()
-	# return None
+	# 	plan = myPlan.policy_iteration()
+	# 	if str(plan) not in all_plan and len(plan) > 0:
+	# 		all_plan[str(plan)] = True
+
+	# duration = time.time() - start_time
+	# print("MDP plan time: ", duration)
+	# plan_str = []
+	# for plan, _ in all_plan.items():
+	# 	plan_str.append(str(plan))
+
+	# return plan_str
+
+	myPlan.plan_causal(domain.state)
 
 if __name__ == "__main__":
 	'''

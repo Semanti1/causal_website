@@ -60,7 +60,9 @@ class Function_Causal_Node():
 		self.name = name
 		self.causal_function = None
 		self.properties = {p: 0 for p in param}
-		self.children_node = [] #node_name
+		self.children_node = [] #cause node_name
+		self.parent_node = [] # effect
+		self.neighbor_node = [] #common causes
 		self.value = 0
 		# self.latent= latent
 	def assign_causal_function(self, func):
@@ -122,13 +124,20 @@ class Function_Causal_Graph():
 				for parent, children in graph.items():
 					causal_node = Function_Causal_Node(name=parent);
 					#print("parent: ", parent)
+					all_children = [child_pair[0] for child_pair in children]
 					for child_pair in children:
 						#print("child: ", child_pair)
 						child, coef = child_pair
 						if child not in nodes_dict:
 							new_node = Function_Causal_Node(name=child);
+							new_node.neighbor = all_children
+							new_node.parent_node.append(parent)
 							nodes_dict[new_node.name] = new_node
 							causal_graph[new_node.name] = new_node
+						else:
+							child_node = nodes_dict[child]
+							child_node.parent_node.append(parent)
+							child_node.neighbor = all_children
 
 
 						self.coef_map[parent][child] = coef;
@@ -216,13 +225,30 @@ class Function_Causal_Graph():
 	def getScore(self):
 		return self.value
 
+	# def __str__(self):
+	# 	ret = ""
+	# 	for graph in self.all_graph:
+	# 		for key, nodes in graph.items():
+	# 			if len(nodes.children_node) !=0:
+	# 				ret += nodes.name + " \t value: " + str(nodes.value) + "\n\t"
+	# 			for cn in nodes.children_node:
+	# 				ret+=str(graph[cn].name)+ " : " + str(graph[cn].value)  + " coef: " + str(self.coef_map[nodes.name][cn])+ "\n\t"
+	# 			ret +="\n"
+	# 	return ret
+
 	def __str__(self):
 		ret = ""
-		for graph in self.all_graph:
-			for key, nodes in graph.items():
-				if len(nodes.children_node) !=0:
-					ret += nodes.name + " \t value: " + str(nodes.value) + "\n\t"
-				for cn in nodes.children_node:
-					ret+=str(graph[cn].name)+ " : " + str(graph[cn].value)  + " coef: " + str(self.coef_map[nodes.name][cn])+ "\n\t"
-				ret +="\n"
+		for nodes in self.all_nodes:
+			for name, node in nodes.items():
+				ret += name + "\t \n"
+				ret += "children node: "
+				for child in node.children_node:
+					ret+= child +"\t"
+				ret += "\n neighboring node: "
+				for neigh in node.neighbor_node:
+					ret += neigh + "\t"
+				ret += "\n parent node: "
+				for par in node.parent_node:
+					ret += par + "\t"
+				ret += "\n\n"
 		return ret
