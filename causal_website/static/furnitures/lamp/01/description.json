@@ -1,0 +1,10 @@
+{
+  "name" : "lamp",
+  "id": 2,
+  "object_list": ["base with cables", "light bulb", "shade"],
+  "property_list": [],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": [],
+  "description": "The base of the lamp is a stand with an electrical cable running through it. When the switch is turned on, electricity flows to the lightbulb and it emits light. The lamp shade diffuses light.",
+  "goal_list": ["Produce Light"]
+}

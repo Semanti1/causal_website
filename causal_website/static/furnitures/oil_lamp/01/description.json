@@ -1,0 +1,10 @@
+{
+  "name" : "oil_lamp",
+  "id": 1,
+  "object_list": ["wick", "container"],
+  "property_list": [],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": [],
+  "description": "The container contains oil and stores the wick. The wick absorbs oil, and when the wick is lit, the oil burns and produces a flame. As the oil burns, capillary action draws more oil to the wick, keeping the flame alive.",
+  "goal_list": ["Produce Light"]
+}

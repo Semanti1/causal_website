@@ -1,0 +1,10 @@
+{
+  "name" : "wall_lamp",
+  "id": 1,
+  "object_list": ["backplate", "lamp body", "light bulb"],
+  "property_list": [],
+  "keyword_list": ["AND", "OR", "is/are neccesary for causing", "is/are preferrable for causing"],
+  "latent_list": [],
+  "description": "The backplate is connected to the electrical circuit. When the switch is turned on, electricity flows to lightbulb through the lamp body, and it emits light. The lamp body also diffuses light. ",
+  "goal_list": ["Produce Light"]
+}

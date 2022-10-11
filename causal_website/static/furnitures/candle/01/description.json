@@ -1,0 +1,10 @@
+{
+  "name" : "candle",
+  "id": 3,
+  "object_list": ["wick", "wax"],
+  "property_list": [],
+  "keyword_list": [],
+  "latent_list": [],
+  "description": "When the wick is lit, the flame melts the wax around the wick. The wick absorbs the liquid wax through capillary action and pulls it upward, which keeps feeding the flame.",
+  "goal_list": ["Lamp"]
+}

@@ -1,0 +1,10 @@
+{
+  "name" : "flashlight",
+  "id": 1,
+  "object_list": ["case", "batteries", "head"],
+  "property_list": [],
+  "keyword_list": [],
+  "latent_list": [],
+  "description": "The case contains the batteries and the electrical circuit connecting the batteries to the head. The head contains the lightbulb. When the switch is turned on, electricity from batteries flows to the lightbulb and it emits light.",
+  "goal_list": ["Produce Light"]
+}
