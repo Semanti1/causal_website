@@ -1,7 +1,7 @@
 {
   "name" : "kerosene_lamp",
   "id": 1,
-  "object_list": ["fuel tank", "burner", "chimney"],
+  "object_list": ["fuel tank with kerosene", "burner", "chimney"],
   "property_list": [],
   "keyword_list": [],
   "latent_list": [],

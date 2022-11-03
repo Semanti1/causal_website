@@ -95,3 +95,7 @@ body {
 #property_words #prop{
 }
 .top-buffer { margin-top:20px; }
+
+.vertSpace{
+height:100px;
+}

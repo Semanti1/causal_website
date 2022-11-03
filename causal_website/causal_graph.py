@@ -1,4 +1,5 @@
 from graphviz import Digraph
+from time import sleep
 import os
 import shutil
 import json
@@ -37,14 +38,14 @@ def check_correctness(sentence):
                 if name == "prop" or name =="lat":
                     # print(sentence[idx+1], sentence[idx+1].find("key"))
                     if (sentence[idx+1].find("key") == -1):
-                        return "missing AND/OR"
+                        return "missing AND"
         else:
             for idx, field in enumerate(sentence[:-1]):
                 name, value = field.split(":")
                 if name =="prop" or name =="lat":
                     if(sentence[idx+1].find("score") != -1):
                         if(sentence[idx+2].find("key") ==-1):
-                            return "missing AND/OR"
+                            return "missing AND"
     except:
         return "error"
     return "success"
@@ -134,29 +135,60 @@ class CausalInfo():
     def create_causal_info(self, all_sentences, info_path):
         success_final = 0
         all_graph = []
+        print("ALL SENTENCESsssssss  ", all_sentences)
         for model in all_sentences:
+            print("MODELLLLLLLLLLL  ", model)
             reverse_graph = {}
             success = self.create_single_causal_info(model, reverse_graph)
             if success !=0:
+                if success == 1:
+                    syntax_error="There is an error on the server end to save the causal model. Please report this to the developer."
+                elif success == 2:
+                    syntax_error="All nodes must be connected to the goal node directly or indirectly"
+                elif success == 8:
+                    syntax_error="There are syntax error in your causal rules"
+                elif success == 7:
+                    syntax_error="missing AND"
+                elif success == 3:
+                    syntax_error= "no necessary/preferrable is specified"
+                elif success == 4:
+                    syntax_error = "Object property cannot be used as effect"
+                elif success == 5:
+                    syntax_error="Effect nodes must be caused by at least one of the functions"
+                elif success == 6:
+                    syntax_error="Goal node not present"
+
+                with open(info_path, "w") as file:
+                    json.dump(syntax_error, file)
                 return success
             all_graph.append(reverse_graph)
         with open(info_path, "w") as file:
             json.dump(all_graph, file)
-        return success_final;
+        print("dumped")
+        #sleep(5)
+        return success_final
 
     def create_single_causal_info(self, all_sentences, reverse_graph):
         try:
             self.graph = {}
             self.reverse_graph = {}
             syntax_error = False
-
+            goal,gname = (all_sentences[-1][-1]).split(':')
+            if goal!="goal":
+                return 6
             for sentence in all_sentences:
+                print("Singleeeeee SENTENCE  ", sentence)
                 children_list = []
                 before_key = True
                 syntax_error = check_correctness(sentence);
                 if syntax_error != "success":
                     print(syntax_error)
-                    return 3; #status code3: syntax error
+                    if (syntax_error=="no necessary/preferrable is specified"):
+                        return 3 #status code3: syntax error
+                    elif (syntax_error=="missing AND"):
+                        return 7
+                    else:
+                        return 8
 
                 optional,_ = check_optional(sentence);
                 for idx, field in enumerate(sentence):

@@ -8,8 +8,12 @@ instance/
 .pytest_cache/
 .coverage
 htmlcov/
-
+flask_session
+*.log
 dist/
+.idea
+.idea/*
+causal_website/.vs
 build/
 *.egg-info/
 causal_website/static/js/buttonv2.js
