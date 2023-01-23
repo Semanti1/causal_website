@@ -1,5 +1,7 @@
 import sys
 import os
+import os.path
+from os import path
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, dir_path)
 print(sys.path)
@@ -50,15 +52,27 @@ def runSimulation(myplanner):
 			domain.state = e.message
 			runSimulation(myplanner)
 
-def website_plan( furniture_path, causal_path, encoding, plan_object, gen=""):
-	causal_path = os.path.join(causal_path, "causal_" + gen + "_" +encoding+".json")
-	prop_path = os.path.join(furniture_path, "object_property_" + gen + "_" + encoding+".json")
+def website_plan( furniture_path, causal_path, encoding, plan_object,step,num=0,obj_prop_num=0, gen=""):
+	if ("specific" in gen):
+		causal_path = os.path.join(causal_path, "causal_" + gen + "_" +"obj"+str(step)+"_"+plan_object + "_"+str(num)+"_"+ encoding + ".json")
+		prop_path = os.path.join(furniture_path, "object_property_" + gen + "_"+"obj"+str(step)+"_" +plan_object + "_"+str(obj_prop_num)+"_"+encoding + ".json")
+
+	else:
+		causal_path = os.path.join(causal_path, "causal_" + gen + "_" +str(num)+"_"+ encoding+".json")
+		prop_path = os.path.join(furniture_path, "object_property_" + gen + "_" + str(obj_prop_num)+"_"+encoding+".json")
 
 
-	print(causal_path, prop_path)
+	print("plan object", plan_object)
+	print("causal path", causal_path,  path.exists(causal_path))
+	print("prop path", prop_path)
+	# print(causal_path, prop_path)
 	domain = Furniture(causal_path, prop_path, plan_object)
 	myPlan = Planner(domain)
-	print("here")
+	# print("here")
+
+	if (not path.exists(causal_path)):
+		return [["Feedback: Please submit causal model and try again."]]
+
 	# heur = FurnitureHeuristicGenerator(domain)
 	# myPlan.setAlgo(functools.partial(myPlan.Causal, self=myPlan, pickBestAction=heur.chooseNextAction, repick=heur.repickNextAction))
 	# res= myPlan.plan()
@@ -80,16 +94,115 @@ def website_plan( furniture_path, causal_path, encoding, plan_object, gen=""):
 	# 	plan = myPlan.policy_iteration()
 	# 	if str(plan) not in all_plan and len(plan) > 0:
 	# 		all_plan[str(plan)] = True
-
+	#
 	# duration = time.time() - start_time
 	# print("MDP plan time: ", duration)
 	# plan_str = []
 	# for plan, _ in all_plan.items():
 	# 	plan_str.append(str(plan))
-
+	#
 	# return plan_str
 
-	myPlan.plan_causal(domain.state)
+	#Uncomment for graph based
+	if isinstance(plan_object,list):
+		a=[]
+		i=0
+		# for obj in plan_object:
+		# 	print(obj)
+		# 	domain = Furniture(causal_path, prop_path, obj)
+		# 	myPlan = Planner(domain)
+		# 	a.append(myPlan.plan_causal_constrained(domain.state,i))
+		# 	i=i+1
+		# 	print("goal satisfied?? ",domain.isGoalSatisfied(domain.state))
+		goal="provide light"
+		domain = Furniture(causal_path, prop_path, plan_object,goal)
+		myPlan = Planner(domain)
+		a = myPlan.plan_causal_constrained_no_validactions(domain.state, plan_object)
+		#return myPlan.plan_causal_constrained(domain.state)
+		print("PLAN before FEEDBACK ", a)
+		feedback1 = chkplan(a)
+		print("FEEDBACK ", feedback1)
+		return a,feedback1
+	else:
+		if ("tutorial" in gen):
+			goal = "play notes"
+		else:
+			goal = "provide light"
+		domain = Furniture(causal_path, prop_path, plan_object,goal)
+		myPlan = Planner(domain)
+		res = myPlan.plan_causal_constrained_no_validactions(domain.state,plan_object)
+		#print("goal satisfied?? ", domain.isGoalSatisfied(domain.state))
+		print("PLAN before FEEDBACK ", res)
+		feedback2 = chkplan(res)
+		print("FEEDBACK ", feedback2, "RES", res)
+		return res,feedback2
+	
+
+		#return myPlan.plan_causal_constrained(domain.state,0)
+
+
+def chkplan(plan):
+	newplan = plan[:]
+	for id,p in enumerate(plan):
+		planobj = set()
+		obj = ""
+		for partid,partp in enumerate(p):
+			if partid==0:
+				obj = partp.split()[3]
+			else:
+				if 'None' in partp:
+					continue
+				else:
+					allobj = partp.split('\"')
+					planobj.add(allobj[1])
+					planobj.add(allobj[3])
+		if len(planobj)==0:
+			newplan[id] = plan[id]
+		else:
+			feedback = chkcomplete(planobj,obj)
+			newplan[id] = [plan[id][0]]+[feedback]
+	return newplan
+
+def chkcomplete(planobj,obj):
+	validparts = []
+	if obj == "kerosene_lamp":
+		validparts.append("fuel tank with kerosene")
+		validparts.append("burner")
+		validparts.append("chimney");
+	elif obj == "flashlight":
+		validparts.append("head");
+		validparts.append("batteries");
+		validparts.append("case");
+	elif obj == "candle":
+		validparts.append("wax");
+		validparts.append("wick");
+	elif obj == "lamp":
+		validparts.append("base with cables");
+		validparts.append("light bulb");
+		validparts.append("shade");
+	elif obj == "wall_lamp":
+		validparts.append("backplate");
+		validparts.append("lamp body");
+		validparts.append("light bulb");
+	elif obj == "oil_lamp":
+		validparts.append("container with oil");
+		validparts.append("wick")
+	elif obj == "recorder":
+		validparts.append("mouth piece");
+		validparts.append("body")
+	setvalidobjs = set(validparts)
+	diff = setvalidobjs.difference(planobj)
+	if len(diff)==0:
+		feedback = "Successfully generated a complete plan."
+	else:
+		feedback = "Couldn't generate a complete plan. Missing object parts "+(", ").join('"' + mobj + '"' for mobj in list(diff))+ " in the plan. Please update the causal model and/or the object associations and plan again."
+	return feedback
+
+
+
+
+
+
 
 if __name__ == "__main__":
 	'''
@@ -117,9 +230,10 @@ if __name__ == "__main__":
 	# myPlan.setAlgo(functools.partial(myPlan.Causal, self=myPlan, pickBestAction=heur.chooseNextAction, repick=heur.repickNextAction))
 	# res=myPlan.plan()
 	# Planner.printHistory(res)
-	furniture_path = "../static/causal_graph"
-	encoding = "d5fb0b55baaf0b1a2abe5565ebb0bcb8830364601137925797be6687d1cec8d9"
-	str = website_plan(furniture_path, furniture_path, encoding, ["lamp"], "specific_lamp")
+	furniture_path = "../static/causal_graph/sb3533"
+	encoding = "sb3533"
+	# furniture_path, causal_path, encoding, plan_object, step, num = 0, obj_prop_num = 0, gen = ""
+	str = website_plan(furniture_path, furniture_path, encoding, "kerosene_lamp",1,1,1, "specific")
 	print(str)
 	# runSimulation(myPlan)
 

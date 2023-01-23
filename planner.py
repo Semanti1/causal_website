@@ -10,7 +10,7 @@ import statistics
 import numpy as np
 import math
 from graphviz import Digraph
-
+from itertools import combinations
 
 
 class Planner():
@@ -217,17 +217,23 @@ class Planner():
 					queue.append([action.state, action, score])
 				#print("\n")
 			# self.value_graph.render("image", view=True)
-
+			#print("Printing MDP","\n")
+			#print(self.MDP)
 		except Exception as err:
 			print("MDP_Init error: ", err);
 
 
-		#TESTING:
-		# for state, action_next_state in self.MDP.items():
-		# 	print(state.causal_graph)
-		# 	for action, next_state in self.MDP[state].items():
-		# 		[prob, ns, reward, done] = next_state
-		# 		print(action, prob, reward, done)
+		 #TESTING:
+		print("Printing MDP","\n")
+		for state, action_next_state in self.MDP.items():
+			#print(state.causal_graph)
+			
+			for action, next_state in self.MDP[state].items():
+				print('state')
+				print (str(state))
+				[prob, ns, reward, done] = next_state
+				print('action nd next state')
+				print(action, prob,str(ns), reward, done)
 
 
 	def policy_iteration(self):
@@ -327,12 +333,15 @@ class Planner():
 		causal_node_dict = state.causal_graph.all_nodes[0]
 		root = causal_graph[causal_obj.goal_name]
 		action_list = []
-
+		valid_actions = self.domain.getValidActions(state)
+		print("valid actions", [v.parameters for v in valid_actions])
 		def dfs(root):
 			if len(root.children_node) ==0:
 				if root.name in state.obj_func:
 					return state.obj_func[root.name][0]
 			prev_obj = None
+			print("HHHHEEELLLLOOOO")
+			print(root.children_node)
 			for child in root.children_node: #connect subtree children object together
 				obj = dfs(causal_node_dict[child])
 				if prev_obj:
@@ -354,6 +363,701 @@ class Planner():
 
 		print(action_list)
 		return action_list
+
+	# def plan_causal_constrained(self, state,i):
+	# 	if (not state.causal_graph.all_graph):
+	# 		return
+	#
+	# 	causal_graph = state.causal_graph.all_graph[0]
+	# 	causal_obj = state.causal_graph
+	# 	print("HIIII",state.obj_func)
+	# 	causal_node_dict = state.causal_graph.all_nodes[0]
+	# 	testdict = [[a,b.name] for a,b in causal_graph.items()]
+	# 	print("causal node dict",causal_node_dict )
+	# 	print( "length", len(state.causal_graph.all_graph) )
+	# 	root = causal_graph[causal_obj.goal_name]
+	# 	action_list = []
+	# 	valid_actions = self.domain.getValidActions(state)
+	# 	valid_actions_done = []
+	# 	print("valid actions", [v.parameters for v in valid_actions])
+	# 	def dfs(root):
+	# 		if len(root.children_node) ==0:
+	# 			if root.name in state.obj_func:
+	# 				if (len(state.obj_func[root.name])>i):
+	# 					return state.obj_func[root.name][i]
+	# 				else:
+	# 					return state.obj_func[root.name][0]
+	#
+	# 		prev_obj = None
+	# 		print("HHHHEEELLLLOOOO")
+	# 		print(root.children_node, root.name)
+	# 		for bottom,top in combinations(root.children_node,2): #connect subtree children object together
+	# 			bottom_obj = dfs(causal_node_dict[bottom])
+	# 			print("bottom_obj",bottom_obj)
+	# 			top_obj= dfs(causal_node_dict[top])
+	# 			#if prev_obj:
+	# 			action1 = SpecificAction(self.domain.connect, [bottom_obj, top_obj], state)
+	# 			action2 = SpecificAction(self.domain.connect, [top_obj, bottom_obj], state)
+	# 			print("Action1 ", action1.parameters)
+	# 			print("Action2 ", action2.parameters)
+	# 			if action1 in valid_actions:
+	# 				if action1 not in valid_actions_done:
+	# 					print("Action1 ", action1.parameters)
+	# 					action_list.append(type(action1.action).__name__ +": "+ ",".join(action1.parameters))
+	# 					action1.action.doAction(state, action1.parameters)
+	# 					valid_actions_done.append(action1)
+	# 			elif action2 in valid_actions:
+	# 				if action2 not in valid_actions_done:
+	# 					action_list.append(type(action2.action).__name__ + ": " + ",".join(action2.parameters))
+	# 					action2.action.doAction(state, action2.parameters)
+	# 					valid_actions_done.append(action2)
+	# 			else:
+	# 				continue
+	#
+	# 				#print(state)
+	# 			#prev_obj = obj
+	# 		# if root.name in state.obj_func: # connect subtree root object with the children (if subtree root is a function node)
+	# 		# 	obj = state.obj_func[root.name][0]
+	# 		# 	action = SpecificAction(self.domain.connect, [prev_obj, obj], state)
+	# 		# 	action_list.append(type(action.action).__name__ +": "+ ",".join(action.parameters))
+	# 		# 	action.action.doAction(state, action.parameters)
+	# 		# 	#print(state)
+	# 		# 	prev_obj = obj
+	# 		# return prev_obj
+	#
+	# 	dfs(root)
+	#
+	# 	print(action_list)
+	# 	#print("is goal satisfied?",state.)
+	# 	return action_list
+	def plan_causal_constrained_no_validactions(self, state, plan_object):
+		if (not state.causal_graph.all_graph):
+			return
+		print("obj dict", state.obj_dict)
+		causal_graph = state.causal_graph.all_graph[0]
+		causal_obj = state.causal_graph
+		print("HIIII",state.obj_func)
+		causal_node_dict = state.causal_graph.all_nodes[0]
+		testdict = [[a,b.name] for a,b in causal_graph.items()]
+		print("causal node dict",causal_node_dict )
+		print( "length", len(state.causal_graph.all_graph) )
+		root = causal_graph[causal_obj.goal_name]
+		action_list = []
+		#valid_actions = self.domain.getValidActions(state)
+		valid_actions_done = []
+		error_code = 0
+		print ("goal", self.domain.goal)
+		#done = False
+		#print("valid actions", [v.parameters for v in valid_actions])
+		def dfs(root,planobj):
+
+
+			#done = False
+			#if len(uniquechild.values())==0:
+			if len(root.children_node) ==0:
+				if root.name in state.obj_func:
+					i = self.valobjs(state.obj_func[root.name], planobj)
+					if (i!=-1):
+						#error_code+=1
+						return state.obj_func[root.name][i]
+					else:
+						return None
+					# if (len(state.obj_func[root.name])>0):
+					# 	i = self.valobjs(state.obj_func[root.name],planobj)
+					# 	return state.obj_func[root.name][i]
+					# else:
+					# 	return state.obj_func[root.name][0]
+			#if len(uniquechild.values()) == 1:
+			if len(root.children_node) == 1:
+				#if root.name in state.obj_func:
+				#i = self.valobjs(state.obj_func[root.name], planobj)
+				if (root.name in state.obj_func):
+					print("in 1 child")
+					i = self.valobjs(state.obj_func[root.name], planobj)
+					obj1 =  dfs(causal_node_dict[root.children_node[0]],planobj)
+					#lastobj = state.obj_func[root.children_node[0]][i]
+					if (i!=-1):
+						#error_code += 1
+						lastobj = state.obj_func[root.name][i]
+					else:
+						lastobj = None
+					print('lastobj',lastobj)
+					print('obj1',obj1)
+					newact = SpecificAction(self.domain.connect, [lastobj, obj1], state)
+					action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(
+						f'"{param}"' for param in newact.parameters))
+					# if newact in valid_actions:
+					# 	if newact not in valid_actions_done:
+					# 		# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+					# 		action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+					# 		# newact.action.doAction(state, newact.parameters)
+					# 		valid_actions_done.append(newact)
+					# newact2 = SpecificAction(self.domain.connect, [ obj1,lastobj], state)
+					# if newact2 in valid_actions:
+					# 	if newact2 not in valid_actions_done:
+					# 		# action_list.append(" "+type(newact2.action).__name__ + ": " + ",".join(newact2.parameters))
+					# 		action_list.append(" " + type(newact2.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact2.parameters))
+					# 		# newact2.action.doAction(state, newact2.parameters)
+					# 		valid_actions_done.append(newact2)
+					valid_actions_done.append(newact)
+					if valid_actions_done:
+						return valid_actions_done[-1].parameters[-1]
+					else:
+						return None
+				else:
+					#dfs(causal_node_dict[root.children_node[0]], planobj)
+					obj1 = dfs(causal_node_dict[root.children_node[0]], planobj)
+					if(causal_node_dict[root.children_node[0]].name in state.obj_func):
+						i = self.valobjs(state.obj_func[root.children_node[0]], planobj)
+						lastobj = state.obj_func[root.children_node[0]][i]
+						#lastobj = state.obj_func[root.name][i]
+						print('lastobj', lastobj)
+						print('obj1', obj1)
+						newact = SpecificAction(self.domain.connect, [lastobj, obj1], state)
+						action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(
+							f'"{param}"' for param in newact.parameters))
+						# if newact in valid_actions:
+						# 	if newact not in valid_actions_done:
+						# 		# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+						# 		action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+						# 		# newact.action.doAction(state, newact.parameters)
+						# 		valid_actions_done.append(newact)
+						# newact2 = SpecificAction(self.domain.connect, [obj1, lastobj], state)
+						# if newact2 in valid_actions:
+						# 	if newact2 not in valid_actions_done:
+						# 		# action_list.append(" "+type(newact2.action).__name__ + ": " + ",".join(newact2.parameters))
+						# 		action_list.append(" " + type(newact2.action).__name__ + " " + " with ".join(
+						# 			f'"{param}"' for param in newact2.parameters))
+						# 		# newact2.action.doAction(state, newact2.parameters)
+						# 		valid_actions_done.append(newact2)
+						valid_actions_done.append(newact)
+						if valid_actions_done:
+							return valid_actions_done[-1].parameters[-1]
+						else:
+							return None
+					else:
+						return None
+			prev_obj = None
+			print("HHHHEEELLLLOOOO")
+			print(root.children_node, root.name)
+			uniquechild = {}
+			for child in root.children_node:
+				if causal_node_dict[child].name in state.obj_func:
+					i = self.valobjs(state.obj_func[causal_node_dict[child].name], planobj)
+					objpart = state.obj_func[causal_node_dict[child].name][i]
+					if objpart in uniquechild:
+						continue
+					else:
+						uniquechild[objpart] = child
+
+			print("unique child ",uniquechild)
+			#for bottom, top in combinations(uniquechild.values(), 2):
+			for bottom,top in combinations(root.children_node,2): #connect subtree children object together
+				bottom_obj = dfs(causal_node_dict[bottom],planobj)
+				print("bottom_obj",bottom_obj)
+				top_obj= dfs(causal_node_dict[top],planobj)
+				print("top_obj", top_obj)
+				#if prev_obj:
+				if (bottom_obj!=None and top_obj!=None):
+					action1 = SpecificAction(self.domain.connect, [bottom_obj, top_obj], state)
+					action2 = SpecificAction(self.domain.connect, [top_obj, bottom_obj], state)
+					print("Action1 ", action1.parameters)
+					print("Action2 ", action2.parameters)
+					valid_actions_done.append(action1)
+					action_list.append(" " + type(action1.action).__name__ + " " + " with ".join(
+					f'"{param}"' for param in action1.parameters))
+					# if action1 in valid_actions:
+					# 	if action1 not in valid_actions_done:
+					# 		print("Action1 ", action1.parameters)
+					# 		# action_list.append(" "+type(action1.action).__name__ +": "+ ",".join(action1.parameters))
+					# 		action_list.append(" "+type(action1.action).__name__ + " " + " with ".join(f'"{param}"' for param in action1.parameters))
+					# 		# action1.action.doAction(state, action1.parameters)
+					# 		valid_actions_done.append(action1)
+					#
+					# 		# if not done:
+					# 		# 	if(self.domain.isGoalSatisfied(action1.state)):
+					# 		# 		done = True
+					#
+					# elif action2 in valid_actions:
+					# 	if action2 not in valid_actions_done:
+					# 		#action_list.append(" "+type(action2.action).__name__ + ": " + ",".join(action2.parameters))
+					# 		action_list.append(" "+type(action2.action).__name__ + " " + " with ".join(f'"{param}"' for param in action2.parameters))
+					# 		# action2.action.doAction(state, action2.parameters)
+					# 		valid_actions_done.append(action2)
+					# 		# if not done:
+					# 		# 	if(self.domain.isGoalSatisfied(action2.state)):
+					# 		# 		done = True
+					#
+					# else:
+					# 	continue
+				else:
+					print("ONE IS NONE")
+					if(bottom_obj==None and top_obj!=None and valid_actions_done ):
+						lastobj = valid_actions_done[-1].parameters[-1]
+						newact = SpecificAction(self.domain.connect, [lastobj, top_obj], state)
+						valid_actions_done.append(newact)
+						action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(
+						f'"{param}"' for param in newact.parameters))
+						# if newact in valid_actions:
+						# 	if newact not in valid_actions_done:
+						# 		# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+						# 		action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+						# 		# newact.action.doAction(state, newact.parameters)
+						# 		valid_actions_done.append(newact)
+					if (bottom_obj != None and top_obj == None and valid_actions_done):
+						lastobj = valid_actions_done[-1].parameters[-1]
+						newact = SpecificAction(self.domain.connect, [lastobj, bottom_obj], state)
+						action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(
+							f'"{param}"' for param in newact.parameters))
+						# if newact in valid_actions:
+						# 	if newact not in valid_actions_done:
+						# 		# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+						# 		action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+						# 		# newact.action.doAction(state, newact.parameters)
+						# 		valid_actions_done.append(newact)
+						valid_actions_done.append(newact)
+
+			#connecting to parent
+
+			if (root.name in state.obj_func):
+				print("in 1 child")
+				i = self.valobjs(state.obj_func[root.name], planobj)
+				if len(uniquechild)==1:
+					obj1 = list(uniquechild.keys())[0]
+				elif valid_actions_done:
+					obj1 = valid_actions_done[-1].parameters[-1]
+				else:
+					obj1 = None
+
+				#obj1 = valid_actions_done[-1].parameters[-1] if valid_actions_done else None
+				# lastobj = state.obj_func[root.children_node[0]][i]
+				if (i != -1):
+					# error_code += 1
+					lastobj = state.obj_func[root.name][i]
+				else:
+					lastobj = None
+				print('lastobj', lastobj)
+				print('obj1', obj1)
+				newact = SpecificAction(self.domain.connect, [lastobj, obj1], state)
+				valid_actions_done.append(newact)
+				action_list.append(
+				" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+				# if newact in valid_actions:
+				# 	if newact not in valid_actions_done:
+				# 		# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+				# 		action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+				# 		# newact.action.doAction(state, newact.parameters)
+				# 		valid_actions_done.append(newact)
+				# newact2 = SpecificAction(self.domain.connect, [obj1, lastobj], state)
+				# if newact2 in valid_actions:
+				# 	if newact2 not in valid_actions_done:
+				# 		# action_list.append(" "+type(newact2.action).__name__ + ": " + ",".join(newact2.parameters))
+				# 		action_list.append(" " + type(newact2.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact2.parameters))
+				# 		# newact2.action.doAction(state, newact2.parameters)
+				# 		valid_actions_done.append(newact2)
+				# if valid_actions_done:
+				# 	return valid_actions_done[-1].parameters[-1]
+				# else:
+				# 	return None
+			if valid_actions_done:
+				return  valid_actions_done[-1].parameters[-1]
+			else:
+				return None
+
+			#done = self.domain.isGoalSatisfied(state)
+			# done = len(action_list)>0
+			action_list.append("done?: "+str(True))
+					#print(state)
+				#prev_obj = obj
+			# if root.name in state.obj_func: # connect subtree root object with the children (if subtree root is a function node)
+			# 	obj = state.obj_func[root.name][0]
+			# 	action = SpecificAction(self.domain.connect, [prev_obj, obj], state)
+			# 	action_list.append(type(action.action).__name__ +": "+ ",".join(action.parameters))
+			# 	action.action.doAction(state, action.parameters)
+			# 	#print(state)
+			# 	prev_obj = obj
+			# return prev_obj
+
+		i = 0
+		#self.domain.isGoalSatisfied(state)
+		if isinstance(plan_object,list):
+			i=0
+			new_action_list = []
+			for obj in plan_object:
+				#action_list = ["Assembly plan for " + str(obj) + " : "]
+				action_list=[]
+				valid_actions_done=[]
+				error_code = 0
+				dfs(root,obj)
+				visited=set()
+				ct=[]
+				ctn = self.ctnodes(state,root,obj,visited,ct,causal_node_dict)
+				if (len(action_list) < 1 and ctn == 0):
+					action_list.append("None. Feedback: No parts for this object found. Please update causal model.")
+
+				if (len(action_list) < 1 and ctn == 1):
+					action_list.append(	"None. Feedback: Only 1 part found. Atleast 2 parts needed for assembly. Please update causal model.")
+				elif (len(action_list) < 1 and ctn != 0):
+					action_list.append("None. Feedback: The parts cannot be connected together. Please update causal model.")
+				print("NUMBER OF NODES  ",ctn)
+				# action_list[0] = "Assembly plan for " + str(obj) + " - " + action_list[0]
+				action_list = ["Assembly plan for " + str(obj) + " : "] + action_list
+				new_action_list.append(action_list)
+				i=i+1
+
+
+			print(new_action_list)
+			#print("is goal satisfied?",state.)
+			return new_action_list
+
+		else:
+			#action_list = ["Assembly plan for " + str(plan_object) +" : "]
+			action_list = []
+			dfs(root,plan_object)
+			visited = set()
+			ct = []
+			ctn = self.ctnodes(state, root, plan_object, visited, ct,causal_node_dict)
+			if (len(action_list)<1 and ctn==0):
+				action_list.append("None. Feedback: No parts for this object found. Please update causal model.")
+
+			if (len(action_list) < 1 and ctn == 1):
+				action_list.append("None. Feedback: Only 1 part found. Atleast 2 parts needed for assembly. Please update causal model or function associations")
+			elif (len(action_list) < 1 and ctn != 0):
+				action_list.append("None. Feedback: The parts cannot be connected together. Please update causal model or function associations")
+			#action_list[0]="Assembly plan for " + str(plan_object) +" - " + action_list[0]
+			action_list = ["Assembly plan for " + str(plan_object) + " : "] + action_list
+			print("NUMBER OF NODES  ", ctn)
+			print(action_list)
+			return [action_list]
+
+
+	def plan_causal_constrained(self, state, plan_object):
+		if (not state.causal_graph.all_graph):
+			return
+		print("obj dict", state.obj_dict)
+		causal_graph = state.causal_graph.all_graph[0]
+		causal_obj = state.causal_graph
+		print("HIIII",state.obj_func)
+		causal_node_dict = state.causal_graph.all_nodes[0]
+		testdict = [[a,b.name] for a,b in causal_graph.items()]
+		print("causal node dict",causal_node_dict )
+		print( "length", len(state.causal_graph.all_graph) )
+		root = causal_graph[causal_obj.goal_name]
+		action_list = []
+		valid_actions = self.domain.getValidActions(state)
+		valid_actions_done = []
+		error_code = 0
+		print ("goal", self.domain.goal)
+		#done = False
+		print("valid actions", [v.parameters for v in valid_actions])
+		def dfs(root,planobj):
+
+
+			#done = False
+			#if len(uniquechild.values())==0:
+			if len(root.children_node) ==0:
+				if root.name in state.obj_func:
+					i = self.valobjs(state.obj_func[root.name], planobj)
+					if (i!=-1):
+						#error_code+=1
+						return state.obj_func[root.name][i]
+					else:
+						return None
+					# if (len(state.obj_func[root.name])>0):
+					# 	i = self.valobjs(state.obj_func[root.name],planobj)
+					# 	return state.obj_func[root.name][i]
+					# else:
+					# 	return state.obj_func[root.name][0]
+			#if len(uniquechild.values()) == 1:
+			if len(root.children_node) == 1:
+				#if root.name in state.obj_func:
+				#i = self.valobjs(state.obj_func[root.name], planobj)
+				if (root.name in state.obj_func):
+					print("in 1 child")
+					i = self.valobjs(state.obj_func[root.name], planobj)
+					obj1 =  dfs(causal_node_dict[root.children_node[0]],planobj)
+					#lastobj = state.obj_func[root.children_node[0]][i]
+					if (i!=-1):
+						#error_code += 1
+						lastobj = state.obj_func[root.name][i]
+					else:
+						lastobj = None
+					print('lastobj',lastobj)
+					print('obj1',obj1)
+					newact = SpecificAction(self.domain.connect, [lastobj, obj1], state)
+					if newact in valid_actions:
+						if newact not in valid_actions_done:
+							# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+							action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+							# newact.action.doAction(state, newact.parameters)
+							valid_actions_done.append(newact)
+					newact2 = SpecificAction(self.domain.connect, [ obj1,lastobj], state)
+					if newact2 in valid_actions:
+						if newact2 not in valid_actions_done:
+							# action_list.append(" "+type(newact2.action).__name__ + ": " + ",".join(newact2.parameters))
+							action_list.append(" " + type(newact2.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact2.parameters))
+							# newact2.action.doAction(state, newact2.parameters)
+							valid_actions_done.append(newact2)
+					if valid_actions_done:
+						return valid_actions_done[-1].parameters[-1]
+					else:
+						return None
+				else:
+					#dfs(causal_node_dict[root.children_node[0]], planobj)
+					obj1 = dfs(causal_node_dict[root.children_node[0]], planobj)
+					if(causal_node_dict[root.children_node[0]].name in state.obj_func):
+						i = self.valobjs(state.obj_func[root.children_node[0]], planobj)
+						lastobj = state.obj_func[root.children_node[0]][i]
+						#lastobj = state.obj_func[root.name][i]
+						print('lastobj', lastobj)
+						print('obj1', obj1)
+						newact = SpecificAction(self.domain.connect, [lastobj, obj1], state)
+						if newact in valid_actions:
+							if newact not in valid_actions_done:
+								# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+								action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+								# newact.action.doAction(state, newact.parameters)
+								valid_actions_done.append(newact)
+						newact2 = SpecificAction(self.domain.connect, [obj1, lastobj], state)
+						if newact2 in valid_actions:
+							if newact2 not in valid_actions_done:
+								# action_list.append(" "+type(newact2.action).__name__ + ": " + ",".join(newact2.parameters))
+								action_list.append(" " + type(newact2.action).__name__ + " " + " with ".join(
+									f'"{param}"' for param in newact2.parameters))
+								# newact2.action.doAction(state, newact2.parameters)
+								valid_actions_done.append(newact2)
+						if valid_actions_done:
+							return valid_actions_done[-1].parameters[-1]
+						else:
+							return None
+					else:
+						return None
+			prev_obj = None
+			print("HHHHEEELLLLOOOO")
+			print(root.children_node, root.name)
+			uniquechild = {}
+			for child in root.children_node:
+				if causal_node_dict[child].name in state.obj_func:
+					i = self.valobjs(state.obj_func[causal_node_dict[child].name], planobj)
+					objpart = state.obj_func[causal_node_dict[child].name][i]
+					if objpart in uniquechild:
+						continue
+					else:
+						uniquechild[objpart] = child
+
+			print("unique child ",uniquechild)
+			#for bottom, top in combinations(uniquechild.values(), 2):
+			for bottom,top in combinations(root.children_node,2): #connect subtree children object together
+				bottom_obj = dfs(causal_node_dict[bottom],planobj)
+				print("bottom_obj",bottom_obj)
+				top_obj= dfs(causal_node_dict[top],planobj)
+				print("top_obj", top_obj)
+				#if prev_obj:
+				if (bottom_obj!=None and top_obj!=None):
+					action1 = SpecificAction(self.domain.connect, [bottom_obj, top_obj], state)
+					action2 = SpecificAction(self.domain.connect, [top_obj, bottom_obj], state)
+					print("Action1 ", action1.parameters)
+					print("Action2 ", action2.parameters)
+					if action1 in valid_actions:
+						if action1 not in valid_actions_done:
+							print("Action1 ", action1.parameters)
+							# action_list.append(" "+type(action1.action).__name__ +": "+ ",".join(action1.parameters))
+							action_list.append(" "+type(action1.action).__name__ + " " + " with ".join(f'"{param}"' for param in action1.parameters))
+							# action1.action.doAction(state, action1.parameters)
+							valid_actions_done.append(action1)
+
+							# if not done:
+							# 	if(self.domain.isGoalSatisfied(action1.state)):
+							# 		done = True
+
+					elif action2 in valid_actions:
+						if action2 not in valid_actions_done:
+							#action_list.append(" "+type(action2.action).__name__ + ": " + ",".join(action2.parameters))
+							action_list.append(" "+type(action2.action).__name__ + " " + " with ".join(f'"{param}"' for param in action2.parameters))
+							# action2.action.doAction(state, action2.parameters)
+							valid_actions_done.append(action2)
+							# if not done:
+							# 	if(self.domain.isGoalSatisfied(action2.state)):
+							# 		done = True
+
+					else:
+						continue
+				else:
+					print("ONE IS NONE")
+					if(bottom_obj==None and top_obj!=None and valid_actions_done ):
+						lastobj = valid_actions_done[-1].parameters[-1]
+						newact = SpecificAction(self.domain.connect, [lastobj, top_obj], state)
+						if newact in valid_actions:
+							if newact not in valid_actions_done:
+								# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+								action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+								# newact.action.doAction(state, newact.parameters)
+								valid_actions_done.append(newact)
+					if (bottom_obj != None and top_obj == None and valid_actions_done):
+						lastobj = valid_actions_done[-1].parameters[-1]
+						newact = SpecificAction(self.domain.connect, [lastobj, bottom_obj], state)
+						if newact in valid_actions:
+							if newact not in valid_actions_done:
+								# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+								action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+								# newact.action.doAction(state, newact.parameters)
+								valid_actions_done.append(newact)
+
+			#connecting to parent
+
+			if (root.name in state.obj_func):
+				print("in 1 child")
+				i = self.valobjs(state.obj_func[root.name], planobj)
+				if len(uniquechild)==1:
+					obj1 = list(uniquechild.keys())[0]
+				elif valid_actions_done:
+					obj1 = valid_actions_done[-1].parameters[-1]
+				else:
+					obj1 = None
+
+				#obj1 = valid_actions_done[-1].parameters[-1] if valid_actions_done else None
+				# lastobj = state.obj_func[root.children_node[0]][i]
+				if (i != -1):
+					# error_code += 1
+					lastobj = state.obj_func[root.name][i]
+				else:
+					lastobj = None
+				print('lastobj', lastobj)
+				print('obj1', obj1)
+				newact = SpecificAction(self.domain.connect, [lastobj, obj1], state)
+				if newact in valid_actions:
+					if newact not in valid_actions_done:
+						# action_list.append(" "+type(newact.action).__name__ + ": " + ",".join(newact.parameters))
+						action_list.append(" " + type(newact.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact.parameters))
+						# newact.action.doAction(state, newact.parameters)
+						valid_actions_done.append(newact)
+				newact2 = SpecificAction(self.domain.connect, [obj1, lastobj], state)
+				if newact2 in valid_actions:
+					if newact2 not in valid_actions_done:
+						# action_list.append(" "+type(newact2.action).__name__ + ": " + ",".join(newact2.parameters))
+						action_list.append(" " + type(newact2.action).__name__ + " " + " with ".join(f'"{param}"' for param in newact2.parameters))
+						# newact2.action.doAction(state, newact2.parameters)
+						valid_actions_done.append(newact2)
+				# if valid_actions_done:
+				# 	return valid_actions_done[-1].parameters[-1]
+				# else:
+				# 	return None
+			if valid_actions_done:
+				return  valid_actions_done[-1].parameters[-1]
+			else:
+				return None
+
+			#done = self.domain.isGoalSatisfied(state)
+			# done = len(action_list)>0
+			action_list.append("done?: "+str(True))
+					#print(state)
+				#prev_obj = obj
+			# if root.name in state.obj_func: # connect subtree root object with the children (if subtree root is a function node)
+			# 	obj = state.obj_func[root.name][0]
+			# 	action = SpecificAction(self.domain.connect, [prev_obj, obj], state)
+			# 	action_list.append(type(action.action).__name__ +": "+ ",".join(action.parameters))
+			# 	action.action.doAction(state, action.parameters)
+			# 	#print(state)
+			# 	prev_obj = obj
+			# return prev_obj
+
+		i = 0
+		#self.domain.isGoalSatisfied(state)
+		if isinstance(plan_object,list):
+			i=0
+			new_action_list = []
+			for obj in plan_object:
+				#action_list = ["Assembly plan for " + str(obj) + " : "]
+				action_list=[]
+				valid_actions_done=[]
+				error_code = 0
+				dfs(root,obj)
+				visited=set()
+				ct=[]
+				ctn = self.ctnodes(state,root,obj,visited,ct,causal_node_dict)
+				if (len(action_list) < 1 and ctn == 0):
+					action_list.append("None. Feedback: No parts for this object found. Please update causal model.")
+
+				if (len(action_list) < 1 and ctn == 1):
+					action_list.append(	"None. Feedback: Only 1 part found. Atleast 2 parts needed for assembly. Please update causal model.")
+				elif (len(action_list) < 1 and ctn != 0):
+					action_list.append("None. Feedback: The parts cannot be connected together. Please update causal model.")
+				print("NUMBER OF NODES  ",ctn)
+				# action_list[0] = "Assembly plan for " + str(obj) + " - " + action_list[0]
+				action_list = ["Assembly plan for " + str(obj) + " : "] + action_list
+				new_action_list.append(action_list)
+				i=i+1
+
+
+			print(new_action_list)
+			#print("is goal satisfied?",state.)
+			return new_action_list
+
+		else:
+			#action_list = ["Assembly plan for " + str(plan_object) +" : "]
+			action_list = []
+			dfs(root,plan_object)
+			visited = set()
+			ct = []
+			ctn = self.ctnodes(state, root, plan_object, visited, ct,causal_node_dict)
+			if (len(action_list)<1 and ctn==0):
+				action_list.append("None. Feedback: No parts for this object found. Please update causal model.")
+
+			if (len(action_list) < 1 and ctn == 1):
+				action_list.append("None. Feedback: Only 1 part found. Atleast 2 parts needed for assembly. Please update causal model or function associations")
+			elif (len(action_list) < 1 and ctn != 0):
+				action_list.append("None. Feedback: The parts cannot be connected together. Please update causal model or function associations")
+			#action_list[0]="Assembly plan for " + str(plan_object) +" - " + action_list[0]
+			action_list = ["Assembly plan for " + str(plan_object) + " : "] + action_list
+			print("NUMBER OF NODES  ", ctn)
+			print(action_list)
+			return [action_list]
+
+	def ctnodes(self,state, root, obj,visited,ct,causal_node_dict):
+		visited.add(root)
+		i = self.valobjs(state.obj_func[root.name], obj)
+		if (i!=-1):
+			ct.append(1)
+		for child in root.children_node:
+			if child not in visited:
+				self.ctnodes(state,causal_node_dict[child],obj,visited,ct,causal_node_dict)
+		return len(ct)
+
+	def valobjs(self,listofparts,planObj):
+		validparts=[]
+		if planObj == "kerosene_lamp":
+			validparts.append("fuel tank with kerosene")
+			validparts.append("burner")
+			validparts.append("chimney");
+		elif planObj == "flashlight":
+			validparts.append("head");
+			validparts.append("batteries");
+			validparts.append("case");
+		elif planObj == "candle":
+			validparts.append("wax");
+			validparts.append("wick");
+		elif planObj == "lamp":
+			validparts.append("base with cables");
+			validparts.append("light bulb");
+			validparts.append("shade");
+		elif planObj == "wall_lamp":
+			validparts.append("backplate");
+			validparts.append("lamp body");
+			validparts.append("light bulb");
+		elif planObj == "oil_lamp":
+			validparts.append("container with oil");
+			validparts.append("wick")
+		elif planObj == "recorder":
+			validparts.append("mouth piece");
+			validparts.append("body")
+		objneeded = list(set(validparts).intersection(set(listofparts)))
+		#print("obj needed",objneeded)
+		if (objneeded==[]):
+			return -1
+		else:
+			return listofparts.index(objneeded[0])
+
+
 
 	@staticmethod
 	def Causal(self, pickBestAction, repick=None):
@@ -390,7 +1094,7 @@ class Planner():
 		#While the current state is not the goal state
 		done=False
 		while not(self.domain.isGoalSatisfied(curr_node.specifiedaction.state)):
-		# while not(self.goal.isSatisfied(curr_node.specifiedaction.state)):
+
 
 			next_actions = self.domain.getValidActions(curr_node.specifiedaction.state)
 			#implement look-ahead step where the next action will result in a dead-end state

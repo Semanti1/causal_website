@@ -245,7 +245,7 @@ class FurnitureState(State):
 
 		for object in plan_object:
 			if object=="kerosene_lamp":
-				self.addObjectwithName("fuel tank");
+				self.addObjectwithName("fuel tank with kerosene");
 				self.addObjectwithName("burner");
 				self.addObjectwithName("chimney");
 			elif object == "flashlight":
@@ -264,8 +264,11 @@ class FurnitureState(State):
 				self.addObjectwithName("lamp body");
 				self.addObjectwithName("light bulb");
 			elif object == "oil_lamp":
-				self.addObjectwithName("container");
+				self.addObjectwithName("container with oil");
 				self.addObjectwithName("wick");
+			elif object =="recorder":
+				self.addObjectwithName("mouth piece");
+				self.addObjectwithName("body");
 		# if plan_object != None:
 		# 	self.addObjectwithName("wax");
 		# 	self.addObjectwithName("wick");
@@ -382,12 +385,12 @@ class FurnitureState(State):
 		# return self.total_weight > 8
 
 class Furniture(Domain):
-	def __init__(self, causal_path, prop_path, plan_object=None):
+	def __init__(self, causal_path, prop_path, plan_object=None,goal=''):
 		super().__init__(FurnitureState(prop_path, plan_object))
 		# self.stack = stack(self)
 		# self.insert = insert(self)
 		self.connect = connect(self)
-		self.goal = Goal()
+		self.goal = goal#Goal()
 		self.constraint = Constraint()
 
 
@@ -415,7 +418,9 @@ class Furniture(Domain):
 		# self.state.causal_graph = Function_Causal_Graph()
 		# self.state.causal_graph.addNode(LAMP)
 
-		self.state.causal_graph = Function_Causal_Graph("Light")
+		#self.state.causal_graph = Function_Causal_Graph("Light")
+		#self.state.causal_graph = Function_Causal_Graph("provide light")
+		self.state.causal_graph = Function_Causal_Graph(goal)
 		self.state.causal_graph.addCausalGraphFromfile(causal_path)
 
 		#connect cables to base by default
@@ -452,6 +457,8 @@ class Furniture(Domain):
 
 		#self.goal = Goal(weight=5, height=9)
 		print("----causal graph ------")
+		print(self.state)
+		print("hi")
 		print(self.state.causal_graph)
 
 		# self.unstack = unstack(self)
@@ -480,8 +487,8 @@ class Block():
 	def __hash__(self):
 		return hash(self.name)
 class Goal():
-	def __init__(self):
-		self.goal = "lamp"
+	def __init__(self,name):
+		self.goal = name
 	def isSatisfied(self, state):
 		#define goal reached if there is one base on ground, one rod on base and one light on rod
 
