@@ -1,3 +1,7 @@
-[submodule "causal_website/Causal-Model-Task-Planner"]
+; [submodule "causal_website/Causal-Model-Task-Planner"]
+; 	path = causal_website/planner
+; 	url = git@github.com:liuyanqi/Causal-Model-Task-Planner.git
+
+[submodule "causal_website/causal_website"]
 	path = causal_website/planner
-	url = git@github.com:liuyanqi/Causal-Model-Task-Planner.git
+	url = https://github.com/Semanti1/causal_website/tree/causal_planner
