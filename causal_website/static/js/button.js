@@ -14,6 +14,15 @@
     $('#submit_causal').on('click', submit_causal);
     $('#add_graph').on('click', add_graph)
     $('#add_plan_object_properties_0').on('click', add_plan_object_properties);
+
+//     const chkfilled = $("#plan_obj_property_form_0").serializeArray();
+//const toEnableButton = () => {
+//  document.getElementById("plan_submit_0").disabled = !(
+//      chkfilled[0]['value']!='' &&
+//      chkfilled[1]['value']!=''
+//   )
+//   chkfilled.addEventListener('change', toEnableButton);
+//}
     $('#add_plan_object_properties_1').on('click', add_plan_object_properties_2);
 
     $('#plan_submit_0').on('click', plan_submit_0);
@@ -25,6 +34,7 @@
 
     // }
     $("#nextexp").on("click", next_experiment);
+    $("#gotoprolific").on("click", enter_prolific);
     // $('#after_tutorial').on('click', after_tutorial);
     // var socket = io.connect('http://127.0.0.1:5000');
 
@@ -35,10 +45,13 @@
     var property_list = content["property_list"];
     var total_property_list = [];
     //var keyword_list = content["keyword_list"];
-    var keyword_list = ["AND", "OR", "is/are neccesary for causing"];
+    //var keyword_list = ["AND", "OR", "is/are neccesary for causing"];
+    var keyword_list = ["AND", "is/are neccesary for causing"];
     var latent_list = content["latent_list"];
     //var goal_list = content["goal_list"];
-    var goal_list = ["Light"]
+    //var goal_list = ["Light"]
+    var goal_list = ["provide light"];
+    var goal_list2 = ["play notes"]
     var plan_object_list = []
     var plan_object_dict = {}
     var plan_property_list = []
@@ -93,43 +106,85 @@ $(window).on("load", function(){
   var href = window.location.href;
   var rel_href = href.replace(/^(?:\/\/|[^/]+)*\//, '')
   console.log(rel_href)
-  // if(rel_href == "light"){
-  //   console.log("here")
+   if((rel_href == "light_h") || (rel_href=="light_e") ){
+     console.log("here")
   //   $("#txt_for_all").append("<p> In this task, your goal is to create a single causal model that can explain how all four objects create light. That is, you need to consider which object parts from different objects plays the same role in creating light, and use these functions in creating a generalized causal model for producing light</p>")
   // }else {
+  $("#txt_for_all").append("<b> Please read the following instructions: </b>")
+  $("#txt_for_all").append("<p> In this section, your task is to create a single abstract causal model that explains how both objects produce light. In Step 1, you need to identify which parts from different objects fulfill similar functions for producing light, and associate the object parts from both objects with those functions. In Step 2, you will use these functions to create a single abstract causal model that the machine will use to generate an assembly plan for both objects. Your causal model should lead to a successful plan for both objects, not just one. So if you are not satisfied with the plan for either object, you should go back and update your causal model in Step 2 or functions of the object parts in Step 1. Once you are satisfied with the generated plans, click the “Next Section” button. Once you click this button, you can no longer update your previous models.</p>")
+}
   if(document.getElementById("MORESTEP") != null){
-    document.getElementById("MORESTEP").style.display='none'
+    document.getElementById("MORESTEP").style.display='none';
   }
-  document.getElementById("TRANS_BUTT").style.display='none'
+  document.getElementById("TRANS_BUTT").style.display='none';
+ if(document.getElementById("TRANS_BUTT2") != null){
+    document.getElementById("TRANS_BUTT2").style.display='none';
+  }
+  if(document.getElementById("TRANS_BUTT3") != null){
+    document.getElementById("TRANS_BUTT3").style.display='none';
+  }
+  if(document.getElementById("TRANS_BUTT4") != null){
+    document.getElementById("TRANS_BUTT4").style.display='none';
+  }
+   document.getElementById("planner").disabled = true;
+    if(document.getElementById("MORESTEP3") != null){
+    document.getElementById("MORESTEP3").style.display='none';
+  }
+//  if(document.getElementById("PLAN_OBJ_PROPERTY_FORM_0") != null){
+//    document.getElementById("PLAN_OBJ_PROPERTY_FORM_0").style.display='none';
+//  }
+//if(document.getElementById("planner") != null){
+//    document.getElementById("planner").style.display='none';
+//  }
+if(document.getElementById("planbutton") != null){
+    document.getElementById("planbutton").style.display='none';
+  }
+  if(document.getElementById("graph") != null){
+    document.getElementById("graph").style.display='none';
+  }
+  if(document.getElementById("submit") != null){
+    document.getElementById("submit").style.display='none';
+  }
+  //document.getElementById("MORESTEP").style.display='none';
+  //document.getElementById("NEXT_STEP").style.display='none';
+//  document.getElementById("SUBMIT_CAUSAL").style.display='none'
   // document.getElementById("FINISH").style.display='none'
 
 
   // }
   var i = 0;
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function(s) of object parts List: </p> </div>");
-  $("#key_words").append("<div class='col-auto text-center'> <p> Keywords: </p> </div>")
-  $("#lat_words").append("<div class='col-auto text-center'> <p> Effect: </p> </div>")
+//  $("#key_words").append("<div class='col-auto text-center'> <p> Keywords: </p> </div>")
+$("#key_words").append("<div class='col-auto text-center'> <p> Keyword to connect multiple causes: </p> </div>")
+//  $("#lat_words").append("<div class='col-auto text-center'> <p> Effect: </p> </div>")
+  $("#lat_words").append("<div class='col-auto text-center'> <p> <b>Optional</b> Intermediate function: </p> </div>")
   $("#goal_words").append("<div class='col-auto text-center'> <p> Goal: </p> </div>")
+  $("#goal_words2").append("<div class='col-auto text-center'> <p> Goal: </p> </div>")
   // for (; i < property_list.length; i++){
   //   $("#property_words2").append("<button  id=prop_btn>" + property_list[i] + "</button>");
   // }
-  for (i = 0; i < keyword_list.length; i++){
-    if (keyword_list[i].indexOf("pferrable") !=-1){
-      $("#key_words").append("<button id=key_btn_special>" + keyword_list[i] + "</button> ");
-    }else{
-      $("#key_words").append("<button id=key_btn>" + keyword_list[i] + "</button>");
-    }
-  }
-
+//  for (i = 0; i < keyword_list.length; i++){
+//    if (keyword_list[i].indexOf("pferrable") !=-1){
+//      $("#key_words").append("<button id=key_btn_special>" + keyword_list[i] + "</button> ");
+//    }else{
+//      $("#key_words").append("<button id=key_btn>" + keyword_list[i] + "</button>");
+//    }
+//  }
+ $("#key_words").append("<button id=key_btn>" + keyword_list[0] + "</button> ");
+// $("#key_words").append("<div class=row></div>");
+ $("#key_words2").append("<div class='col-auto text-center'> <p> Keyword to separate cause(s) and effect: </p> </div>")
+ $("#key_words2").append("<button id=key_btn >" + keyword_list[1] + "</button> ");
   for (i = 0; i < latent_list.length; i++){
     $("#lat_words").append("<button  id=lat_btn>" + latent_list[i] + "</button>");
   }
 
-  for (i = 0; i < goal_list.length; i++){
+  for (i = 0; i < goal_list2.length; i++){
+    $("#goal_words2").append("<button  id=goal_btn>" + goal_list2[i] + "</button>");
+  }
+for (i = 0; i < goal_list.length; i++){
     $("#goal_words").append("<button  id=goal_btn>" + goal_list[i] + "</button>");
   }
-
-  $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add an effect' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
+  $("#lat_words").append(" <input id='custom_lat' type='text' placeholder='add an optional intermediate function ' aria-label='add custom latent' >  <button id='lat_add' type='button'>add</button> ");
   $("#lat_add").on('click', function(){
     var text = $("#custom_lat").val();
     var lat_no = parseInt($("#total_latent").val());
@@ -145,6 +200,12 @@ $(window).on("load", function(){
 
 
   $("#key_words #key_btn").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=key>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
+  $("#key_words2 #key_btn").each(function(index){
     $(this).on('click', function(){
       var causal_no = parseInt($('#total_object_causal').val());
       $("<div class='col-auto align-middle' id=key>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
@@ -180,7 +241,12 @@ $(window).on("load", function(){
       $("<div class='col-auto align-middle' id=goal>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
     });
   })
-
+  $("#goal_words2 #goal_btn").each(function(index){
+    $(this).on('click', function(){
+      var causal_no = parseInt($('#total_object_causal').val());
+      $("<div class='col-auto align-middle' id=goal>" + $(this).text()+ "</div>").appendTo("#new_form"+ causal_no);
+    });
+  })
   $('#plan_property_words_0').append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
   if (plan_property_list.length !=0){
     $('#plan_property_words_0').append(load_list(plan_property_list, "prop"));
@@ -311,7 +377,7 @@ function add_object_properties(object_list, property_list) {
   	var i = 0;
     var new_pair_no = parseInt($('#total_pair').val()) + 1;
     var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
-  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='object_list'>"+ " <datalist id='object_list'>";
+  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='object_list' autocomplete='off'>"+ " <datalist id='object_list'>";
   // new_input += "<div class= 'col-auto'> <select id='object'> "
   for(; i < object_list.length; i++){
      new_input += " <option value='" + object_list[i] + "'>" + object_list[i] + "</option>"
@@ -320,7 +386,7 @@ function add_object_properties(object_list, property_list) {
    new_input += "<div class = ' my-auto'>  's function is to </div>"
 
   	i = 0;
-    new_input += "<div class ='col-auto'> <input id='property' name='property' class='form-control' list='property_list'>"+ " <datalist id='property_list'>";
+    new_input += "<div class ='col-auto'> <input id='property' name='property' class='form-control' list='property_list' autocomplete='off'>"+ " <datalist id='property_list'>";
   for(; i < property_list.length; i++){
      new_input += " <option value='" + property_list[i] + "'>"
    }
@@ -332,14 +398,19 @@ function add_object_properties(object_list, property_list) {
    $('#object').on('click', function() {
     $(this).val('');
   });
+if((document.getElementById("submit") != null) ){
+    document.getElementById("submit").style.display='block';
+    //console.log("hello??");
+  }
 
 }
 
 function add_plan_object_properties(){
   var i = 0;
+
   var new_pair_no = parseInt($('#total_pair').val()) + 1;
   var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
-  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list'>"+ " <datalist id='plan_object_list'>";
+  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list' autocomplete='off'>"+ " <datalist id='plan_object_list'>";
   console.log(plan_object_list)
   for(; i < plan_object_list[0].length; i++){
     new_input += " <option value='" + plan_object_list[0][i] + "'>" + plan_object_list[0][i] + "</option>"
@@ -348,22 +419,43 @@ function add_plan_object_properties(){
  new_input += "<div class = ' my-auto'>  's function is to </div>"
 
   i = 0;
-  new_input += "<div class ='col-auto'> <input id='property' onkeydown='return false;' name='property' class='form-control' list='total_property_list'>"+ " <datalist id='total_property_list'>";
+  new_input += "<div class ='col-auto'> <input id='property' onkeydown='return false;' name='property' class='form-control' list='total_property_list' autocomplete='off'>"+ " <datalist id='total_property_list'>";
   for(; i < total_property_list.length; i++){
    new_input += " <option value='" + total_property_list[i] + "'>" + total_property_list[i] + "</option>"
  }
- new_input += " <option value='None of above'> None of above </option>"
+ new_input += " <option value='None of the above'> None of the above </option>"
  new_input += "</datalist> </div></div>"
  $('#plan_obj_property_form_0').prepend(new_input);
  $('#total_pair').val(new_pair_no)
-
+//if(($("#plan_obj_property_form_0").serializeArray()[0]['value']!='') && ($("#plan_obj_property_form_0").serializeArray()[1]['value']!='')){
+////document.getElementById("plan_submit_0").disabled = false;}
+//document.getElementById("plan_submit_0").removeAttribute('disabled');}
   $('#plan_obj_property_form_0 #object').on('click', function() {
-    $(this).val('');
+     $(this).val('');
+
   });
 
   $('#plan_obj_property_form_0 #property').on('click', function() {
     $(this).val('');
+
   });
+
+console.log($('#plan_obj_property_form_0 #property'))
+
+
+
+
+if((document.getElementById("TRANS_BUTT3") != null) ){
+    document.getElementById("TRANS_BUTT3").style.display='block';
+    //console.log("hello??");
+  }
+//if((document.getElementById("TRANS_BUTT3") != null) && ($("#plan_obj_property_form_0").serializeArray()[0]['value']!='') && ($("#plan_obj_property_form_0").serializeArray()[1]['value']!='')){
+//    document.getElementById("TRANS_BUTT3").style.display='block';
+//  }
+ // if(document.getElementById("add_plan_object_properties_1") != null){
+    //if(document.getElementById("plan_obj_property_form_0")!=null){
+//  }
+
 }
 
 
@@ -371,7 +463,7 @@ function add_plan_object_properties_2(){
   var i = 0;
   var new_pair_no = parseInt($('#total_pair').val()) + 1;
   var new_input = " <div class='form-group row' id='new_pair_" + new_pair_no+"'>";
-  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list_2'>"+ " <datalist id='plan_object_list_2'>";
+  new_input += "<div class ='col-auto'> <input id='object' onkeydown='return false;' name='object' class='form-control' list='plan_object_list_2' autocomplete='off'>"+ " <datalist id='plan_object_list_2'>";
   for(; i < plan_object_list[1].length; i++){
     new_input += " <option value='" + plan_object_list[1][i] + "'>" + plan_object_list[1][i] + "</option>"
   }
@@ -379,11 +471,11 @@ function add_plan_object_properties_2(){
  new_input += "<div class = ' my-auto'>  's function is to </div>"
 
   i = 0;
-  new_input += "<div class ='col-auto'> <input id='property' onkeydown='return false;' name='property' class='form-control' list='total_property_list'>"+ " <datalist id='total_property_list'>";
+  new_input += "<div class ='col-auto'> <input id='property' onkeydown='return false;' name='property' class='form-control' list='total_property_list' autocomplete='off'>"+ " <datalist id='total_property_list'>";
   for(; i < total_property_list.length; i++){
    new_input += " <option value='" + total_property_list[i] + "'>" + total_property_list[i] + "</option>"
  }
- new_input += " <option value='None of above'> None of above </option>"
+ new_input += " <option value='None of the above'> None of the above </option>"
  new_input += "</datalist> </div></div>"
  $('#plan_obj_property_form_1').prepend(new_input);
  $('#total_pair').val(new_pair_no)
@@ -395,6 +487,11 @@ function add_plan_object_properties_2(){
   $('#plan_obj_property_form_1 #property').on('click', function() {
     $(this).val('');
   });
+
+  if((document.getElementById("TRANS_BUTT4") != null) ){
+    document.getElementById("TRANS_BUTT4").style.display='block';
+    //console.log("hello??");
+  }
 }
 
 function getFormData($form){
@@ -415,14 +512,32 @@ function serialize(){
   var form = $("#obj_property_form");
   var content = JSON.stringify(form.serializeArray());
   console.log(content)
+  var submit_time_step1 = parseInt($("#total_submit_times_step1").val())
+   submit_time_step1 +=1;
+   $("#total_submit_times_step1").val(submit_time_step1);
+   $.ajax({
+     type:"POST",
+     url: "/record_time_step1",
+     data: JSON.stringify({"time": submit_time_step1,"cont":form.serializeArray()}),
+     contentType:"application/json; charset=utf-8",
+     success: function(msg){
+     }
+   });
+//   var form = $("#obj_property_form");
+//  var content = JSON.stringify(form.serializeArray());
+//  console.log(content)
   //$.post("/recieve_property", content)
-  $.ajax({
-    type:"POST",
-    url: "/recieve_property",
-    data: content,
-    contentType:"application/json; charset=utf-8",
-  });
+//  $.ajax({
+//    type:"POST",
+//    url: "/recieve_property",
+//  //  data:JSON.stringify({"cont":content,"time":submit_time_step1}),
+//   data: content,
+//    contentType:"application/json; charset=utf-8",
+//  });
 
+// var submit_time_step1 = parseInt($("#total_submit_times_step1").val())
+//   submit_time_step1 +=1;
+//   $("#total_submit_times_step1").val(submit_time_step1);
   var property_list = form.serializeArray().map(function(v){
     if (v.name =="property"){
       return [v.value];
@@ -437,6 +552,7 @@ function serialize(){
 
   var i = 0;
   $("#property_words2").empty()
+  total_property_list=[]
   $("#property_words2").append("<div class='col-auto text-center'> <p> Function(s) of object parts: </p> </div>");
   for (var key in set){
       $("#property_words2").append("<button  id=prop_btn>" + key + "</button>");
@@ -459,13 +575,32 @@ function serialize(){
   for (var key in set){
       $("#plan_property_words_1").append( "<div class='col-auto align-middle' id='prop'><p>" + key + "</p></div>");
   }
-
+//  $.ajax({
+//    type:"POST",
+//    url: "/recieve_property",
+//    data: content,
+//    contentType:"application/json; charset=utf-8",
+//  });
+//$.ajax({
+//     type:"POST",
+//     url: "/record_time_step1",
+//     data: JSON.stringify({"time": submit_time_step1}),
+//     contentType:"application/json; charset=utf-8",
+//     success: function(msg){
+//     }
+//   });
   // $("#text_obj").text(content);
+//  $("#obj_property_form").empty()
 }
 
 function plan_submit_0(){
   var form = $("#plan_obj_property_form_0").serializeArray();
-  form.push({"obj_name": plan_object[0]})
+  var isvalid = checkvalid(form,plan_object_list[0]);
+  console.log(isvalid)
+//  var formInvalid = false;
+//  if((form[0]['value']!='') && (form[1]['value']!=''))
+if (isvalid)
+  {form.push({"obj_name": "near_"+plan_object[0]})
   var content = JSON.stringify(form);
   //$.post("/recieve_property", content)
   $.ajax({
@@ -480,13 +615,55 @@ function plan_submit_0(){
       }
     }
   });
+//  document.getElementById("add_plan_object_properties_1").disabled = true;
+//      document.getElementById("plan_submit_1").disabled = true;
+var x = document.getElementById("MORESTEP3");
+   if(x.style.display == "none"){
+     x.style.display = "block";
+   }
+  }
+  else
+  {
+  alert('Some/All object parts have not been associated. Please associate all objects to function parts before submitting.Choose \'None of the above\' if no association exists');
+  }
+
+
+}
+function checkvalid(form,plan_list){
+
+var len = form.length;
+var objsentered=[];
+for(let i=0;i<len;i+=2)
+{
+objsentered.push(form[i]['value'])
+}
+for(let j=0;j<plan_list.length;j++)
+{
+
+if (!objsentered.includes(plan_list[j]))
+  return false;
+
+
+}
+return true;
+//var numobj = plan_list.length;
+//if (len == plan_list.length)
+// {return true;}
+// else
+// { return false;}
 }
 
 function plan_submit_1(){
   var form = $("#plan_obj_property_form_1").serializeArray();
-  form.push({"obj_name": plan_object[1]})
+  form.push({"obj_name": "far_"+plan_object[1]})
   var content = JSON.stringify(form);
+  var isvalid = checkvalid(form,plan_object_list[1]);
+  console.log(isvalid)
+//  var formInvalid = false;
+//  if((form[0]['value']!='') && (form[1]['value']!=''))
+if (isvalid){
   //$.post("/recieve_property", content)
+//  if((form[0]['value']!='') && (form[1]['value']!='')){
   $.ajax({
     type:"POST",
     url: "/recieve_plan_property",
@@ -499,7 +676,11 @@ function plan_submit_1(){
       }
     }
   });
-  document.getElementById("TRANS_BUTT").style.display = "block"
+  document.getElementById("TRANS_BUTT").style.display = "block"}
+  else
+  {
+  alert('Some/All object parts have not been associated. Please associate all objects to function parts before submitting.Choose \'None of the above\' if no association exists');
+  }
 
 }
 
@@ -519,7 +700,7 @@ function plan_submit_1(){
 //
 // }
 function add_graph(){
-  var causal_graph_no = parseInt($('#total_causal_graph').val())
+  var causal_graph_no = parseInt($('nextexp').val())
   var rel_causal_no = parseInt($('#relevant_object_causal').val())
   causal_graph_no  = causal_graph_no + 1;
   rel_causal_no = 0;
@@ -527,6 +708,7 @@ function add_graph(){
   $("#total_causal_graph").val(causal_graph_no);
   new_input = "<div id='object_causal" + causal_graph_no + "'> <p> <strong>causal_graph " + (causal_graph_no+1) + "</strong></p>"
   $("#causal_graph").append(new_input)
+  //$("#graph").append("<select id ='graph'> <option value ="0">  </option> </select>")
   var input = "<option value='" + causal_graph_no +"'> to causal_graph " + (causal_graph_no+1) + "</option>";
   $("#graph").append(input)
   $("#graph").val(causal_graph_no).change();
@@ -536,6 +718,8 @@ function add_graph(){
 
 
 function add_causal(){
+
+//add_graph()
   var new_causal_no = parseInt($('#total_object_causal').val())
   var rel_causal_no = parseInt($('#relevant_object_causal').val())
   var reset_causal_delete = parseInt($('#reset_causal_delete').val())
@@ -549,7 +733,8 @@ function add_causal(){
     $("#relevant_object_causal").val(rel_causal_no);
     var new_input = " <div class='row' id='new_form" + new_causal_no +  "'>";
     new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-    new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+    //new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+    new_input += "<div class=' my-auto'> Causal rule " + ": </div>"
     $("#object_causal"+ causal_graph_no).append(new_input);
   }
   else if(reset_causal_delete){
@@ -559,7 +744,8 @@ function add_causal(){
     $("#relevant_object_causal").val(rel_causal_no);
     var new_input = " <div class='row' id='new_form" + new_causal_no +  "'>";
     new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-    new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+    //new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+    new_input += "<div class=' my-auto'> Causal rule " + ": </div>"
     $("#object_causal"+ causal_graph_no).append(new_input);
     $("#reset_causal_delete").val(0);
   }
@@ -590,17 +776,42 @@ function add_causal(){
           $("#text_causal").empty()
           new_causal_no +=1;
           rel_causal_no +=1
+          //new_causal_no =0
+          //rel_causal_no =0
           $('#total_object_causal').val(new_causal_no);
           $("#relevant_object_causal").val(rel_causal_no);
           var new_input = "</div> <div class='row' id='new_form" + new_causal_no +  "'>";
           new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
-          new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+          //new_input += "<div class=' my-auto'> Causal rule #" + new_causal_no + ": </div>"
+          new_input += "<div class=' my-auto'> Causal rule " + ": </div>"
           // new_input += "<button type=button class=close aria-label=Close> <span aria-hidden='true'>&times;</span></button>"
           $("#object_causal"+causal_graph_no).append(new_input);
         }
+        else if(msg=="error"){
+
+        $("#text_causal").empty()
+//          $("#text_causal").text(msg);
+            $("#text_causal").append("<b> Errors found: <b> <br>");
+            $("#text_causal").append("<p style='color:red;' >" + msg + "</p>");
+      $("#text_causal").append("<br>");
+      $("#text_causal").append("<a style='color:green;' href=https://docs.google.com/document/d/1LMw-_2Q48YvjM1BkN9Daku7ujSKej2el1dfHC8LF1OY/edit target='_blank'>Please review the tutorial here</a>");
+        }
+
         else{
           $("#text_causal").empty()
-          $("#text_causal").text(msg);
+//          $("#text_causal").text(msg);
+            $("#text_causal").append("<b> Errors found: <b> <br>");
+            var msgfilt = msg.filter(onlyUnique);
+          for(var i = 0; i < msgfilt.length; i++){
+
+      $("#text_causal").append("<p style='color:red;' >" + msgfilt[i] + "</p>");
+      $("#text_causal").append("<br>");
+        }
+        $("#text_causal").append("<a style='color:green;' href=https://docs.google.com/document/d/1LMw-_2Q48YvjM1BkN9Daku7ujSKej2el1dfHC8LF1OY/edit target='_blank'>Please review the tutorial here</a>");
+//          new_causal_no =0
+//          rel_causal_no =0
+//          $('#total_object_causal').val(new_causal_no);
+//          $("#relevant_object_causal").val(rel_causal_no);
         }
       }
     });
@@ -615,6 +826,10 @@ $(document).on('click',  ".row .close", function(){
   //causal_no = causal_no -1;
   //console.log(causal_no)
   //$('#total_object_causal').val(causal_no)
+//  new_causal_no =0
+//  rel_causal_no =0
+//  $('#total_object_causal').val(new_causal_no);
+//  $("#relevant_object_causal").val(rel_causal_no);
   $('#reset_causal_delete').val(1);
 })
 
@@ -622,6 +837,7 @@ $(document).on('click',  ".row .close", function(){
 
 function extract_causal(i){
   var row = $("#object_causal"+i).find(".row");
+  console.log(parseInt($('#total_object_causal').val()))
   all_sentences = []
   $.each(row, function(){
     sentence = []
@@ -664,19 +880,31 @@ function generate_causal(){
      contentType:"application/json; charset=utf-8",
      success:function(msg){
        $("#image_causal").empty();
-       console.log(msg)
+
       for (var i = 0; i < msg.length; i++){
         var content = "<img src='/" + msg[i] + ".png' class='img-fluid' alt='Responsive Image'>"
         $("#image_causal").append(content);
       }
      }
    });
+
+//   if (document.getElementById("IMAGE_CAUSAl") == null){
+//      document.getElementById("SUBMIT_CAUSAL").style.display = "block"
+//   }
 }
 
 function plan_causal(){
   var href = window.location.href;
   var rel_href = href.replace(/^(?:\/\/|[^/]+)*\//, '')
   console.log(rel_href)
+  let ct = 0;
+  var flag;
+  var submit_time_plan = parseInt($("#total_submit_times_plan").val())
+  submit_time_plan +=1;
+  $("#total_submit_times_plan").val(submit_time_plan);
+  if($("#text_causal").text()=="successfully saved the causal model."){
+
+//  $("#text_causal").empty();
   $.ajax({
     type:"POST",
     url: "/plan_causal",
@@ -685,17 +913,107 @@ function plan_causal(){
     success: function(msg){
       console.log(msg)
       $("#plan").empty();
-      $("#plan").append("<p>")
-      if(msg.length == 0){
-        $("#plan").append("Failed to generate a plan");
+      if(msg==null){
+
       }else{
         for(var i = 0; i < msg.length; i++){
-          $("#plan").append("Plan " + i + " : " + msg[i] + "<br>");
+
+        for(var j = 0; j < msg[i].length; j++){
+
+        if(j==0)
+        {
+
+        $("#plan").append("<br>");
+        $("#plan").append( "<b>"+msg[i][j] + "</b>");
+        $("#plan").append("<br>");
         }
+        else{
+
+        //"&emsp;" +
+        $("#plan").append("<br>");
+         $("#plan").append("&emsp;"+msg[i][j]);
+         $("#plan").append("<br>");
+          }
+//          $("#plan").append(document.createElement("br"));
+
+
+
+        }
+        let lastv = msg[i].slice(-1);
+           let lastv_done = lastv[0];
+          if(lastv_done.includes('Successfully'))
+          {
+
+            ct = ct + 1;
+           }
+        }
+        console.log("msg length",msg.length, "msg", msg, "ct", ct)
+
       }
-      $("#plan").append("</p>")
-    }
+//      $("#plan").append("</p>")
+//      console.log("count",ct)
+//      if((document.getElementById("TRANS_BUTT2") != null) && (ct>=0 )){
+//    document.getElementById("TRANS_BUTT2").style.display='block'
+//  }
+//if((document.getElementById("TRANS_BUTT") != null) && (msg.length==1 )){
+//    document.getElementById("TRANS_BUTT").style.display='block'
+//  }
+
+         if(document.getElementById("MORESTEP") == null)
+{
+ document.getElementById("TRANS_BUTT").style.display = "block";
+//  document.getElementById("planner").disabled = false;
+}
+else{document.getElementById("TRANS_BUTT").style.display = "none";}
+if(document.getElementById("MORESTEP"))
+{
+ document.getElementById("TRANS_BUTT2").style.display = "block";
+
+}
+
+if (ct==msg.length)
+{
+document.getElementById("planner").disabled = true;
+      document.getElementById("planbutton").disabled = true;
+      //document.getElementById("next_step").disabled = true;
+      document.getElementById("add_causal").disabled = true;
+      document.getElementById("generate_causal").disabled = true;
+      document.getElementById("submit_causal").disabled = true;
+      document.getElementById("add_object_properties").disabled = true;
+      document.getElementById("submit").disabled = true;
+}
+
+   }
+
+
+
+
   });
+  }
+   else if ($("#incorrect_model_submit_times").val()>=3){
+   $("#plan").empty();
+   $("#plan").append("Couldn't complete this section. Please move on to the next section or update your causal model and try again.");
+   console.log($("#plan"))
+   if(document.getElementById("TRANS_BUTT2") != null){
+    document.getElementById("TRANS_BUTT2").style.display='block'
+  }
+  else if (document.getElementById("TRANS_BUTT") != null ){
+    document.getElementById("TRANS_BUTT").style.display='block'
+  }
+   }
+   else{
+    $("#plan").empty();
+    $("#plan").append("Please enter a valid causal model to plan. Please submit your causal model to plan. ")
+   }
+   document.getElementById("planner").disabled = true;
+$.ajax({
+     type:"POST",
+     url: "/record_time_plan",
+     data: JSON.stringify({"time": submit_time_plan}),
+     contentType:"application/json; charset=utf-8",
+     success: function(msg){
+     }
+   });
 }
 //
 //  console.log(all_sentences)
@@ -717,20 +1035,55 @@ function plan_causal(){
 //   });
 
 function next_step(){
+
+var conf = confirm("Are you sure you want to proceed to the next section? You will not be able to return to this section once you proceed.");
+if (conf==true){
     var x = document.getElementById("MORESTEP");
    if(x.style.display == "none"){
      x.style.display = "block";
    }
-}
+//   $('#add_causal').on('click', add_causal);
+//    $('#generate_causal').on('click', generate_causal);
+//    $('#submit_causal').on('click', submit_causal);
+//    $('#add_graph').on('click', add_graph)
+//    $('#add_plan_object_properties_0').on('click', add_plan_object_properties);
+//    $('#add_plan_object_properties_1').on('click', add_plan_object_properties_2);
+//
+//    $('#plan_submit_0').on('click', plan_submit_0);
+//    $('#plan_submit_1').on('click', plan_submit_1);
 
+    // if(document.getElementById("#next_step") != null){
+      //$("#next_step").button("disable");
+      document.getElementById("planner").disabled = true;
+      document.getElementById("planbutton").disabled = true;
+      document.getElementById("next_step").disabled = true;
+      document.getElementById("add_causal").disabled = true;
+      document.getElementById("generate_causal").disabled = true;
+      document.getElementById("submit_causal").disabled = true;
+      document.getElementById("add_object_properties").disabled = true;
+      document.getElementById("submit").disabled = true;
+      //document.getElementById("add_graph").disabled = true;
+      //document.getElementById("plan_submit_0").disabled = true;
+
+//      $('#planner').button('disable');
+}
+}
 function next_experiment(){
   window.location.href="/next_experiment";
 }
 
-
+function enter_prolific(){
+  window.location.href="/enter_prolific";
+}
 function submit_causal(){
    // console.log($("#object_causal")[0])
    var i = 0;
+   document.getElementById("planner").disabled = true;
+
+   var submit_time = parseInt($("#total_submit_times").val())
+   var submit_time_wrong = parseInt($("#incorrect_model_submit_times").val())
+   submit_time +=1;
+   $("#total_submit_times").val(submit_time);
    var all_sentences = []
    var total_causal_graph_no = parseInt($("#total_causal_graph").val());
    console.log(total_causal_graph_no)
@@ -740,34 +1093,149 @@ function submit_causal(){
      console.log(sentences);
      all_sentences.push(sentences);
    }
-   var submit_time = parseInt($("#total_submit_times").val())
-   submit_time +=1;
-   $("#total_submit_times").val(submit_time);
+//   var submit_time = parseInt($("#total_submit_times").val())
+//   submit_time +=1;
+//   $("#total_submit_times").val(submit_time);
 
    //checking for resubmit
+//    $.ajax({
+//     type:"POST",
+//     url: "/record_time",
+//     data: JSON.stringify({"time": submit_time}),
+//     contentType:"application/json; charset=utf-8",
+//     success: function(msg){
+//     }
+//   });
    $.ajax({
      type:"POST",
      url: "/submit_causal",
-     data: JSON.stringify(all_sentences),
+     //data: JSON.stringify(all_sentences),
+     data: JSON.stringify({"as":all_sentences,"time":submit_time}),
      contentType:"application/json; charset=utf-8",
-     success: function(msg){
-       $("#text_causal").empty();
-       $("#text_causal").append("<p style='color:blue;' >" + msg + "</p>");
-     }
-   });
-   $.ajax({
-     type:"POST",
-     url: "/record_time",
-     data: JSON.stringify({"time": submit_time}),
-     contentType:"application/json; charset=utf-8",
-     success: function(msg){
-     }
-   });
 
-   if (document.getElementById("MORESTEP") == null){
-      document.getElementById("TRANS_BUTT").style.display = "block"
-   }
-   console.log(all_sentences)
+     success: function(msg){
+        console.log(msg);
+
+       $("#text_causal").empty();
+
+       /* Print 1 error per line*/
+        $("#plan").empty()
+       if(msg=="successfully saved the causal model."){
+
+       $("#text_causal").append("<p style='color:blue;' >" + msg + "</p>");
+
+      }else{
+
+      $("#text_causal").append("<b> Errors found: <b> <br>");
+        for(var i = 0; i < msg.length; i++){
+
+      $("#text_causal").append("<p style='color:red;' >" + msg[i] + "</p>");
+      $("#text_causal").append("<br>");
+        }
+  }
+
+       /* End of Print 1 error per line*/
+
+//       $("#text_causal").append("<p style='color:blue;' >" + msg + "</p>");
+       if($("#text_causal").text()=="Some of your causal rules have errors.\n")
+       {
+       $("#text_causal").append("<a style='color:green;' href=https://docs.google.com/document/d/1LMw-_2Q48YvjM1BkN9Daku7ujSKej2el1dfHC8LF1OY/edit target='_blank'>Please review the tutorial here</a>")
+       }
+
+       if($("#text_causal").text()!="successfully saved the causal model.")
+       {
+
+       $("#text_causal").append("<a style='color:green;' href=https://docs.google.com/document/d/1LMw-_2Q48YvjM1BkN9Daku7ujSKej2el1dfHC8LF1OY/edit target='_blank'>Please review the tutorial here</a>")
+       submit_time_wrong+=1;
+       $("#incorrect_model_submit_times").val(submit_time_wrong);
+       }
+//       if($("#text_causal").text()=="successfully saved the causal model." || $("#incorrect_model_submit_times").val()==3 ){document.getElementById("planbutton").style.display='block';document.getElementById("planner").disabled = false;}
+
+       // * removing planner (1155 to 1172)*
+       if($("#text_causal").text()=="successfully saved the causal model." ){document.getElementById("planbutton").style.display='block';document.getElementById("planner").disabled = false;$("#plan").empty();}
+       else if($("#incorrect_model_submit_times").val()>=3){document.getElementById("planner").disabled = true;document.getElementById("planbutton").style.display='none';$("#plan").empty();
+   $("#plan").append("Couldn't complete this section. Please move on to the next section or update your causal model and try again."); }
+       else{document.getElementById("planner").disabled = true;document.getElementById("planbutton").style.display='none';}
+
+       /*button*/
+       if( ($("#incorrect_model_submit_times").val()>=3) && document.getElementById("MORESTEP") == null)
+{
+ document.getElementById("TRANS_BUTT").style.display = "block";
+//  document.getElementById("planner").disabled = false;
+}
+else{document.getElementById("TRANS_BUTT").style.display = "none";}
+if(($("#incorrect_model_submit_times").val()>=3) && document.getElementById("MORESTEP"))
+{
+ document.getElementById("TRANS_BUTT2").style.display = "block";
+
+}
+/*button end*/
+if($("#total_submit_times").val()>=1){
+       if(document.getElementById("MORESTEP") == null)
+{
+ document.getElementById("TRANS_BUTT").style.display = "block";
+//  document.getElementById("planner").disabled = false;
+}
+else{document.getElementById("TRANS_BUTT").style.display = "none";}
+if(document.getElementById("MORESTEP"))
+{
+ document.getElementById("TRANS_BUTT2").style.display = "block";
+
+}
+}
+//if((($("#plan").empty()==false) || ($("#incorrect_model_submit_times").val()>=3)) && document.getElementById("MORESTEP")==null)
+//{
+// document.getElementById("TRANS_BUTT").style.display = "block";
+//
+//}
+//else{document.getElementById("TRANS_BUTT").style.display = "none";}
+
+//       $("#chksubmit").empty();
+//       if (msg[0]=='s')
+//      {
+//        $("#chksubmit").append(1);
+//      }
+//      $("#chksubmit").empty();
+//      $("#chksubmit").text(msg[0])
+
+////       console.log(JSON.stringify(msg));
+//      if (msg =="successfully saved the causal model.")
+//       {
+//         $("#chksubmit").append(1);
+//       }
+
+
+     }
+   });
+//   $.ajax({
+//     type:"POST",
+//     url: "/record_time",
+//     data: JSON.stringify({"time": submit_time}),
+//     contentType:"application/json; charset=utf-8",
+//     success: function(msg){
+//     }
+//   });
+//console.log($("#text_causal").text())
+//   if (document.getElementById("SUBMIT_CAUSAL")){
+//      document.getElementById("TRANS_BUTT").style.display = "block"
+//   }
+//if($("#text_causal").text()=="successfully saved the causal model.")
+//{
+// document.getElementById("TRANS_BUTT").style.display = "block"
+//}
+
+
+
+//    if (all_sentences[0].length==0){
+//      document.getElementById("TRANS_BUTT").style.display = "block";
+//      console.log("highhbfjkfvbnkjdvkj")
+//
+//   }
+
+// if (document.getElementById("MORESTEP") == null){
+//      document.getElementById("TRANS_BUTT").style.display = "block"
+//   }
+   //console.log("all sent", all_sentences)
   }
 
 // function after_tutorial(){

@@ -41,6 +41,7 @@ body {
 }
 .col-sm-12{
   margin-bottom:10px;
+  clear:both;
 }
 #obj{
   margin-left:5px;
@@ -72,6 +73,13 @@ body {
 }
 .row{
   margin-bottom:10px;
+
+}
+.rowplan{
+
+  margin-bottom:20px;
+  clear:both;
+
 }
 .btn{
   margin-left: 5px;
@@ -95,3 +103,7 @@ body {
 #property_words #prop{
 }
 .top-buffer { margin-top:20px; }
+
+.vertSpace{
+height:30px;
+}

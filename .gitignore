@@ -4,11 +4,11 @@ venv/*
 __pycache__/
 .DS_Store
 instance/
-
+.idea
 .pytest_cache/
 .coverage
 htmlcov/
-
+causal_website/.vs
 dist/
 build/
 *.egg-info/

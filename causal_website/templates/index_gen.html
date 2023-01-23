@@ -27,7 +27,7 @@
 <!--     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a class="dropdown-item" href="{{url_for('lamp')}}">Lamp</a>
       <a class="dropdown-item" href="{{url_for('candle')}}">Candle</a>
-      <a class="dropdown-item" href="{{url_for('kerosene_lamp')}}"> Kerosene_lamp </a>
+      <a class="dropdown-item" href="{{url_for('kerosene lamp')}}"> Kerosene_lamp </a>
       <a class="dropdown-item" href="{{url_for('flashlight')}}"> Flashlight </a>
       <a class="dropdown-item" href="{{url_for('light')}}">Light0</a>
       <a class="dropdown-item" href="{{url_for('light_e')}}">Light1</a>
@@ -159,6 +159,7 @@ console.log(content);
 </div>
 
 <div class="row", id="plan">
+
 </div>
 {% if plan_object %}
 <div id="MORESTEP">
@@ -244,7 +245,7 @@ console.log(all_planobject);
 {% else %}
 <div id="NEXTEXP">
   <button class="btn btn-success" id="nextexp" > Next Experiment </button>
-  <!-- onclick="window.location.href='{{url_for('next_experiment')}}';" -->
+<!--  <button class="btn btn-success" id="nextexp" onclick="window.location.href='{{url_for('next_experiment')}}';">   Next Experiment  </button>-->
 </div>
 {% endif %}
 </div>

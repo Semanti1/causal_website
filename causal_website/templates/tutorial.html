@@ -37,10 +37,29 @@
 </div>
 
 <div class="container">
-Please finish reading the tutorial <a target="_blank" href="https://docs.google.com/document/d/1LMw-_2Q48YvjM1BkN9Daku7ujSKej2el1dfHC8LF1OY/edit?usp=sharing">here</a> and proceed to the next step.
-<div>
-  <button class="btn btn-success" onclick="window.location.href='{{url_for('after_tutorial')}}';"> Start Experiment </button>
+  Please finish reading the tutorial <a target="_blank" href="https://docs.google.com/document/d/1LMw-_2Q48YvjM1BkN9Daku7ujSKej2el1dfHC8LF1OY/edit">here</a> and proceed to the next step.
 </div>
 
+<div class="container">
+  <p></p>
+  <p></p>
+  <p></p>
+  <p></p>
+  <button class="btn btn-success" id="gotoprolific" > Next </button>
+<!--  <button class="btn btn-success" id="nextexp" onclick="window.location.href='{{url_for('next_experiment')}}';">   Next Experiment  </button>-->
+
+</div>
+<!--Please finish reading the tutorial <a target="_blank" href="https://docs.google.com/document/d/1LMw-_2Q48YvjM1BkN9Daku7ujSKej2el1dfHC8LF1OY/edit?usp=sharing">here</a> and proceed to the next step.-->
+<!--<div>-->
+<!--&lt;!&ndash;&lt;!&ndash;  <button class="btn btn-success" id = "prolific_id"> Start Experiment </button>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <button class="btn btn-success" onclick="window.location.href='{{url_for('after_tutorial')}}';"> Start Experiment </button>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--  <form action="{{ url_for("after_tutorial")}}" method="post">-->
+<!--<label for="prolific">Prolific id:</label>-->
+<!--<input type="text" id="prolific" name="pid" placeholder="prolific id">-->
+<!--&lt;!&ndash;<label for="lastname">Last Name:</label>&ndash;&gt;-->
+<!--&lt;!&ndash;<input type="text" id="lastname" name="lname" placeholder="lastname">&ndash;&gt;-->
+<!--<button type="submit">Start</button>-->
+<!--</div>-->
 <script type=text/javascript src="{{url_for('static', filename='js/button.js')}}"></script>
 </html>
